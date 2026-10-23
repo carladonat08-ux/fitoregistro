@@ -1,4 +1,4 @@
-# Buscador Fitosanitario Cítricos
+# FitoLupa
 
 Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el trabajo diario de calidad en cítricos: consultar fichas sin tener que leerlas una a una en la web del Ministerio.
 

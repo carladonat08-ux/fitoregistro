@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Buscador Fitosanitario Cítricos</title>
+<title>FitoLupa</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA: usos en cítricos (campo y postcosecha), dosis en cc/L y g/L, plazos de seguridad, condicionamientos y búsqueda por plaga.">
 <meta name="theme-color" content="#1f5a3a">
@@ -305,7 +305,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 
 <header class="top">
   <div class="wrap">
-    <div class="brand"><h1>Buscador Fitosanitario Cítricos</h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
+    <div class="brand"><h1>FitoLupa</h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     <nav class="tabs" role="tablist" aria-label="Secciones">
       <button role="tab" aria-selected="true" data-view="buscar">Producto</button>
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
@@ -784,7 +784,7 @@ function renderFicha() {
   })();
   $("#ficha").innerHTML = `
   <div class="f-head">
-    <div class="printonly">Buscador Fitosanitario Cítricos · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
+    <div class="printonly">FitoLupa · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
     <div class="f-title"><h2>${esc(p.nombre)}</h2><span class="regbox" title="Nº de registro">${esc(p.reg)}</span>${estadoPill(p)}</div>
     <div class="f-tags">${USOS && p.campo ? '<span class="pill cit">Cítricos campo</span>' : ""}${USOS && p.post ? '<span class="pill post">Postcosecha cítricos</span>' : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
     <div class="f-form">${esc(p.form)}</div>

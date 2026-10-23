@@ -1,6 +1,6 @@
 {
-  "name": "Buscador Fitosanitario Cítricos",
-  "short_name": "Fito Cítricos",
+  "name": "FitoLupa",
+  "short_name": "FitoLupa",
   "description": "Buscador del Registro de Productos Fitosanitarios del MAPA para cítricos: usos, dosis, plazos de seguridad y condicionamientos.",
   "lang": "es",
   "start_url": "./",
