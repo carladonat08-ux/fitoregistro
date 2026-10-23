@@ -1,0 +1,75 @@
+name: Actualizar registro y publicar
+
+on:
+  schedule:
+    # El MAPA actualiza el registro los viernes a partir de las 14:00 (hora peninsular).
+    # Se comprueba el viernes por la tarde-noche y el sábado temprano por si se retrasa.
+    - cron: '30 16 * * 5'   # viernes 18:30 (verano) / 17:30 (invierno)
+    - cron: '0 21 * * 5'    # viernes 23:00 / 22:00
+    - cron: '0 6 * * 6'     # sábado 08:00 / 07:00
+  workflow_dispatch:
+    inputs:
+      forzar:
+        description: 'Regenerar los datos aunque la fecha no haya cambiado'
+        type: boolean
+        default: false
+  push:
+    branches: [main]
+    paths-ignore:
+      - 'README.md'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: actualizar-y-publicar
+  cancel-in-progress: false
+
+jobs:
+  actualizar:
+    if: github.event_name != 'push'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descargar y convertir el Registro de Productos Fitosanitarios
+        run: |
+          if [ "${{ inputs.forzar }}" = "true" ]; then
+            python3 scripts/actualizar.py --forzar
+          else
+            python3 scripts/actualizar.py
+          fi
+
+      - name: Guardar los datos nuevos
+        run: |
+          if git diff --quiet -- data/; then
+            echo "Sin datos nuevos."
+          else
+            FECHA=$(python3 -c "import json;print(json.load(open('data/version.json'))['fecha_datos'])")
+            git config user.name "fitoregistro-bot"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/
+            git commit -m "Datos del Registro MAPA a ${FECHA}"
+            git push
+          fi
+
+  publicar:
+    needs: [actualizar]
+    if: always() && (needs.actualizar.result == 'success' || needs.actualizar.result == 'skipped')
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.despliegue.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: despliegue
+        uses: actions/deploy-pages@v4

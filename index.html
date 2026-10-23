@@ -1,0 +1,712 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>FitoRegistro Cítricos</title>
+<meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA: usos en cítricos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos.">
+<meta name="theme-color" content="#1f5a3a">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2718%27 r=%2712%27 fill=%27%23d9661f%27/%3E%3Cpath d=%27M16 7c2-5 8-5 10-3-3 3-7 4-10 3z%27 fill=%27%231f5a3a%27/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: header de búsqueda fijo · lista de resultados a la izquierda + ficha de registro a la derecha (una columna en móvil).
+   Concepto: la ficha se lee como la etiqueta oficial de un producto; verde hoja de cítrico como tinta, mandarina solo para acciones. */
+:root{
+  --bg:#f3f6f3; --surface:#ffffff; --sunk:#e8eee9; --line:#d3ddd5; --line-strong:#a9b9ad;
+  --ink:#14281d; --ink-2:#3d5446; --ink-3:#6b7f72;
+  --leaf:#1f5a3a; --leaf-soft:#dcebe1;
+  --accent:#d9661f; --accent-ink:#ffffff; --accent-soft:#fbe7d8;
+  --ok:#1d7a45; --ok-soft:#d8f0e1; --warn:#9a6a00; --warn-soft:#fbefcc; --bad:#b3261e; --bad-soft:#f9dedc;
+  --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --r:6px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0e1712; --surface:#15211a; --sunk:#1b2a21; --line:#2a3d31; --line-strong:#3f5747;
+  --ink:#e4efe7; --ink-2:#b6c8bb; --ink-3:#86998c;
+  --leaf:#7fcf9f; --leaf-soft:#1d3a29;
+  --accent:#f08a45; --accent-ink:#1a0e05; --accent-soft:#3a2414;
+  --ok:#6fd398; --ok-soft:#173826; --warn:#f0c55a; --warn-soft:#3a2f10; --bad:#ff8a80; --bad-soft:#401b19;
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1712; --surface:#15211a; --sunk:#1b2a21; --line:#2a3d31; --line-strong:#3f5747;
+  --ink:#e4efe7; --ink-2:#b6c8bb; --ink-3:#86998c;
+  --leaf:#7fcf9f; --leaf-soft:#1d3a29;
+  --accent:#f08a45; --accent-ink:#1a0e05; --accent-soft:#3a2414;
+  --ok:#6fd398; --ok-soft:#173826; --warn:#f0c55a; --warn-soft:#3a2f10; --bad:#ff8a80; --bad-soft:#401b19;
+  color-scheme:dark}
+*{box-sizing:border-box}
+html{color-scheme:light;-webkit-text-size-adjust:100%}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding-block:12px}
+.brand{display:flex;align-items:baseline;gap:10px;min-width:0}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:.01em;line-height:1;color:var(--leaf)}
+.brand small{font-size:12px;color:var(--ink-3)}
+.tabs{display:flex;gap:2px;background:var(--sunk);padding:3px;border-radius:8px;margin-left:auto}
+.tabs button{border:0;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0 / .12)}
+.tabs .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;line-height:18px;text-align:center}
+.searchrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:0 12px}
+.search{position:relative;flex:1 1 380px;min-width:0}
+.search input{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--line-strong);border-radius:8px;background:var(--bg);font-size:16px}
+.search input:focus{border-color:var(--leaf);outline:none;box-shadow:0 0 0 3px var(--leaf-soft)}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--ink-3)}
+.filters{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink-2)}
+.filters label{display:flex;align-items:center;gap:6px;cursor:pointer}
+.filters input{accent-color:var(--leaf);width:16px;height:16px}
+
+/* Main grid */
+main{padding-block:18px 40px}
+.grid{display:grid;grid-template-columns:340px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:860px){.grid{grid-template-columns:minmax(0,1fr)}}
+.results{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.results .head{padding:10px 14px;font-size:12px;color:var(--ink-3);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px}
+.results ol{list-style:none;margin:0;padding:0;max-height:calc(100vh - 230px);overflow:auto}
+@media (max-width:860px){.results ol{max-height:340px}}
+.results li button{display:grid;grid-template-columns:1fr auto;gap:2px 10px;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:10px 14px;cursor:pointer}
+.results li button:hover{background:var(--sunk)}
+.results li button[aria-current="true"]{background:var(--leaf-soft);box-shadow:inset 3px 0 0 var(--leaf)}
+.r-name{font-weight:700;font-size:14px;min-width:0;overflow-wrap:anywhere}
+.r-reg{font-family:var(--f-mono);font-size:12px;color:var(--ink-2);text-align:right}
+.r-ma{grid-column:1/-1;font-size:12px;color:var(--ink-3);overflow-wrap:anywhere}
+.r-tags{grid-column:1/-1;display:flex;gap:4px;flex-wrap:wrap}
+
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:2px 7px;border-radius:4px;line-height:1.5;white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.cit{background:var(--accent-soft);color:var(--accent)}
+.pill.mute{background:var(--sunk);color:var(--ink-2)}
+
+/* Ficha */
+.ficha{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.f-head{padding:20px 22px 16px;border-bottom:3px solid var(--leaf);display:grid;gap:12px}
+.f-title{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px}
+.f-title h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(30px,4vw,42px);line-height:1;letter-spacing:.005em;text-wrap:balance}
+.regbox{font-family:var(--f-mono);font-weight:600;font-size:15px;border:1.5px solid var(--ink);padding:2px 8px;border-radius:4px;letter-spacing:.02em}
+.f-form{font-family:var(--f-mono);font-size:13px;color:var(--ink-2);overflow-wrap:anywhere}
+.f-actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line-strong);background:var(--surface);padding:7px 12px;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--ink-2)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.small{padding:4px 9px;font-size:12px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.alerts{display:grid;gap:6px}
+.alert{padding:8px 12px;border-radius:6px;font-size:13px;border-left:4px solid}
+.alert.bad{background:var(--bad-soft);border-color:var(--bad);color:var(--ink)}
+.alert.warn{background:var(--warn-soft);border-color:var(--warn);color:var(--ink)}
+.alert.info{background:var(--leaf-soft);border-color:var(--leaf);color:var(--ink)}
+
+.f-body{padding:18px 22px 24px;display:grid;gap:26px}
+.sec h3{margin:0 0 10px;font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:10px}
+.sec h3::after{content:"";flex:1;height:1px;background:var(--line)}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px 18px}
+.kv div{min-width:0}
+.kv dt{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.kv dd{margin:2px 0 0;font-weight:600;overflow-wrap:anywhere}
+.ma{display:flex;flex-wrap:wrap;gap:8px}
+.ma span{background:var(--sunk);border:1px solid var(--line);border-radius:5px;padding:5px 10px;font-weight:600;font-size:14px}
+.ma b{font-family:var(--f-mono);font-weight:600;color:var(--leaf);margin-left:6px}
+
+.usebar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1.5px solid var(--line-strong);background:var(--surface);border-radius:20px;padding:4px 12px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--leaf);border-color:var(--leaf);color:var(--surface)}
+.usebar select,.usebar input[type=search]{border:1.5px solid var(--line-strong);border-radius:6px;padding:5px 8px;background:var(--surface);font-size:13px;min-width:0;max-width:100%}
+.crop{margin-top:16px}
+.crop h4{margin:0 0 8px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.crop h4 .n{font-size:12px;color:var(--ink-3);font-weight:500}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:6px}
+table.uses{border-collapse:collapse;width:100%;min-width:860px;font-size:13px}
+table.uses th{background:var(--sunk);text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.uses td{padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.uses tr:last-child td{border-bottom:0}
+table.uses tr.cond td{background:var(--bg);padding-top:0;font-size:12.5px;color:var(--ink-2)}
+td.plagas{min-width:200px;max-width:300px}
+td.plagas ul{margin:0;padding-left:16px}
+.dose{font-family:var(--f-mono);font-weight:600;white-space:nowrap}
+.conv{display:block;font-family:var(--f-mono);font-size:12px;color:var(--accent);font-weight:600;white-space:nowrap}
+.ps{font-family:var(--f-mono);font-weight:700;font-size:15px}
+.ps small{font-family:var(--f-body);font-weight:500;font-size:11px;color:var(--ink-3);display:block}
+.caldo{white-space:pre-line;min-width:140px}
+.condtxt{white-space:pre-line;margin:0;padding:8px 10px;border-left:3px solid var(--line-strong);background:var(--surface);border-radius:0 4px 4px 0}
+details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12px}
+.longtext{white-space:pre-line;font-size:14px;color:var(--ink-2);max-width:80ch;margin:0}
+.empty{padding:30px 22px;color:var(--ink-3);text-align:center}
+
+/* Calculadora */
+.calc{background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:14px 16px;display:grid;gap:10px}
+.calc .row{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:end}
+.calc label{display:grid;gap:3px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.calc input{width:120px;border:1.5px solid var(--line-strong);border-radius:6px;padding:6px 8px;background:var(--surface);font-family:var(--f-mono);font-size:15px}
+.calc .out{display:flex;flex-wrap:wrap;gap:8px 24px}
+.calc .out div{min-width:0}
+.calc .out b{display:block;font-family:var(--f-mono);font-size:20px;color:var(--ink)}
+.calc .out span{font-size:12px;color:var(--ink-3)}
+.calc .which{font-size:13px;color:var(--ink-2)}
+
+/* Panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:14px;min-width:0}
+.panel h2{margin:0;font-family:var(--f-display);font-size:30px;font-weight:700;line-height:1.05}
+.panel p.lead{margin:0;color:var(--ink-2);max-width:75ch}
+textarea#vlist{width:100%;min-height:170px;border:1.5px solid var(--line-strong);border-radius:6px;padding:10px 12px;background:var(--bg);font-family:var(--f-mono);font-size:13px;resize:vertical}
+.vsum{display:flex;flex-wrap:wrap;gap:8px}
+table.v{border-collapse:collapse;width:100%;min-width:820px;font-size:13px}
+table.v th{background:var(--sunk);text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.v td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+table.v tr.nr td{color:var(--ink-3)}
+.linkbtn{border:0;background:none;color:var(--leaf);font-weight:700;cursor:pointer;padding:0;text-align:left;text-decoration:underline;text-underline-offset:2px}
+.foot{font-size:12px;color:var(--ink-3);padding-block:0 30px;display:grid;gap:4px}
+.foot a{color:var(--ink-2)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-size:14px;font-weight:600;z-index:20;max-width:calc(100% - 32px)}
+.loading{display:flex;gap:10px;align-items:center;color:var(--ink-3);font-size:13px}
+.spin{width:14px;height:14px;border:2px solid var(--line-strong);border-top-color:var(--leaf);border-radius:50%;animation:sp 0.8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px}
+[hidden]{display:none!important}
+img{max-width:100%}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand"><h1>FitoRegistro</h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
+    <nav class="tabs" role="tablist" aria-label="Secciones">
+      <button role="tab" id="tab-buscar" aria-selected="true" data-view="buscar">Buscador</button>
+      <button role="tab" id="tab-verificar" aria-selected="false" data-view="verificar">Verificar lista</button>
+      <button role="tab" id="tab-cuaderno" aria-selected="false" data-view="cuaderno">Mi cuaderno<span class="count" id="cnt" hidden>0</span></button>
+    </nav>
+  </div>
+  <div class="wrap searchrow" id="searchrow">
+    <div class="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Nº de registro, nombre comercial o materia activa (ej. 24526, Teppeki, piriproxifen)" aria-label="Buscar producto">
+    </div>
+    <div class="filters">
+      <label><input type="checkbox" id="fVig" checked> Solo vigentes</label>
+      <label><input type="checkbox" id="fCit"> Solo autorizados en cítricos</label>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="view-buscar" class="grid">
+    <aside class="results" aria-label="Resultados">
+      <div class="head"><span id="rcount">Cargando registro…</span><span id="rhint"></span></div>
+      <ol id="rlist"></ol>
+    </aside>
+    <article class="ficha" id="ficha"><div class="empty"><div class="loading"><span class="spin"></span>Cargando el Registro de Productos Fitosanitarios…</div></div></article>
+  </section>
+
+  <section id="view-verificar" hidden>
+    <div class="panel">
+      <h2>Verificar una lista de productos</h2>
+      <p class="lead">Ejemplo cargado: sustitúyelo por tu lista. Pega los productos de una receta, un cuaderno de campo o un parte de tratamientos, uno por línea. Se reconoce el nº de registro (ES-00657, ES00657, 24526) o el nombre comercial. Las líneas sin registro fitosanitario (abonos, correctores, bioestimulantes) quedan separadas.</p>
+      <textarea id="vlist" spellcheck="false" aria-label="Lista de productos"></textarea>
+      <div class="f-actions">
+        <button class="btn primary" id="vrun">Verificar</button>
+        <button class="btn" id="vclear">Vaciar</button>
+        <label class="filters" style="align-self:center"><input type="checkbox" id="vcit" checked> Comprobar autorización en cítricos</label>
+      </div>
+      <div class="vsum" id="vsum"></div>
+      <div class="tblwrap" id="vout" hidden></div>
+    </div>
+  </section>
+
+  <section id="view-cuaderno" hidden>
+    <div class="panel">
+      <h2>Mi cuaderno</h2>
+      <p class="lead">Usos que has añadido desde las fichas, con las columnas de tu cuaderno de tratamientos. Puedes descargarlo en Excel o copiarlo para pegar en tu hoja. Se guarda en este navegador.</p>
+      <div class="f-actions">
+        <button class="btn primary" id="cxlsx">Descargar Excel</button>
+        <button class="btn" id="ccopy">Copiar tabla</button>
+        <button class="btn" id="cclear">Vaciar cuaderno</button>
+      </div>
+      <div id="cconfirm" hidden class="alert warn">¿Vaciar todas las filas del cuaderno? <button class="btn small" id="cyes">Sí, vaciar</button> <button class="btn small" id="cno">Cancelar</button></div>
+      <div class="tblwrap" id="cout"></div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span id="fuente">Fuente: Registro de Productos Fitosanitarios del Ministerio de Agricultura, Pesca y Alimentación.</span>
+  <span>Consulta informativa, sin afiliación con el MAPA. Ante cualquier duda prevalecen la resolución de inscripción y la etiqueta autorizada. <a href="https://servicio.mapa.gob.es/regfiweb" target="_blank" rel="noopener">Abrir el Registro oficial</a></span>
+</footer>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+"use strict";
+// ---------- Estado ----------
+const CIT_PREFIX = "01010201";        // Cítricos (Naranjo, Mandarino, Limonero, Pomelo)
+const CIT_FRUIT_PREFIX = "020101";    // Frutos cítricos (postcosecha)
+let IDX = null, USOS = null;
+let P = [], byId = new Map(), citSet = new Set();
+let current = null;
+const ui = { crop: "cit", cropSel: "", plaga: "", calc: { ha: 1, caldo: 2000, gi: null } };
+const $ = s => document.querySelector(s);
+const norm = s => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+const regKey = s => (s || "").toUpperCase().replace(/[\s\-_.]/g, "");
+const regDigits = s => ((s || "").match(/\d+/g) || []).join("").replace(/^0+/, "");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmtDate = d => d ? d.split("-").reverse().join("/") : "—";
+const fmtNum = n => n == null ? "" : Number(n).toLocaleString("es-ES", { maximumFractionDigits: 3 });
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2600); }
+
+// ---------- Carga de datos ----------
+async function load() {
+  const r = await fetch("data/indice.json",{cache:"no-cache"});
+  IDX = await r.json();
+  P = IDX.p.map(a => {
+    const o = { id: a[0], reg: a[1], nombre: a[2], titular: a[3], form: a[4], estado: a[5], fReg: a[6], cad: a[7], canc: a[8], limV: a[9], cond: a[10], sus: a[11] };
+    o.n = norm(o.nombre); o.rk = regKey(o.reg); o.rd = regDigits(o.reg);
+    o.sn = o.sus.map(s => norm(s[0])).join(" | ");
+    o.liquid = /P\/V/i.test(o.form) || /\[(EC|SC|SL|EW|ME|OD|SE|CS|DC|EO|SU|UL|AL|OL|LS|FS|ZC)\]/i.test(o.form);
+    return o;
+  });
+  P.forEach(o => byId.set(o.id, o));
+  $("#fechaTop").textContent = "Registro MAPA · datos a " + fmtDate(IDX.fecha);
+  $("#fuente").textContent = "Fuente: Registro de Productos Fitosanitarios del MAPA, exportación de productos autorizados a " + fmtDate(IDX.fecha) + ". " + P.length.toLocaleString("es-ES") + " productos.";
+  runSearch();
+  const r2 = await fetch("data/usos.json",{cache:"no-cache"});
+  USOS = await r2.json();
+  for (const [pid, arr] of Object.entries(USOS.u)) {
+    for (const u of arr) {
+      if (u[3] === 0 && u[2] > 0) u[3] = u[2];
+      if (u[3] == null && u[2] != null) u[3] = u[2];
+      if (!u[2] && !u[3]) { u[2] = null; u[3] = null; }
+    }
+    if (arr.some(u => IDX.c[u[0]][0].startsWith(CIT_PREFIX))) citSet.add(Number(pid));
+  }
+  runSearch();
+  const start = store.get("fr_last", null);
+  const first = (start && byId.get(start)) || P.find(p => p.reg === "24526") || P[0];
+  openProduct(first.id, false);
+}
+
+// ---------- Búsqueda ----------
+function score(p, q, qn, qk, qd) {
+  if (!q) return 1;
+  if (p.rk === qk) return 1000;
+  if (qd && qd.length >= 3 && p.rd === qd) return 900;
+  if (p.n === qn) return 800;
+  if (p.n.startsWith(qn)) return 600;
+  if (qn.length >= 2 && p.n.includes(qn)) return 400;
+  if (qn.length >= 3 && p.sn.includes(qn)) return 300;
+  if (qd && qd.length >= 3 && p.rd.includes(qd)) return 200;
+  if (qn.length >= 4 && norm(p.titular).includes(qn)) return 100;
+  const toks = qn.split(/\s+/).filter(Boolean);
+  if (toks.length > 1 && toks.every(t => p.n.includes(t) || p.sn.includes(t))) return 150;
+  return 0;
+}
+function runSearch() {
+  if (!IDX) return;
+  const q = $("#q").value.trim(), qn = norm(q), qk = regKey(q), qd = /^\s*(es)?[\s\-]*\d+\s*$/i.test(q) ? regDigits(q) : "";
+  const vig = $("#fVig").checked, cit = $("#fCit").checked;
+  let res = [];
+  for (const p of P) {
+    if (vig && p.estado !== "Vigente") continue;
+    if (cit && USOS && !citSet.has(p.id)) continue;
+    const s = score(p, q, qn, qk, qd);
+    if (s > 0) res.push([s, p]);
+  }
+  res.sort((a, b) => b[0] - a[0] || a[1].n.localeCompare(b[1].n));
+  const total = res.length;
+  res = res.slice(0, 120);
+  $("#rcount").textContent = q ? `${total.toLocaleString("es-ES")} resultado${total === 1 ? "" : "s"}` : `${total.toLocaleString("es-ES")} productos`;
+  $("#rhint").textContent = total > 120 ? "mostrando 120" : "";
+  const hl = (txt) => { if (!qn || qn.length < 2) return esc(txt); const i = norm(txt).indexOf(qn); return i < 0 ? esc(txt) : esc(txt.slice(0, i)) + "<mark>" + esc(txt.slice(i, i + qn.length)) + "</mark>" + esc(txt.slice(i + qn.length)); };
+  $("#rlist").innerHTML = res.length ? res.map(([, p]) => `
+    <li><button data-id="${p.id}" ${current && current.id === p.id ? 'aria-current="true"' : ""}>
+      <span class="r-name">${hl(p.nombre)}</span><span class="r-reg">${esc(p.reg)}</span>
+      <span class="r-ma">${p.sus.map(s => hl(s[0]) + (s[1] ? " " + esc(s[1]) + "%" : "")).join(" + ") || esc(p.form)}</span>
+      <span class="r-tags">${estadoPill(p)}${USOS && citSet.has(p.id) ? '<span class="pill cit">Cítricos</span>' : ""}</span>
+    </button></li>`).join("") : `<li class="empty">Sin coincidencias. Prueba con el nº de registro completo o parte del nombre.${q.length > 2 ? "<br><br>Si el nombre es una «otra denominación» comercial, busca por su nº de registro." : ""}</li>`;
+}
+function estadoPill(p) {
+  if (p.estado !== "Vigente") return '<span class="pill bad">Cancelado</span>';
+  const d = daysTo(p.cad);
+  if (p.limV) return '<span class="pill warn">Límite venta</span>';
+  if (d != null && d < 180) return '<span class="pill warn">Caduca pronto</span>';
+  return '<span class="pill ok">Vigente</span>';
+}
+function daysTo(d) { if (!d) return null; return Math.round((new Date(d + "T00:00:00") - new Date()) / 864e5); }
+
+// ---------- Dosis: conversión a formato cuaderno ----------
+function convDose(v, unit, liquid) {
+  if (v == null) return null;
+  const u = (unit || "").toLowerCase().trim();
+  const lu = liquid ? "cc/L" : "g/L";
+  if (u === "%") return { v: v * 10, u: lu, per: "L" };
+  if (u === "ml/hl" || u === "cc/hl") return { v: v / 100, u: "cc/L", per: "L" };
+  if (u === "l/hl") return { v: v * 10, u: "cc/L", per: "L" };
+  if (u === "g/hl") return { v: v / 100, u: "g/L", per: "L" };
+  if (u === "kg/hl") return { v: v * 10, u: "g/L", per: "L" };
+  if (u === "cc/l" || u === "ml/l") return { v, u: "cc/L", per: "L" };
+  if (u === "g/l") return { v, u: "g/L", per: "L" };
+  if (u === "l/ha") return { v: v * 1000, u: "cc/ha", per: "ha" };
+  if (u === "cc/ha" || u === "ml/ha") return { v, u: "cc/ha", per: "ha" };
+  if (u === "kg/ha") return { v: v * 1000, u: "g/ha", per: "ha" };
+  if (u === "g/ha") return { v, u: "g/ha", per: "ha" };
+  return null;
+}
+function parseCaldo(s) {
+  if (!s) return null;
+  const t = s.replace(/(\d)\.(\d{3})/g, "$1$2");
+  const nums = (t.match(/\d+(?:,\d+)?/g) || []).map(x => parseFloat(x.replace(",", "."))).filter(x => x >= 50 && x <= 20000);
+  if (!nums.length || !/l\s*\/\s*ha/i.test(t)) return null;
+  return { min: Math.min(...nums), max: Math.max(...nums) };
+}
+const S = i => i < 0 || !USOS ? null : USOS.s[i];
+const Tx = i => i < 0 || !USOS ? null : USOS.t[i];
+
+// ---------- Ficha ----------
+function openProduct(id, scroll = true) {
+  const p = byId.get(id); if (!p) return;
+  if (!current || current.id !== id) { ui.calc.gi = null; ui.plaga = ""; ui.cropSel = ""; ui.crop = USOS && citSet.has(id) ? "cit" : "all"; }
+  current = p; store.set("fr_last", id);
+  document.querySelectorAll("#rlist button").forEach(b => b.setAttribute("aria-current", String(Number(b.dataset.id) === id)));
+  renderFicha();
+  if (scroll && window.matchMedia("(max-width:860px)").matches) $("#ficha").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+function groupsFor(p) {
+  const arr = (USOS && USOS.u[p.id]) || [];
+  const crops = new Map();
+  for (const u of arr) {
+    const c = IDX.c[u[0]];
+    const isCit = c[0].startsWith(CIT_PREFIX) || c[0].startsWith(CIT_FRUIT_PREFIX);
+    if (ui.crop === "cit" && !isCit) continue;
+    if (ui.crop === "one" && c[1] !== ui.cropSel) continue;
+    const ag = IDX.a[u[1]];
+    if (ui.plaga && !norm(ag[1]).includes(norm(ui.plaga))) continue;
+    if (!crops.has(c[1])) crops.set(c[1], { code: c[0], name: c[1], groups: new Map() });
+    const sig = u.slice(2).join("¦");
+    const g = crops.get(c[1]).groups;
+    if (!g.has(sig)) g.set(sig, { u, plagas: [] });
+    g.get(sig).plagas.push(ag[1]);
+  }
+  return [...crops.values()].sort((a, b) => a.code.localeCompare(b.code));
+}
+function allCrops(p) {
+  const arr = (USOS && USOS.u[p.id]) || [];
+  return [...new Set(arr.map(u => IDX.c[u[0]][1]))].sort((a, b) => a.localeCompare(b, "es"));
+}
+let GROUPS = [];
+function renderFicha() {
+  const p = current; if (!p) return;
+  const d = daysTo(p.cad);
+  const alerts = [];
+  if (p.estado !== "Vigente") alerts.push(`<div class="alert bad"><b>Producto cancelado</b>${p.canc ? " el " + fmtDate(p.canc) : ""}. No puede utilizarse${p.limV ? "; fecha límite de venta " + fmtDate(p.limV) : ""}.</div>`);
+  else {
+    if (p.limV) alerts.push(`<div class="alert warn"><b>Con fecha límite de venta: ${fmtDate(p.limV)}.</b> Comprueba el periodo de gracia de uso en la resolución.</div>`);
+    if (d != null && d < 0) alerts.push(`<div class="alert bad"><b>Autorización caducada</b> el ${fmtDate(p.cad)}.</div>`);
+    else if (d != null && d < 180) alerts.push(`<div class="alert warn"><b>La autorización caduca el ${fmtDate(p.cad)}</b> (en ${d} días). Revisa si hay renovación antes de planificar tratamientos.</div>`);
+  }
+  if (USOS && !citSet.has(p.id) && p.estado === "Vigente") alerts.push(`<div class="alert info">Este producto <b>no tiene usos autorizados en cítricos</b>.</div>`);
+  const hasCit = USOS && citSet.has(p.id);
+  const crops = allCrops(p);
+  GROUPS = [];
+  const cropsHtml = !USOS ? `<div class="loading"><span class="spin"></span>Cargando usos autorizados…</div>` : (() => {
+    const cs = groupsFor(p);
+    if (!cs.length) return `<p class="empty">No hay usos que coincidan con el filtro.</p>`;
+    return cs.map(c => {
+      const rows = [...c.groups.values()].map(g => { GROUPS.push({ ...g, crop: c.name }); return useRow(p, g, GROUPS.length - 1); }).join("");
+      return `<div class="crop"><h4>${esc(c.name)} <span class="n">${c.groups.size} uso${c.groups.size === 1 ? "" : "s"}</span></h4>
+        <div class="tblwrap"><table class="uses"><thead><tr><th>Plaga / finalidad</th><th>Dosis registro</th><th>Caldo</th><th>Plazo seg.</th><th>Nº aplic.</th><th>Intervalo</th><th>Estado fenol.</th><th>Usuario · método</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+    }).join("");
+  })();
+  $("#ficha").innerHTML = `
+  <div class="f-head">
+    <div class="f-title"><h2>${esc(p.nombre)}</h2><span class="regbox" title="Nº de registro">${esc(p.reg)}</span>${estadoPill(p)}${hasCit ? '<span class="pill cit">Autorizado en cítricos</span>' : ""}</div>
+    <div class="f-form">${esc(p.form)}</div>
+    ${alerts.length ? `<div class="alerts">${alerts.join("")}</div>` : ""}
+    <div class="f-actions">
+      <a class="btn" href="https://servicio.mapa.gob.es/regfiweb/Productos/DetalleProducto/${p.id}" target="_blank" rel="noopener">Ficha oficial MAPA ↗</a>
+      <button class="btn" id="copyFicha">Copiar resumen</button>
+    </div>
+  </div>
+  <div class="f-body">
+    <section class="sec"><h3>Materia activa</h3>
+      <div class="ma">${p.sus.map(s => `<span>${esc(s[0])}<b>${s[1] ? esc(s[1]) + "%" : ""}</b></span>`).join("") || "—"}</div>
+    </section>
+    <section class="sec"><h3>Datos del registro</h3>
+      <dl class="kv">
+        <div><dt>Titular</dt><dd>${esc(p.titular) || "—"}</dd></div>
+        <div><dt>Inscripción</dt><dd class="mono">${fmtDate(p.fReg)}</dd></div>
+        <div><dt>Caducidad</dt><dd class="mono">${fmtDate(p.cad)}</dd></div>
+        <div><dt>Límite de venta</dt><dd class="mono">${fmtDate(p.limV)}</dd></div>
+        <div><dt>Cancelación</dt><dd class="mono">${fmtDate(p.canc)}</dd></div>
+        <div><dt>Formulación</dt><dd>${p.liquid ? "Líquida · dosis en cc" : "Sólida · dosis en g"}</dd></div>
+      </dl>
+    </section>
+    <section class="sec"><h3>Usos autorizados y dosis</h3>
+      <div class="usebar">
+        <div class="chips" role="group" aria-label="Cultivo">
+          ${hasCit ? `<button class="chip" data-crop="cit" aria-pressed="${ui.crop === "cit"}">Cítricos</button>` : ""}
+          <button class="chip" data-crop="all" aria-pressed="${ui.crop === "all"}">Todos los cultivos (${crops.length})</button>
+        </div>
+        <select id="cropSel" aria-label="Elegir un cultivo"><option value="">Elegir cultivo…</option>${crops.map(c => `<option ${ui.crop === "one" && ui.cropSel === c ? "selected" : ""}>${esc(c)}</option>`).join("")}</select>
+        <input type="search" id="plagaF" placeholder="Filtrar plaga (ej. piojo rojo)" value="${esc(ui.plaga)}" aria-label="Filtrar plaga">
+      </div>
+      <div id="calcBox">${calcHtml(p)}</div>
+      ${cropsHtml}
+    </section>
+    <section class="sec"><h3>Condiciones generales de uso</h3>
+      ${p.cond ? `<p class="longtext">${esc(p.cond)}</p>` : `<p class="longtext">Sin condicionamiento general en el registro.</p>`}
+    </section>
+  </div>`;
+}
+function doseText(u) {
+  const [dmin, dmax] = [u[2], u[3]], unit = S(u[4]) || "";
+  if (dmin == null && dmax == null) return esc(unit) || "—";
+  const v = dmin === dmax || dmax == null ? fmtNum(dmin ?? dmax) : `${fmtNum(dmin)}–${fmtNum(dmax)}`;
+  return `${v} ${esc(unit)}`;
+}
+function convText(p, u) {
+  const unit = S(u[4]);
+  const a = convDose(u[2], unit, p.liquid), b = convDose(u[3], unit, p.liquid);
+  if (!a && !b) return "";
+  const x = a || b, y = b || a;
+  if (x.per !== "L") return "";
+  const v = x.v === y.v ? fmtNum(x.v) : `${fmtNum(x.v)}–${fmtNum(y.v)}`;
+  return `<span class="conv">= ${v} ${x.u}</span>`;
+}
+function useRow(p, g, gi) {
+  const u = g.u, cond = Tx(u[11]);
+  const pl = S(u[5]);
+  const plHtml = pl == null ? "—" : /^\d+$/.test(pl) ? `${pl}<small>días</small>` : pl === "NO PROCEDE" ? `NP<small>no procede</small>` : `<span style="font-size:12px;font-family:var(--f-body);font-weight:600">${esc(pl)}</span>`;
+  const um = [S(u[12]), S(u[15]), S(u[14]) ? "Sistema " + S(u[14]) : null].filter(Boolean).map(esc).join(" · ") || "—";
+  const plag = g.plagas.length > 6 ? `<details class="cd"><summary>${g.plagas.length} plagas/finalidades</summary><ul>${g.plagas.map(x => `<li>${esc(x)}</li>`).join("")}</ul></details>` : `<ul>${g.plagas.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  return `<tr>
+    <td class="plagas">${plag}</td>
+    <td><span class="dose">${doseText(u)}</span>${convText(p, u)}</td>
+    <td class="caldo">${esc(S(u[9]) || "—")}</td>
+    <td class="ps">${plHtml}</td>
+    <td>${esc(S(u[7]) || "—")}</td>
+    <td>${esc(S(u[8]) || "—")}</td>
+    <td>${esc(S(u[10]) || "—")}</td>
+    <td>${um}</td>
+    <td style="white-space:nowrap"><div style="display:grid;gap:6px"><button class="btn small primary" data-add="${gi}">+ Cuaderno</button><button class="btn small" data-calc="${gi}">Calcular</button></div></td>
+  </tr>${cond ? `<tr class="cond"><td colspan="9"><details class="cd" ${g.plagas.length <= 6 && cond.length < 260 ? "open" : ""}><summary>Condicionamiento específico</summary><p class="condtxt">${esc(cond)}</p></details></td></tr>` : ""}`;
+}
+// ---------- Calculadora ----------
+function calcHtml(p) {
+  const gi = ui.calc.gi, g = gi != null ? GROUPS[gi] : null;
+  const head = g ? `<div class="which">Uso seleccionado: <b>${esc(g.crop)}</b> · ${esc(g.plagas.slice(0, 2).join(", "))}${g.plagas.length > 2 ? "…" : ""} · ${doseText(g.u)}</div>` : `<div class="which">Pulsa <b>Calcular</b> en un uso para saber cuánto producto necesitas.</div>`;
+  let out = "";
+  if (g) {
+    const unit = S(g.u[4]);
+    const a = convDose(g.u[2], unit, p.liquid) || convDose(g.u[3], unit, p.liquid);
+    const b = convDose(g.u[3], unit, p.liquid) || a;
+    const ha = ui.calc.ha, caldo = ui.calc.caldo;
+    if (a && ha > 0 && caldo > 0) {
+      const big = p.liquid ? "L" : "kg";
+      const tot = x => x.per === "L" ? x.v * caldo * ha / 1000 : x.v * ha / 1000;
+      const conc = x => x.per === "L" ? x.v : x.v / caldo;
+      const r = (x, y) => x === y ? fmtNum(x) : `${fmtNum(x)}–${fmtNum(y)}`;
+      out = `<div class="out">
+        <div><b>${r(+tot(a).toFixed(3), +tot(b).toFixed(3))} ${big}</b><span>producto total para ${fmtNum(ha)} ha</span></div>
+        <div><b>${fmtNum(caldo * ha)} L</b><span>caldo total</span></div>
+        <div><b>${r(+conc(a).toFixed(3), +conc(b).toFixed(3))} ${p.liquid ? "cc/L" : "g/L"}</b><span>concentración en cuba</span></div>
+        <div><b>${r(+conc(a).toFixed(3), +conc(b).toFixed(3))} ${p.liquid ? "L" : "kg"}</b><span>por cuba de 1.000 L</span></div>
+      </div>`;
+      const cal = parseCaldo(S(g.u[9]));
+      if (cal && (caldo < cal.min || caldo > cal.max)) out += `<div class="alert warn">El caldo de ${fmtNum(caldo)} L/ha está fuera del rango autorizado (${fmtNum(cal.min)}–${fmtNum(cal.max)} L/ha).</div>`;
+    } else if (!a) out = `<div class="alert info">La unidad «${esc(unit || "sin dato")}» no se puede convertir automáticamente. Revisa el condicionamiento.</div>`;
+  }
+  return `<div class="calc">${head}<div class="row">
+    <label>Superficie (ha)<input id="cHa" type="number" min="0" step="0.01" value="${ui.calc.ha}"></label>
+    <label>Caldo (L/ha)<input id="cCaldo" type="number" min="0" step="50" value="${ui.calc.caldo}"></label>
+  </div>${out}</div>`;
+}
+
+// ---------- Cuaderno ----------
+let CQ = store.get("fr_cuaderno", []);
+function cuadernoRow(p, g) {
+  const u = g.u, unit = S(u[4]);
+  const a = convDose(u[2], unit, p.liquid), b = convDose(u[3], unit, p.liquid);
+  const x = b || a;
+  const isL = x && x.per === "L";
+  const cal = parseCaldo(S(u[9]));
+  const pl = S(u[5]);
+  return {
+    materia: p.sus.map(s => s[0] + (s[1] ? " " + s[1] + "%" : "")).join(" + "),
+    nombre: p.nombre, registro: p.reg,
+    dosis_cc: isL && x.u === "cc/L" ? +x.v.toFixed(4) : "",
+    dosis_g: isL && x.u === "g/L" ? +x.v.toFixed(4) : "",
+    dosis_reg: doseText(u).replace(/&amp;/g, "&"),
+    caldo: cal ? (cal.min === cal.max ? cal.max : cal.min + "-" + cal.max) : (S(u[9]) || ""),
+    plazo: pl == null ? "" : pl === "NO PROCEDE" ? "NP" : pl,
+    cultivo: g.crop, plaga: g.plagas.join("; "),
+    aplic: S(u[7]) || "", intervalo: S(u[8]) || "",
+    estado: p.estado, caducidad: fmtDate(p.cad), fecha: new Date().toLocaleDateString("es-ES")
+  };
+}
+const CCOLS = [["materia", "Materia activa"], ["nombre", "Nombre comercial"], ["registro", "Nº Registro"], ["dosis_cc", "Dosis cc/l"], ["dosis_g", "Dosis g/l"], ["caldo", "Caldo l/ha"], ["plazo", "Plazo días"], ["cultivo", "Cultivo"], ["plaga", "Plaga / objeto"], ["dosis_reg", "Dosis registro"], ["aplic", "Nº aplic. máx."], ["intervalo", "Intervalo"], ["estado", "Estado"], ["caducidad", "Caducidad"], ["fecha", "Fecha consulta"]];
+function renderCuaderno() {
+  const c = $("#cnt"); c.hidden = !CQ.length; c.textContent = CQ.length;
+  if (!CQ.length) { $("#cout").innerHTML = `<p class="empty">Aún no hay filas. Abre un producto en el Buscador y pulsa <b>+ Cuaderno</b> en el uso que vas a aplicar.</p>`; return; }
+  $("#cout").innerHTML = `<table class="v"><thead><tr>${CCOLS.map(c => `<th>${c[1]}</th>`).join("")}<th></th></tr></thead><tbody>${CQ.map((r, i) => `<tr>${CCOLS.map(c => `<td class="${["registro", "dosis_cc", "dosis_g", "plazo"].includes(c[0]) ? "mono" : ""}">${esc(r[c[0]])}</td>`).join("")}<td><button class="btn small" data-del="${i}">Quitar</button></td></tr>`).join("")}</tbody></table>`;
+}
+function saveFile(filename, blob) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 4000);
+  toast("Descargado: " + filename);
+}
+async function copyText(txt, okMsg) {
+  try { await navigator.clipboard.writeText(txt); toast(okMsg); }
+  catch { const ta = document.createElement("textarea"); ta.value = txt; document.body.appendChild(ta); ta.select(); try { document.execCommand("copy"); toast(okMsg); } catch { toast("Selecciona y copia manualmente."); } ta.remove(); }
+}
+
+// ---------- Verificador ----------
+const EJEMPLO = `24526
+ES-01312
+CORNALINA
+LAINCOIL
+FLASH UM
+UREA CRISTALINA
+SULFATO DE ZINC`;
+function matchLine(line) {
+  const raw = line.trim(); if (!raw) return null;
+  const codes = raw.match(/\bES[\s\-]?\d{3,6}\b|\b\d{4,6}\b/gi) || [];
+  const name = norm(raw.replace(/\bES[\s\-]?\d{3,6}\b|\b\d{4,6}\b/gi, "").replace(/\(.*?\)/g, " ").replace(/\s+/g, " "));
+  const paren = (raw.match(/\(([^)]+)\)/) || [])[1];
+  let byCode = null, byName = null;
+  for (const c of codes) {
+    const k = regKey(c), d = regDigits(c);
+    byCode = P.find(p => p.rk === k) || (/^ES/i.test(c) ? null : P.find(p => /^\d+$/.test(p.reg) && p.rd === d));
+    if (byCode) break;
+  }
+  const nameCands = [name, paren ? norm(paren) : null].filter(Boolean);
+  for (const n of nameCands) {
+    const exact = P.filter(p => p.n === n);
+    byName = exact.find(p => p.estado === "Vigente") || exact[0];
+    if (byName) break;
+  }
+  if (!byName && name.length >= 4) { const sw = P.filter(p => p.n.startsWith(name) && p.estado === "Vigente"); if (sw.length === 1) byName = sw[0]; }
+  let note = "";
+  const p = byCode || byName;
+  if (byCode && name && byCode.n !== name && !(paren && norm(paren) === byCode.n) && !byCode.n.includes(name)) note = `El nº corresponde a «${byCode.nombre}» en el registro (puede ser otra denominación comercial; revísalo).`;
+  if (!byCode && codes.length && byName) note = `El nº indicado (${codes.join(", ")}) no coincide; el nombre corresponde al nº ${byName.reg}.`;
+  if (!byCode && codes.length && !byName) note = `El nº ${codes.join(", ")} no figura en el registro de productos autorizados.`;
+  return { raw, p, note };
+}
+function citSummary(p) {
+  const arr = (USOS && USOS.u[p.id]) || [];
+  const cu = arr.filter(u => IDX.c[u[0]][0].startsWith(CIT_PREFIX));
+  if (!cu.length) return null;
+  const pls = cu.map(u => S(u[5])).filter(Boolean);
+  const nums = pls.filter(x => /^\d+$/.test(x)).map(Number);
+  const other = [...new Set(pls.filter(x => !/^\d+$/.test(x) && x !== "NO PROCEDE"))];
+  const parts = [];
+  if (nums.length) parts.push(Math.min(...nums) === Math.max(...nums) ? nums[0] + " días" : Math.min(...nums) + "–" + Math.max(...nums) + " días");
+  parts.push(...other);
+  if (!parts.length && pls.includes("NO PROCEDE")) parts.push("NP");
+  const plazo = parts.join(" · ") || "—";
+  const doses = [...new Set(cu.map(u => doseText(u)))].slice(0, 3).join(" · ");
+  return { plazo, doses, n: cu.length };
+}
+function runVerify() {
+  const lines = $("#vlist").value.split(/\n/).map(matchLine).filter(Boolean);
+  const chkCit = $("#vcit").checked;
+  let ok = 0, warn = 0, nr = 0;
+  const rows = lines.map(r => {
+    if (!r.p) { nr++; return `<tr class="nr"><td>${esc(r.raw)}</td><td colspan="6"><span class="pill mute">Sin registro fitosanitario</span> ${r.note ? esc(r.note) : "Fertilizante, corrector, bioestimulante o nombre no encontrado. No requiere nº de registro fitosanitario."}</td></tr>`; }
+    const p = r.p, cs = USOS ? citSummary(p) : null;
+    let st;
+    if (p.estado !== "Vigente") { st = '<span class="pill bad">Cancelado</span>'; warn++; }
+    else if (chkCit && USOS && !cs) { st = '<span class="pill bad">No autorizado en cítricos</span>'; warn++; }
+    else if (r.note || (daysTo(p.cad) ?? 999) < 180 || p.limV) { st = estadoPill(p).includes("ok") ? '<span class="pill warn">Revisar</span>' : estadoPill(p); warn++; }
+    else { st = '<span class="pill ok">Correcto</span>'; ok++; }
+    return `<tr><td>${esc(r.raw)}</td><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div></td><td>${st}${r.note ? `<div style="font-size:12px;margin-top:4px">${esc(r.note)}</div>` : ""}</td><td>${esc(p.sus.map(s => s[0] + (s[1] ? " " + s[1] + "%" : "")).join(" + "))}</td><td>${cs ? esc(cs.doses) : "—"}</td><td class="mono">${cs ? esc(cs.plazo) : "—"}</td><td class="mono">${fmtDate(p.cad)}</td></tr>`;
+  });
+  $("#vsum").innerHTML = lines.length ? `<span class="pill ok">${ok} correctos</span><span class="pill warn">${warn} a revisar</span><span class="pill mute">${nr} sin registro fitosanitario</span>` : "";
+  const out = $("#vout"); out.hidden = !lines.length;
+  out.innerHTML = `<table class="v"><thead><tr><th>Entrada</th><th>Producto en registro</th><th>Resultado</th><th>Materia activa</th><th>Dosis en cítricos</th><th>Plazo seg. cítricos</th><th>Caducidad</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
+  store.set("fr_vlist", $("#vlist").value);
+}
+
+// ---------- Vistas y eventos ----------
+function setView(v) {
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
+  ["buscar", "verificar", "cuaderno"].forEach(x => $("#view-" + x).hidden = x !== v);
+  $("#searchrow").hidden = v !== "buscar";
+  if (v === "cuaderno") renderCuaderno();
+  if (v === "verificar" && IDX && USOS && !$("#vout").innerHTML) runVerify();
+}
+document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if (b) setView(b.dataset.view); });
+let st; $("#q").addEventListener("input", () => { clearTimeout(st); st = setTimeout(runSearch, 90); });
+$("#q").addEventListener("keydown", e => { if (e.key === "Enter") { const b = $("#rlist button"); if (b) openProduct(Number(b.dataset.id)); } });
+$("#fVig").addEventListener("change", runSearch); $("#fCit").addEventListener("change", runSearch);
+$("#rlist").addEventListener("click", e => { const b = e.target.closest("button[data-id]"); if (b) openProduct(Number(b.dataset.id)); });
+$("#ficha").addEventListener("click", e => {
+  const chip = e.target.closest("[data-crop]");
+  if (chip) { ui.crop = chip.dataset.crop; ui.cropSel = ""; ui.calc.gi = null; renderFicha(); return; }
+  const add = e.target.closest("[data-add]");
+  if (add) { const g = GROUPS[+add.dataset.add]; CQ.push(cuadernoRow(current, g)); store.set("fr_cuaderno", CQ); renderCuaderno(); toast(`Añadido al cuaderno: ${current.nombre} · ${g.crop}`); return; }
+  const calc = e.target.closest("[data-calc]");
+  if (calc) { ui.calc.gi = +calc.dataset.calc; const cal = parseCaldo(S(GROUPS[ui.calc.gi].u[9])); if (cal) ui.calc.caldo = cal.max; $("#calcBox").innerHTML = calcHtml(current); $("#calcBox").scrollIntoView({ behavior: "smooth", block: "nearest" }); return; }
+  if (e.target.closest("#copyFicha")) {
+    const p = current, cs = citSummary(p);
+    copyText(`${p.nombre} · Nº Reg. ${p.reg} · ${p.estado}\n${p.form}\nTitular: ${p.titular}\nCaducidad: ${fmtDate(p.cad)}${cs ? `\nCítricos: ${cs.doses} · Plazo seguridad ${cs.plazo}` : ""}\nFuente: Registro MAPA (${fmtDate(IDX.fecha)})`, "Resumen copiado");
+  }
+});
+$("#ficha").addEventListener("change", e => {
+  if (e.target.id === "cropSel") { ui.crop = e.target.value ? "one" : (citSet.has(current.id) ? "cit" : "all"); ui.cropSel = e.target.value; ui.calc.gi = null; renderFicha(); }
+});
+$("#ficha").addEventListener("input", e => {
+  if (e.target.id === "plagaF") { clearTimeout(st); st = setTimeout(() => { ui.plaga = e.target.value; ui.calc.gi = null; renderFicha(); const f = $("#plagaF"); f.focus(); f.setSelectionRange(f.value.length, f.value.length); }, 250); }
+  if (e.target.id === "cHa" || e.target.id === "cCaldo") {
+    ui.calc.ha = parseFloat($("#cHa").value) || 0; ui.calc.caldo = parseFloat($("#cCaldo").value) || 0;
+    const id = e.target.id, pos = e.target.selectionStart;
+    $("#calcBox").innerHTML = calcHtml(current); const el = $("#" + id); el.focus(); try { el.setSelectionRange(pos, pos); } catch {}
+  }
+});
+$("#vrun").addEventListener("click", runVerify);
+$("#vclear").addEventListener("click", () => { $("#vlist").value = ""; $("#vout").innerHTML = ""; $("#vout").hidden = true; $("#vsum").innerHTML = ""; store.set("fr_vlist", ""); });
+$("#vcit").addEventListener("change", runVerify);
+$("#vout").addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b) { setView("buscar"); openProduct(Number(b.dataset.open)); } });
+$("#cout").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (b) { CQ.splice(+b.dataset.del, 1); store.set("fr_cuaderno", CQ); renderCuaderno(); } });
+$("#cclear").addEventListener("click", () => { if (CQ.length) $("#cconfirm").hidden = false; });
+$("#cno").addEventListener("click", () => $("#cconfirm").hidden = true);
+$("#cyes").addEventListener("click", () => { CQ = []; store.set("fr_cuaderno", CQ); $("#cconfirm").hidden = true; renderCuaderno(); toast("Cuaderno vaciado"); });
+$("#ccopy").addEventListener("click", () => { if (!CQ.length) return toast("El cuaderno está vacío"); const tsv = [CCOLS.map(c => c[1]).join("\t"), ...CQ.map(r => CCOLS.map(c => String(r[c[0]] ?? "").replace(/[\t\n]/g, " ")).join("\t"))].join("\n"); copyText(tsv, "Tabla copiada: pégala en Excel"); });
+$("#cxlsx").addEventListener("click", () => {
+  if (!CQ.length) return toast("El cuaderno está vacío");
+  if (!window.XLSX) return toast("No se pudo cargar el generador de Excel. Usa «Copiar tabla».");
+  const aoa = [["Aplicaciones de fitosanitarios · consulta Registro MAPA (" + fmtDate(IDX.fecha) + ")"], CCOLS.map(c => c[1]), ...CQ.map(r => CCOLS.map(c => r[c[0]]))];
+  const ws = XLSX.utils.aoa_to_sheet(aoa);
+  ws["!cols"] = CCOLS.map(c => ({ wch: ["materia", "plaga", "nombre"].includes(c[0]) ? 30 : 14 }));
+  ws["!merges"] = [{ s: { r: 0, c: 0 }, e: { r: 0, c: 6 } }];
+  const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Cuaderno");
+  const buf = XLSX.write(wb, { type: "array", bookType: "xlsx" });
+  saveFile("cuaderno_fitosanitarios_" + new Date().toISOString().slice(0, 10) + ".xlsx", new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
+});
+
+$("#vlist").value = store.get("fr_vlist", "") || EJEMPLO;
+renderCuaderno();
+load().catch(err => { $("#ficha").innerHTML = `<p class="empty">No se pudieron cargar los datos del registro (${esc(err.message)}). Recarga la página.</p>`; });
+</script>
+</body>
+</html>
