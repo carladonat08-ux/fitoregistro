@@ -31,6 +31,12 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el t
 - Añade usos desde las fichas con las columnas del cuaderno de tratamientos y descárgalos en Excel.
 - Se guarda solo en el navegador de cada persona.
 
+**WWF (Proyecto Zitrus EDEKA-WWF)**
+- Pestaña separada con las tablas del proyecto (pesticidas y control de hierbas, campaña 2025-2026).
+- Por plaga: medidas culturales, control biológico, plantas auxiliares y alternativas químicas (permitida, excepcional o muy excepcional), con máximos de aplicaciones, toxic load y los productos comerciales del registro autorizados para esa plaga en cítricos.
+- Materias activas del proyecto, verificador de recetas WWF (con Excel) y reglas del proyecto.
+- Los datos están en `data/wwf.json`. No se actualizan solos: cuando el proyecto publique una nueva tabla, hay que actualizar ese fichero.
+
 **Sin conexión**
 - Tras la primera visita funciona sin cobertura en el campo.
 - En el móvil se puede añadir a la pantalla de inicio como una app.

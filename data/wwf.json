@@ -1,0 +1,428 @@
+{
+  "titulo": "Proyecto Zitrus EDEKA-WWF",
+  "campana": "2025-2026",
+  "documentos": [
+    "Tabla de pesticidas del Proyecto Zitrus EDEKA-WWF, campaña 2025-2026 (abril 2026)",
+    "Tabla de control de hierbas del Proyecto Zitrus, campaña 2025-2026 (junio 2026)"
+  ],
+  "fuentes": "Elaboración: Equipo Zitrus. Fuentes de consulta: RAIF, IVIA y MAPA",
+  "reglas": {
+    "objetivo": "Sustituir los plaguicidas peligrosos (altamente peligrosos según PAN, Pesticide Action Network) y los que perjudican especialmente la biodiversidad por plaguicidas menos peligrosos, y reducir la carga tóxica total.",
+    "prevencion": [
+      "Técnicas de cultivo adecuadas (poda, cubiertas vegetales, etc.).",
+      "Uso de variedades resistentes o tolerantes.",
+      "Prácticas equilibradas de fertilización, enmienda de suelos, riego y drenaje.",
+      "Medidas profilácticas contra la propagación de organismos nocivos (limpieza periódica de maquinaria y equipos, cajas de recolección, etc.).",
+      "Proteger a los organismos beneficiosos y conservar infraestructuras ecológicas dentro y fuera de las zonas de producción.",
+      "La tabla de pesticidas aplica a todas las partes de la explotación gestionadas en el proyecto, incluidos injertos y plantones."
+    ],
+    "uso": [
+      "Justificar la aplicación según niveles críticos de plagas mediante monitoreos semanales.",
+      "Evaluar la presencia de organismos beneficiosos y sus efectos.",
+      "Limitar la aplicación de plaguicidas a lo estrictamente necesario.",
+      "Usar solo materias activas de la Tabla de Pesticidas del Proyecto Zitrus.",
+      "No emplear fertilizantes o fitofortificantes para el control de plagas sin autorización.",
+      "Preferir aceite vegetal como coadyuvante, salvo excepciones autorizadas en la tabla.",
+      "Seguir el protocolo de tratamientos excepcionales del Proyecto Zitrus."
+    ],
+    "seleccion": [
+      "El uso de plaguicidas solo se permite cuando no hay otra alternativa, basado en un monitoreo continuo y documentado.",
+      "La selección se basa en el registro fitosanitario del MAPA: solo se incluyen pesticidas registrados contra plagas en cítricos.",
+      "Según el manejo integrado de plagas de IOBC, se excluyen piretroides y otros insecticidas no selectivos, y pesticidas de toxicidad alta.",
+      "Cada tratamiento debe reducirse a la superficie mínima (solo las zonas donde la plaga causa daño económico).",
+      "La limitación de aplicaciones al año se aplica a la MATERIA ACTIVA, independientemente de la marca comercial: usar marcas distintas no exime del límite.",
+      "Los ensayos con materias activas distintas a las de la tabla requieren autorización previa del equipo del proyecto."
+    ],
+    "excepcional": [
+      "Se activa cuando las medidas estándar de la tabla no son efectivas. En la tabla, las materias activas excepcionales están en ROJO.",
+      "El consultor en Buenas Prácticas Agrícolas (BPA) evalúa la situación y comunica si se puede o no utilizar la materia activa excepcional.",
+      "Si se requiere una materia activa no incluida en la tabla, se comunica al consultor y el equipo del proyecto debe aprobarla.",
+      "El protocolo aplica a toda la superficie Zitrus de la finca."
+    ],
+    "hierbas": [
+      "Objetivo: minimizar el uso de herbicidas y sustituir los peligrosos (incluidos los HHP de PAN) y los que afectan a la biodiversidad.",
+      "Prácticas alternativas: poda para sombrear el suelo de los goteros; subsolado de calles; corte con desbrozadora; mulching de material vegetal; riego por pulsos ajustado; favorecer la cubierta vegetal espontánea o sembrada; fijar las líneas de goteros dentro de la zona sombreada por la copa.",
+      "Monitoreo de la finca y mapa de hierbas de cada zona para un control dirigido.",
+      "Los herbicidas solo pueden usarse de forma puntual y dirigida al foco, en la LÍNEA DE PLANTACIÓN.",
+      "PROHIBIDO usar herbicidas en lindes, riberas, taludes, caminos y zonas no productivas.",
+      "Si las medidas de la tabla de hierbas no funcionan, contactar con el experto de buenas prácticas para evaluar la situación."
+    ],
+    "modificaciones": "Sin modificaciones respecto a la versión anterior (tabla de pesticidas 2026)."
+  },
+  "plagas": [
+    {
+      "id": "pulgon", "nombre": "Pulgón verde y pulgones", "cientifico": "Aphis spiraecola, Aphis gossypii, Toxoptera aurantii", "pagina": 3,
+      "codigos": ["6.2.2.3.3"],
+      "culturales": [
+        "Mantener cubierta vegetal rica en floración en el centro y cabezas de calle; mantenerla en primavera el máximo tiempo posible antes de siega. Se aconseja la siega de calles alternas o dejar una calle de cada 5 para su siega posterior.",
+        "Mayor sensibilidad en crecimientos verdes tras podas severas.",
+        "Evitar uso abusivo del abono nitrogenado; tener en cuenta el aporte de nitrógeno por agua de riego.",
+        "Monitorear y valorar: Aphis gossypii y Toxoptera aurantii tienen un alto nivel de control biológico, pudiendo no ser necesario tratamiento.",
+        "Cubierta vegetal rica en floración y gramíneas; generar cubierta de cara a la primavera realizando el desbroce de forma tardía."
+      ],
+      "biologico": [
+        "Parasitoides: avispillas de la familia Aphidiinae: + Binodoxis angelicae (A. spiraecola); +++ Aphidius colemani, A. matricariae, Lysiphlebus testaceipes.",
+        "Depredadores: Coccinellidae (mariquitas): ++ Coccinella, ++ Adonia, ++ Scymnus, + Propylea.",
+        "Dípteros Cecidomyiidae: ++/+++ Aphidoletes aphidimiza; Syrphidae +/++: Ephisyrphus, Sphaerophoria, Eupeodes…",
+        "Neurópteros Chrysopidae +/++: Crysoperla, Chrysopa…",
+        "Arañas +/++: Salticidae, Oxiopidae, Thomisidae…",
+        "Importante el control de hormigas: defienden a la plaga de sus enemigos naturales y los trasladan.",
+        "En el monitoreo, contemplar huevos, larvas y momias (parasitoides) además de adultos, y comparar la evolución de auxiliares entre monitoreos antes de decidir tratar."
+      ],
+      "auxiliares": ["Hinojo (Foeniculum vulgare)", "Jaramagos (Diplotaxis erucoides y otros)", "Acedera (Rumex spp.)"],
+      "alternativas": [
+        {"n": "Flonicamid", "ma": ["flonicamid"], "cat": "permitida", "notas": "Tiene 60 días de plazo de seguridad, por lo que se presta mejor al tratamiento de primavera.", "tl": "77", "tlha": "<5 - 11"},
+        {"n": "Azadirachtin", "ma": ["azadiract"], "cat": "permitida", "notas": "Funciona bien solo con umbrales bajos.", "tl": "70", "tlha": "<2"}
+      ]
+    },
+    {
+      "id": "acaros_rojos", "nombre": "Ácaros rojos", "cientifico": "Panonychus citri, Eutetranychus orientalis", "pagina": 4,
+      "codigos": ["6.1.3.7", "6.1.3.3"],
+      "culturales": [
+        "Mantener niveles óptimos de materia orgánica en suelo, que favorece el hábitat de sus predadores.",
+        "Cubierta vegetal rica en floración y gramíneas: las gramíneas dispersan polen que favorece a los ácaros fitoseidos.",
+        "Especialmente sensibles las variedades del grupo Navel.",
+        "Máxima incidencia: finales de verano y principios de otoño.",
+        "Muy importante alternar materias activas de diferente modo de acción para evitar resistencias."
+      ],
+      "biologico": [
+        "Coccinellidae: +/++ Stethorus pusilus, + Scymnus spp.",
+        "Cecidomyiidae: + Feltiella acarisuga.",
+        "Coniopterygidae: +/++ Conwentzia psociformis, + Semidalis aleyrodiformis.",
+        "Fitoseidos (Phytoseiidae): +++ Euseius stipulatus, ++/+++ Neoseiulus californicus, ++/+++ Phytoseiulus persimilis, ++ Typhlodromus phialatus. Son clave: tenerlos en cuenta en el monitoreo antes de decidir tratar.",
+        "Tratar con acaricidas solo cuando se observen formas vivas o puestas visibles, no de forma preventiva ni solo por síntomas. Mojar bien todo el árbol, con presiones adecuadas."
+      ],
+      "auxiliares": ["Lobularia marítima (Lobularia maritimum)", "Gramíneas (Lolium spp., Hordeum murinum, etc.)"],
+      "alternativas": [
+        {"n": "Acequinocyl", "ma": ["acequinocil"], "cat": "permitida", "max": "1 aplicación/campaña de esta materia activa, independientemente del nombre comercial", "notas": "No superar la dosis máxima por aplicación de 3 l/ha.", "tl": "53", "tlha": "7 - 12"},
+        {"n": "Azadiractina", "ma": ["azadiract"], "cat": "permitida", "notas": "No muy efectivo. Se recomienda prueba previa.", "tl": "69", "tlha": "9 - 29"},
+        {"n": "Aceite vegetal", "ma": ["aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Efecto moderado, puede frenar un poco. Uso en octubre. No aplicar a dosis alta, puede manchar la fruta.", "tl": "-", "tlha": "<2"},
+        {"n": "Maltodextrina", "ma": ["maltodextrina"], "cat": "permitida", "notas": "Aplicar en condiciones de baja humedad y buena temperatura para una buena eficacia."},
+        {"n": "Beauveria bassiana", "ma": ["beauveria bassiana"], "cat": "permitida", "notas": "Tener en cuenta las condiciones de humedad en el momento de aplicar."},
+        {"n": "Biosulfur", "cat": "fitofortificante", "notas": "Fitofortificante autorizado en agricultura ecológica."},
+        {"n": "Mitsei", "cat": "fitofortificante", "notas": "Fitofortificante autorizado en agricultura ecológica."},
+        {"n": "Aceite mineral parafínico", "ma": ["aceite de parafina"], "cat": "excepcional", "notas": "No aplicar de manera generalizada, solo en focos específicos que lo necesiten.", "tl": "61-66", "tlha": "-"},
+        {"n": "Milbemectina (0,93% i.a.)", "ma": ["milbemectina"], "cat": "muy_excepcional", "max": "1 aplicación/campaña", "notas": "Uso en circunstancias muy extremas y siempre que se hayan usado otras materias activas y no hayan funcionado. Uso en plantones e injertadas, sin fruta comercial.", "tl": "-", "tlha": "2,3"}
+      ]
+    },
+    {
+      "id": "arana_roja", "nombre": "Araña roja", "cientifico": "Tetranychus urticae", "pagina": 5,
+      "codigos": ["6.1.3.4"],
+      "culturales": [
+        "Mantener niveles óptimos de materia orgánica en suelo, que favorece el hábitat de sus predadores.",
+        "Cubierta vegetal rica en floración y gramíneas (Lolium sp., Festuca sp.): su polen favorece a los ácaros fitoseidos.",
+        "Tratar con acaricidas solo cuando se observen formas vivas o puestas visibles, no de forma preventiva ni solo por síntomas.",
+        "Mojar bien todas las partes del árbol, incluso las internas y las elevadas, con presiones adecuadas.",
+        "Muy importante alternar materias activas de diferente modo de acción para evitar resistencias."
+      ],
+      "biologico": [
+        "Coccinellidae: + Stethorus pusillus.",
+        "Cecidomyiidae: +/++ Feltiella acarisuga.",
+        "Phytoseiidae: +/++ Phytoseiulus persimilis, +/++ Neoseiulus californicus. Son claves: considerarlos en el monitoreo antes de decidir tratar."
+      ],
+      "auxiliares": ["Lobularia marítima (Lobularia maritimum)", "Gramíneas (Lolium spp., Hordeum murinum, etc.)"],
+      "alternativas": [
+        {"n": "Acequinocyl", "ma": ["acequinocil"], "cat": "permitida", "max": "1 aplicación/campaña de esta materia activa, independientemente del nombre comercial", "notas": "No superar la dosis máxima por aplicación de 3 l/ha.", "tl": "53", "tlha": "-"},
+        {"n": "Aceite vegetal", "ma": ["aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Efecto moderado, puede frenar un poco. Uso en octubre. No aplicar a dosis alta, puede manchar la fruta."},
+        {"n": "Maltodextrina", "ma": ["maltodextrina"], "cat": "permitida", "notas": "Tener en cuenta las condiciones de humedad en el momento de aplicar."},
+        {"n": "Beauveria bassiana", "ma": ["beauveria bassiana"], "cat": "permitida", "notas": "Tener en cuenta las condiciones de humedad en el momento de aplicar."},
+        {"n": "Biosulfur", "cat": "fitofortificante", "notas": "Fitofortificante autorizado en agricultura ecológica."},
+        {"n": "Mitsei", "cat": "fitofortificante", "notas": "Fitofortificante autorizado en agricultura ecológica."},
+        {"n": "Aceite mineral parafínico", "ma": ["aceite de parafina"], "cat": "excepcional", "notas": "No aplicar de manera generalizada, solo en focos específicos que lo necesiten.", "tl": "61-66", "tlha": "-"},
+        {"n": "Milbemectina (0,93% i.a.)", "ma": ["milbemectina"], "cat": "muy_excepcional", "max": "1 aplicación/campaña", "notas": "Muy excepcional. Uso en circunstancias muy extremas y siempre que se hayan usado otras materias activas y no hayan funcionado. Uso en plantones e injertadas, sin fruta comercial.", "tl": "-", "tlha": "2,3"}
+      ]
+    },
+    {
+      "id": "piojo_rojo", "nombre": "Piojo rojo de California", "cientifico": "Aonidiella aurantii", "pagina": 6,
+      "codigos": ["6.2.2.3.7.1"],
+      "culturales": [
+        "Mantener los árboles bien formados y podados, con buena ventilación de las zonas interiores: dificulta la proliferación de la plaga y facilita la eficacia de los tratamientos.",
+        "En invierno, verificar la viabilidad de los focos que queden en fruto y madera (mortandad, control biológico)."
+      ],
+      "biologico": [
+        "Parasitoides Aphelinidae: +++ Aphytis melinus, ++ Aphytis chrysomphali, + Encarsia perniciosi; Encyrtidae: +/++ Comperiella bifasciata.",
+        "Coccinellidae: ++ Rhyzobius lophanthae, + Scymnus spp., + Nephus spp., + Chilocorus bipustulatus."
+      ],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Rescalure 4% (prioritario)", "ma": ["rescalure"], "cat": "permitida", "prioritario": true, "notas": "¡Método preferido! Difusores de vapores para confusión sexual con feromonas.", "tl": "-", "tlha": "-"},
+        {"n": "Piriproxifen 10% con aceite vegetal", "ma": ["piriproxifen", "aceite de colza", "aceite de canola"], "cat": "permitida", "max": "1 aplicación/campaña", "notas": "El momento es muy importante: aplicar a la aparición de las larvas (75% de formas móviles L1 y L2), con 1.500 l/ha de caldo. No superar 2 l/ha.", "tl": "75", "tlha": "4-11"},
+        {"n": "Aceite mineral parafínico", "ma": ["aceite de parafina"], "cat": "excepcional", "notas": "No aplicar de manera generalizada, solo en focos específicos que lo necesiten.", "tl": "61-66", "tlha": "-"}
+      ]
+    },
+    {
+      "id": "minador", "nombre": "Minador de los cítricos", "cientifico": "Phyllocnistis citrella", "pagina": 7,
+      "codigos": ["6.2.4.9.2"],
+      "aviso": "¡Control solo en plantonadas e injertos! Solamente después de consulta previa. Excepcionalmente en adultos, solo con infestaciones graves que puedan provocar mermas en la producción o deterioro de la plantación.",
+      "culturales": [
+        "Concentrar las nuevas brotaciones en un corto espacio de tiempo mediante riegos y fertilizaciones dirigidos.",
+        "Cubierta vegetal rica en floración: aumenta depredadores y parasitoides que acuden al árbol a alimentarse de minador."
+      ],
+      "biologico": [
+        "Parasitoides Eulophidae: +++ Citrostichus phyllocnistoides, +/++ Cirrospilus sp., +/++ Pnigalio pectinicornis…",
+        "Neurópteros Chrysopidae: +/++ Crisoperla sp., +/++ Chrisopa sp., +/++ Mallada sp.",
+        "Arañas +/++: Salticidae, Oxiopidae, Thomisidae…; Heterópteros Anthocoridae: ++ Orius sp.; Díptero Muscidae: + Coenosia attenuata.",
+        "Conservar aves insectívoras y murciélagos, o instalar cajas nido."
+      ],
+      "auxiliares": ["Unciana (Dorycnium rectum)", "Lavanda (Lavandula sp.)", "Romero (Rosmarinus officinalis)"],
+      "alternativas": [
+        {"n": "Tebufenocide con aceite vegetal", "ma": ["tebufenocida", "aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Uso contra larvas. La tabla indica «Caduca 31/05/2025»: comprueba su estado en el registro.", "tl": "75", "tlha": "5 - 14"},
+        {"n": "Acetamiprid + aceite mineral parafínico", "ma": ["acetamiprid", "aceite de parafina"], "cat": "excepcional", "max": "1-2 aplicaciones/año conforme a la etiqueta del producto comercial", "notas": "No aplicar en periodo de floración.", "tl": "66", "tlha": ">976 - >2376"},
+        {"n": "Milbemectina (0,93% i.a.)", "ma": ["milbemectina"], "cat": "muy_excepcional", "max": "1 aplicación/campaña", "notas": "Uso limitado solo a plantones e injertadas. En circunstancias muy extremas y siempre que se hayan usado otras materias activas y no hayan funcionado.", "tl": "-", "tlha": "2,3"},
+        {"n": "Clorantraniliprol", "ma": ["clorantraniliprol"], "cat": "muy_excepcional", "max": "2 aplicaciones/campaña", "notas": "Uso en plantones e injertos o árbol sin fruta.", "tl": "83", "tlha": "8,3"}
+      ]
+    },
+    {
+      "id": "ceratitis", "nombre": "Mosca mediterránea de la fruta", "cientifico": "Ceratitis capitata", "pagina": 8,
+      "codigos": ["6.2.8.11.3"],
+      "culturales": [
+        "Eliminar y destruir la fruta picada de la parcela y controlar frutales hospedantes diseminados (higueras y nísperos), por ejemplo en las tareas de picado de poda.",
+        "Manejo de suelos con niveles adecuados de materia orgánica: fomenta el control biológico de larvas, pupas y adultos recién emergidos por el complejo depredador edáfico.",
+        "Al inicio del cambio de color, la presencia de fruta picada puede justificar los tratamientos."
+      ],
+      "biologico": [
+        "Parasitoides Pteromalidae: + Pachycrepoideus vindemmiae, + Spalangia cameron.",
+        "Arañas ++: Licosidae, Salticidae, Oxiopidae…; Carabidae: +/++ Pseudophonus rufipes…; Staphylinidae; libélulas y caballitos del diablo.",
+        "Los depredadores actúan sobre todo a nivel de suelo: importante un suelo rico en materia orgánica y con baja carga tóxica.",
+        "Medios biotecnológicos: trampas con atrayente e insecticida (trampeo masivo o atracción y muerte, Lure & Kill)."
+      ],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Spinosad en cebo", "ma": ["spinosad"], "cat": "permitida", "soloCebo": true, "notas": "Solamente tratamiento cebo en parcheo con atrayente. [PAN: toxicidad ambiental, tóxico para abejas].", "tl": "71", "tlha": "<1"},
+        {"n": "Ciantraniliprol en cebo", "ma": ["ciantraniliprol"], "cat": "permitida", "soloCebo": true, "max": "3 aplicaciones/campaña", "notas": "Solamente cebo en parcheo con atrayente. Spinosad y ciantraniliprol se usarán de forma alterna para evitar resistencias.", "tl": "94", "tlha": "10"},
+        {"n": "Trampeo masivo", "cat": "biotecnico", "notas": "Recipientes con proteínas hidrolizadas o fosfato diamónico."}
+      ]
+    },
+    {
+      "id": "mosquito_verde", "nombre": "Mosquito verde", "cientifico": "Empoasca sp.", "pagina": 9,
+      "codigos": ["6.2.2.2.3.4"],
+      "culturales": [
+        "Detectar adultos en la etapa sensible (junio a septiembre) con placas amarillas adhesivas.",
+        "Tradicionalmente se ha usado polvo de roca, cola de caballo o silicato de sosa.",
+        "Cubierta vegetal rica en floración: aumenta depredadores y parasitoides."
+      ],
+      "biologico": [
+        "Parasitoides: Dryinidae; Mymaridae: + Anagrus atomus, + Stethynium triclavatum y + Gonatocerus spp.",
+        "Depredadores: + Coenosia attenuata; arañas ++ (Salticidae, Oxiopidae, Thomisidae…); +/++ Orius sp.; libélulas y caballitos del diablo.",
+        "Las aves insectívoras complementan el control biológico."
+      ],
+      "auxiliares": ["Tanaceto (Tanacetum vulgare)"],
+      "alternativas": [
+        {"n": "Caolín 99%", "ma": ["caolin"], "cat": "permitida", "notas": "Barrera física (p. ej. Blanco natural). ¡Aplicar en la primera semana de julio! Si se usa tarde (agosto), habrá mucho mosquito verde en septiembre/octubre. 2-3 aplicaciones entre julio y septiembre según lluvias. También protege del calor.", "tl": "-", "tlha": "-"},
+        {"n": "Hidróxido de calcio / Calcio 33% y Magnesio 0,3%", "cat": "no_fito", "notas": "Nombre comercial: Agrowhite. Alternativa al caolín con efecto similar, más cómodo de aplicar. Tratamiento temprano a primeros de julio.", "tl": "-", "tlha": "-"}
+      ]
+    },
+    {
+      "id": "cotonet", "nombre": "Cotonet", "cientifico": "Planococcus citri", "pagina": 10,
+      "codigos": ["6.2.2.3.6.5"],
+      "culturales": [
+        "Mantener los árboles bien podados y aireados.",
+        "Evitar la concentración en el tiempo y el exceso de abonos nitrogenados; tener en cuenta los nitratos del agua de riego.",
+        "Evitar la subida de hormigas al árbol.",
+        "En focos localizados, tratamientos muy dirigidos (árboles sueltos, a mochila)."
+      ],
+      "biologico": [
+        "Parasitoides Aphelinidae: +++ Anagyrus pseudococci, ++ Leptomatix dactylopii, +/++ Leptomastidea abnormis.",
+        "Coccinellidae: ++/+++ Cryptolaemus montrouzieri, +/++ Nephus conjunctus; Chrysopidae: + Chrysopa sp., + Mallada sp.",
+        "Focos localizados o control biológico tardío: sueltas de Anagyrus pseudococci funcionan bien. Verificar parasitismo (manchas negras o pupas).",
+        "Muy importante el control de hormigas."
+      ],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Aceite vegetal", "ma": ["aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Uso en alta dosis.", "tl": "-", "tlha": "-"},
+        {"n": "Piriproxifen", "ma": ["piriproxifen"], "cat": "permitida", "max": "1 aplicación/campaña", "tl": "75", "tlha": "4 - 11"},
+        {"n": "Acetamiprid + aceite mineral parafínico", "ma": ["acetamiprid", "aceite de parafina"], "cat": "excepcional", "max": "1-2 aplicaciones/año conforme a la etiqueta del producto comercial", "notas": "Después de consulta y aprobación previa del Equipo Zitrus. No aplicar en periodo de floración.", "tl": "66", "tlha": ">976 - >2376"}
+      ]
+    },
+    {
+      "id": "cotonet_sudafrica", "nombre": "Cotonet de Sudáfrica", "cientifico": "Delottococcus aberiae", "pagina": 11,
+      "codigos": ["6.2.2.3.6.1"],
+      "aviso": "Obligatoria la suelta de Cryptolaemus montrouzieri en las parcelas y focos existentes en la campaña (mejor en primavera y otoño, evitando el verano). Contactar con el IVIA (C. Valenciana) o el IRTA (Cataluña) para solicitar sueltas de Anagyrus aberiae.",
+      "culturales": [
+        "Mantener los árboles bien podados y aireados.",
+        "Fundamental un protocolo de limpieza y desinfección en los almacenes de cajones de recolección.",
+        "Protocolo de control de las personas que trabajen o visiten la finca.",
+        "Evitar la subida de hormigas al árbol.",
+        "Detección precoz de focos mediante monitoreo para eliminarlos antes de su propagación.",
+        "Mantener alto el porcentaje de materia orgánica en suelo.",
+        "En focos localizados, tratamientos muy dirigidos (árboles sueltos, a mochila).",
+        "Cartón corrugado en el tronco: frena el flujo hacia la copa y sirve para el monitoreo."
+      ],
+      "biologico": [
+        "Parasitoides Aphelinidae: +/++ Anagyrus aberiae, +/++ Anagyrus vladimiri (en estudio: Allotropa delottococci).",
+        "Coccinellidae: ++ Cryptolaemus montrouzieri. Generalistas: + Chrysopa sp., + Anthocoridae, + Aphidoletes aphidimiza.",
+        "Verificar parasitismo (manchas negras o pupas). Muy importante el control de hormigas."
+      ],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Aceite vegetal", "ma": ["aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Uso en alta dosis.", "tl": "-", "tlha": "-"},
+        {"n": "Piriproxifen", "ma": ["piriproxifen"], "cat": "permitida", "max": "1 aplicación/campaña", "tl": "75", "tlha": "4 - 11"},
+        {"n": "Acetamiprid + aceite mineral parafínico", "ma": ["acetamiprid", "aceite de parafina"], "cat": "excepcional", "max": "1-2 aplicaciones/año conforme a la etiqueta del producto comercial", "notas": "Después de consulta y aprobación previa del Equipo Zitrus. No aplicar en periodo de floración.", "tl": "66", "tlha": ">976 - >2376"}
+      ]
+    },
+    {
+      "id": "hormigas", "nombre": "Hormigas", "cientifico": "Lasius spp.", "pagina": 12,
+      "codigos": [],
+      "aviso": "No hay ninguna materia activa con registro autorizado en cítricos para el control de hormigas. El proyecto no aprueba el uso de las sustancias que se sabe que se están aplicando. Alternativas fitofortificantes solo después de consulta previa.",
+      "culturales": [
+        "Mantener los árboles bien podados y aireados; airear el suelo mediante subsolados.",
+        "Evitar su subida al árbol (barreras) y usar cebos de efecto lento que afecten a la colonia y no tanto a los individuos."
+      ],
+      "biologico": [
+        "No existe un control biológico directo y significativo.",
+        "Medida barrera: goma adhesiva en los troncos (p. ej. Pegafit, Rampastop).",
+        "Cebo azucarado a base de levadura: 5 kg de harina, 1 kg de azúcar, 300 g de levadura en polvo y 3 l de agua; 200 g de cebo en la base de cada árbol.",
+        "Los cebos de efecto rápido (p. ej. piretrinas) pierden eficacia enseguida; se buscan cebos lentos que las obreras lleven al hormiguero (trofalaxia)."
+      ],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Alternativas fitofortificantes", "cat": "fitofortificante", "notas": "Solo después de consulta previa."}
+      ]
+    },
+    {
+      "id": "caracoles", "nombre": "Caracoles y babosas", "cientifico": "", "pagina": 13,
+      "codigos": ["7.2", "7.1"],
+      "culturales": [
+        "Medios físicos: barreras aplicadas sobre los troncos o láminas de cobre alrededor del tronco.",
+        "Prevención: en suelos con mucha caliza, el sulfato de hierro en la línea de goteo actúa contra la caliza activa y contra caracoles (condiciones favorables y niveles altos de plaga).",
+        "Trampas alimenticias: recipientes con cerveza o mezcla de agua, azúcar, harina y levadura."
+      ],
+      "biologico": [
+        "Control biológico limitado: luciérnagas (Lampiridae), Drilidae, erizos, mirlos, tordos y zorzales pueden contribuir.",
+        "La mayor depredadora es la caracola Rumina decollata."
+      ],
+      "auxiliares": ["Romero (Rosmarinus officinalis)", "Lavanda (Lavandula sp.)", "Salvia (Salvia officinalis)"],
+      "alternativas": [
+        {"n": "Sulfato de hierro en gránulos", "cat": "no_fito", "notas": "Aplicar en la línea de goteo; actúa también contra la caliza activa.", "tl": "15", "tlha": "-"},
+        {"n": "Trifosfato férrico", "ma": ["fosfato ferrico", "pirofosfato ferrico"], "cat": "permitida", "tl": "15", "tlha": "-"}
+      ]
+    },
+    {
+      "id": "moscas_blancas", "nombre": "Moscas blancas", "cientifico": "Aleurotrixus floccosus, Paraleyrodes minei, Dialeurodes citri, Parabemisia myricae", "pagina": 14,
+      "codigos": ["6.2.2.3.1"],
+      "culturales": [
+        "Poda adecuada; mayor sensibilidad en crecimientos verdes tras podas severas.",
+        "Evitar uso abusivo del abono nitrogenado; tener en cuenta el nitrógeno del agua de riego.",
+        "Tratar las plagas anteriores de forma justificada por monitoreo y solo en las zonas necesarias.",
+        "Cubierta vegetal rica en floración.",
+        "Monitoreo fundamental según la especie: con Dialeurodes citri insistir en el interior de la copa."
+      ],
+      "biologico": [
+        "Parasitoides Aphelinidae: +++ Cales noacki, ++/+++ Eretmocerus paulistus, ++ Amitus spiniferus. Buen parasitismo en A. floccosus y P. myricae; escaso en D. citri; nulo en P. minei.",
+        "Coccinellidae: +/++ Clitostethus arcuatus; Chrysopidae: ++ Crysoperla spp., +/++ Chrysopa sp., ++ Mallada sp.; Anthocoridae: + Orius spp.",
+        "Verificar depredación o parasitismo. Muy importante el control de hormigas."
+      ],
+      "auxiliares": ["Mastranzo (Mentha suaveolens)", "Albahaca (Ocimum basilicum)", "Salvia (Salvia officinalis)"],
+      "alternativas": [
+        {"n": "Piriproxifen", "ma": ["piriproxifen"], "cat": "permitida", "max": "1 aplicación/campaña", "tl": "75", "tlha": "75"},
+        {"n": "Maltodextrina", "ma": ["maltodextrina"], "cat": "permitida", "notas": "Como tratamiento pre-emergencia. Tener en cuenta la humedad al aplicar.", "tl": "-", "tlha": "-"},
+        {"n": "Acetamiprid + aceite mineral parafínico", "ma": ["acetamiprid", "aceite de parafina"], "cat": "excepcional", "max": "1-2 aplicaciones/año conforme a la etiqueta del producto comercial", "notas": "Después de consulta y aprobación previa del Equipo Zitrus. No aplicar en periodo de floración.", "tl": "66", "tlha": "<5 - 11"},
+        {"n": "Ciantraniliprol", "ma": ["ciantraniliprol"], "cat": "muy_excepcional", "max": "1 aplicación/campaña"}
+      ]
+    },
+    {
+      "id": "trips", "nombre": "Trips dorado", "cientifico": "Scirtothrips aurantii", "pagina": 15,
+      "codigos": ["6.2.3.9"],
+      "aviso": "Es obligatoria la aportación de materia orgánica (estiércol maduro o compost en la línea de proyección de copa) en las fincas donde esté confirmada su presencia, empezando por las parcelas con más presencia.",
+      "culturales": [
+        "Aporte obligatorio de materia orgánica: favorece el control biológico a nivel edáfico, donde pasa parte de su ciclo.",
+        "Cubierta vegetal rica en floración: aumenta los depredadores.",
+        "El estrés hídrico de verano provoca daños similares al trips y puede llevar a confusión."
+      ],
+      "biologico": [
+        "Estrategia integral obligada: cubierta vegetal diversa y de buena cobertura (avalada por Sanidad Vegetal de Andalucía y Valencia e IVIA).",
+        "Materia orgánica sólida en el suelo: clave en el control de prepupa y pupa (en torno al 60%).",
+        "Sueltas de ácaros depredadores del género Amblyseius (sobre todo Amblyseius swirskii).",
+        "Favorece Euseius stipulatus, trips depredadores (Franklinothrips, Aeolothrips) y chinches Orius."
+      ],
+      "auxiliares": ["Mastranzo (Mentha suaveolens)", "Lobularia marítima (Lobularia maritimum)"],
+      "alternativas": [
+        {"n": "Flonicamid", "ma": ["flonicamid"], "cat": "permitida", "max": "2 aplicaciones/campaña"},
+        {"n": "Acetamiprid + aceite mineral parafínico", "ma": ["acetamiprid", "aceite de parafina"], "cat": "excepcional", "max": "1-2 aplicaciones/año conforme a la etiqueta del producto comercial", "notas": "Después de consulta y aprobación previa del Equipo Zitrus. No aplicar en floración. En caso de infestaciones constatadas, después de realizar las medidas culturales recomendadas (principalmente la aportación de materia orgánica).", "tl": "61 -71", "tlha": "61 -71"},
+        {"n": "Milbemectina (0,93% i.a.)", "ma": ["milbemectina"], "cat": "muy_excepcional", "max": "1 aplicación/campaña", "notas": "Uso limitado a plantones e injertadas. En circunstancias muy extremas y siempre que se hayan usado otras materias activas y no hayan funcionado.", "tlha": "2,3"},
+        {"n": "Ciantraniliprol", "ma": ["ciantraniliprol"], "cat": "muy_excepcional", "max": "1 aplicación/campaña"}
+      ]
+    },
+    {
+      "id": "icerya", "nombre": "Cochinilla acanalada", "cientifico": "Icerya purchasi, Icerya seychellarum", "pagina": 16,
+      "codigos": ["6.2.2.3.11.1"],
+      "aviso": "No se trata: control biológico efectivo por Rodolia cardinalis.",
+      "culturales": ["Poda adecuada evitando árboles cerrados y poco aireados.", "Evitar uso abusivo del abono nitrogenado; tener en cuenta el nitrógeno del agua de riego."],
+      "biologico": ["Coccinellidae: +++ Rodolia cardinalis. No hay umbrales de tratamiento: la plaga está perfectamente controlada por Rodolia cardinalis."],
+      "auxiliares": [],
+      "alternativas": [{"n": "No se trata", "cat": "no_tratar", "notas": "Control biológico efectivo por Rodolia cardinalis."}]
+    },
+    {
+      "id": "phytophthora", "nombre": "Aguado - Phytophthora", "cientifico": "Phytophthora sp.", "pagina": 17,
+      "codigos": ["8.48.4"],
+      "culturales": [
+        "Evitar excesos de fertilización nitrogenada.",
+        "Evitar encharcamientos en las parcelas.",
+        "Evitar que las salpicaduras de lluvia lleven el hongo a los frutos bajos: podar las faldas o elevar las ramas inferiores con tutores.",
+        "Cubierta vegetal (p. ej. Oxalis spp.) en otoño: reduce el impacto de la lluvia y las salpicaduras."
+      ],
+      "biologico": ["Prueba de Bacillus velezensis (nombre comercial Cilus Plus) contra aguado."],
+      "auxiliares": ["Cubierta vegetal de Oxalis contra aguado"],
+      "alternativas": [
+        {"n": "Sulfato cuprocálcico (caldo bordelés)", "ma": ["sulfato cuprocalcico"], "cat": "permitida", "notas": "Menos cobre (27%) que los productos con óxido cuproso; uso según necesidad. El uso de cobre con frecuencia muy corta produce desfoliación.", "tl": "64", "tlha": "20-186"},
+        {"n": "Óxido cuproso 50%", "ma": ["oxido cuproso", "oxido de cobre"], "cat": "permitida", "notas": "Más concentración de cobre que el caldo bordelés. Cobre limitado a 4 kg Cu/ha y año. Funciona en contacto con Phytophthora. Efecto positivo contra caracoles.", "tl": "68", "tlha": "50 - 200"},
+        {"n": "Fosfonato de potasio", "ma": ["fosfonatos de potasio"], "cat": "permitida", "notas": "La dosis y el uso dependen del producto: consulta el registro.", "tl": "44", "tlha": "130 - 175"},
+        {"n": "Fosetil de aluminio", "ma": ["fosetil"], "cat": "permitida", "notas": "Mejor funcionamiento en el interior del árbol. Aplicación en marzo/abril.", "tl": "37", "tlha": "30 – 300"},
+        {"n": "Metalaxil-M", "ma": ["metalaxil-m"], "cat": "excepcional", "notas": "Después de consulta y aprobación previa del Equipo Zitrus. Solo en años excepcionalmente húmedos o sitios complicados, si cobre, fosetil-Al o fosfonatos no bastan.", "tl": "58", "tlha": "-"}
+      ]
+    },
+    {
+      "id": "alternaria", "nombre": "Alternaria", "cientifico": "Alternaria alternata", "pagina": 18,
+      "codigos": ["8.59.1"],
+      "aviso": "Solo se aplicará en las variedades Clemenvilla o Nova. Para otras variedades, consultar previamente con el equipo Zitrus.",
+      "culturales": ["Poda adecuada para airear el árbol y evitar excesos de humedad.", "Mantener cubiertas vegetales espontáneas en la época de lluvias para evitar salpicaduras.", "Hay variedades más susceptibles."],
+      "biologico": [],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Piraclostrobin", "ma": ["piraclostrobin"], "cat": "permitida", "max": "4 aplicaciones/campaña", "notas": "Aplicar de forma preventiva cuando se prevean lluvias copiosas en otoño.", "tl": "77", "tlha": "17"},
+        {"n": "Oxicloruro de cobre 25%", "ma": ["oxicloruro de cobre"], "cat": "permitida", "max": "4 aplicaciones/campaña", "notas": "Aplicar de forma preventiva cuando se prevean lluvias copiosas en otoño.", "tl": "89", "tlha": "66 - 89"}
+      ]
+    },
+    {
+      "id": "fitorreguladores", "nombre": "Fitorreguladores", "cientifico": "Cuaje, piel, caída y calibre de la fruta", "pagina": 19, "tipo": "finalidad",
+      "codigos": ["12.7", "12.8", "12.19", "12.27", "12.3"],
+      "culturales": [
+        "Cuaje: fertilización equilibrada; complejos foliares de Zn, Mn, Mo y B; observación de campañas anteriores; variedades con tendencia a la vecería. Alternativa: rayado de ramas tras la purga de junio; rayado en agosto (más floración al año siguiente en variedades veceras).",
+        "Consistencia de la piel: fertilización equilibrada; foliares de nitrato cálcico u óxido de calcio. Alternativa: extractos de algas foliares.",
+        "Caída y calibre de la fruta: fertilización equilibrada; complejos foliares de Zn, Mn, Mo y B. Alternativa: rayado de ramas tras la purga de junio o en agosto."
+      ],
+      "biologico": [],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Giberelina 2% + MCPA 1% (cuaje)", "ma": ["acido giberelico", "mcpa"], "cat": "permitida", "notas": "Para cuaje de la fruta. Ver posibilidad de aplicación de ácido giberélico.", "tl": "15", "tlha": "-"},
+        {"n": "Ácido giberélico (piel, caída de fruta)", "ma": ["acido giberelico"], "cat": "permitida", "notas": "Mejora de la consistencia de la piel y evitar la caída de la fruta.", "tl": "15", "tlha": "<1"},
+        {"n": "Diclorprop-P (EHE) 2,5% i.a.", "ma": ["diclorprop"], "cat": "permitida", "maxConc": 2.5, "notas": "Caída y calibre de la fruta. No se debe usar como herbicida: únicamente como regulador de crecimiento.", "tl": "76", "tlha": "1-4"},
+        {"n": "MCPA máx. 1% i.a.", "ma": ["mcpa"], "cat": "permitida", "maxConc": 1, "notas": "Caída y calibre de la fruta. No se debe usar como herbicida: únicamente como regulador de crecimiento.", "tl": "92", "tlha": "1-5"},
+        {"n": "Triclopir 10% i.a.", "ma": ["triclopir"], "cat": "permitida", "maxConc": 10, "max": "1 aplicación/campaña", "notas": "Indicado para engorde del fruto. No está permitido usarlo como herbicida.", "tl": "-", "tlha": "3,3"},
+        {"n": "Aceite vegetal (coadyuvante)", "ma": ["aceite de colza", "aceite de canola"], "cat": "permitida", "notas": "Como coadyuvante, en lugar de aceite mineral (83%) si es necesario.", "tl": "-", "tlha": "-"}
+      ]
+    },
+    {
+      "id": "hierbas", "nombre": "Control de hierbas", "cientifico": "Grama, coniza, cañota y otras", "pagina": 2, "tipo": "hierbas", "documento": "Tabla de control de hierbas",
+      "codigos": ["1"],
+      "aviso": "Herbicidas solo en la línea de plantación, sobre las hierbas de la zona de influencia de los goteros y en los primeros estadios de germinación. Prohibido en lindes, riberas, taludes, caminos y zonas no productivas.",
+      "culturales": [
+        "Monitoreo: observación semanal de las hierbas en la zona de influencia de los goteros para hacer un mapa de hierbas de cada zona.",
+        "Aplicar herbicidas solo sobre las hierbas de la zona de goteros y en los primeros estadios de germinación.",
+        "Poda suave de las faldas para evitar exceso de luz en el suelo. Desbrozadora articulada: preferir medios mecánicos a los químicos.",
+        "Eliminación mecánica de hierbas.",
+        "Mulching de restos vegetales y acolchados de material no plástico.",
+        "Favorecer el sombreo mediante poda."
+      ],
+      "biologico": [],
+      "auxiliares": [],
+      "alternativas": [
+        {"n": "Flazasulfuron", "ma": ["flazasulfuron"], "cat": "permitida", "max": "1 aplicación/año", "notas": "Muy eficaz contra hoja ancha, con efecto residual (persiste mucho en el suelo). Fecha de aplicación según la etiqueta.", "tl": "49", "tlha": "1-3"},
+        {"n": "Florasulam (7,5%) + Penoxsulam (15%)", "ma": ["florasulam", "penoxsulam"], "cat": "permitida", "max": "1 aplicación/año", "notas": "Muy eficaz contra coniza y otras de hoja ancha, con efecto residual. Aplicar en BBCH 00-89.", "tl": "56 | 86", "tlha": "0,3 - 1"},
+        {"n": "Carfentrazona-etil", "ma": ["carfentrazona"], "cat": "permitida", "max": "1 aplicación/año", "tl": "43", "tlha": "< 1"},
+        {"n": "Fluroxipir-meptil (20%)", "ma": ["fluroxipir"], "cat": "permitida", "max": "1 aplicación/año", "notas": "En revisión por el equipo Zitrus.", "tl": "56", "tlha": "11,2 (dosis 2 l/ha)"},
+        {"n": "Cletodim (gramíneas perennes)", "ma": ["cletodim"], "cat": "excepcional", "max": "2 aplicaciones/año", "notas": "Tratamiento excepcional contra gramíneas perennes, después de consulta y aprobación previa del Equipo Zitrus.", "tl": "-", "tlha": "-"}
+      ]
+    }
+  ]
+}
