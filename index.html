@@ -501,6 +501,11 @@ function funOf(code) {
 
 // ================================================================= Carga de datos
 async function load() {
+  // Las tres descargas empiezan a la vez: la tabla WWF (pequeña) aparece enseguida y la ficha se muestra
+  // con los datos del producto mientras siguen llegando los usos autorizados (el fichero más grande).
+  loadWWF();
+  const usosP = fetch("data/usos.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
+  usosP.catch(() => {});
   const r = await fetch("data/indice.json", { cache: "no-cache" });
   if (!r.ok) throw new Error("HTTP " + r.status);
   IDX = await r.json();
@@ -518,9 +523,13 @@ async function load() {
   const age = -daysTo(IDX.fecha);
   if (age > 21) { const b = $("#stale"); b.hidden = false; b.firstElementChild.textContent = `Los datos son del ${fmtDate(IDX.fecha)} (hace ${age} días). Para decisiones importantes confirma en el Registro oficial.`; }
   runSearch();
-  const r2 = await fetch("data/usos.json", { cache: "no-cache" });
-  if (!r2.ok) throw new Error("HTTP " + r2.status);
-  USOS = await r2.json();
+  const fromHash = productFromHash();
+  const last = store.get("fr_recent", [])[0];
+  const first = fromHash || (last && byId.get(last)) || P.find(p => p.reg === "24526") || P[0];
+  openProduct(first.id, false);
+  if (fromHash) setView("buscar");
+  try { USOS = await usosP; }
+  catch (e) { toast("No se pudieron cargar los usos autorizados. Comprueba la conexión y recarga."); throw e; }
   const funsAll = new Set();
   for (const [pid, arr] of Object.entries(USOS.u)) {
     const p = byId.get(Number(pid)); if (!p) continue;
@@ -537,12 +546,9 @@ async function load() {
   $("#fFun").insertAdjacentHTML("beforeend", [...funsAll].sort((a, b) => a.localeCompare(b, "es")).map(f => `<option>${esc(f)}</option>`).join(""));
   initPlaga();
   runSearch();
-  loadWWF();
-  const fromHash = productFromHash();
-  const last = store.get("fr_recent", [])[0];
-  const first = fromHash || (last && byId.get(last)) || P.find(p => p.reg === "24526") || P[0];
-  openProduct(first.id, false);
-  if (fromHash) setView("buscar");
+  if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; renderFicha(); }
+  if (!$("#view-wwf").hidden) renderWwf();
+  if (!$("#view-verificar").hidden && !$("#vout").innerHTML) runVerify();
 }
 function productFromHash() {
   const m = /^#p-(\d+)$/.exec(location.hash || "");
@@ -1387,7 +1393,7 @@ async function copyText(txt, okMsg) {
 // Arranque
 $("#vlist").value = store.get("fr_vlist", "") || EJEMPLO;
 renderCuaderno();
-load().catch(err => { $("#ficha").innerHTML = `<p class="empty">No se pudieron cargar los datos del registro (${esc(err.message)}). Comprueba la conexión y recarga la página.</p>`; $("#rcount").textContent = "Sin datos"; });
+load().catch(err => { if (current) return; $("#ficha").innerHTML = `<p class="empty">No se pudieron cargar los datos del registro (${esc(err.message)}). Comprueba la conexión y recarga la página.</p>`; $("#rcount").textContent = "Sin datos"; });
 if (!IN_CLAUDE && "serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
 <script src="importar.js"></script>
