@@ -151,7 +151,10 @@ def convertir_mapa(texto):
         sus = []
         for s in p.get("COMPOSICION") or []:
             nombre = limpio(s.get("Nombre Sustancia")) or limpio(s.get("NombreUE")) or ""
-            conc, nota = limpio(s.get("Concentracion")), limpio(s.get("DescripcionNota"))
+            c = s.get("Concentracion")
+            if isinstance(c, float) and c.is_integer():
+                c = int(c)
+            conc, nota = limpio(c), limpio(s.get("DescripcionNota"))
             sus.append([nombre, conc] + ([nota] if nota and nota != "%" else []))
         propio = norm(limpio(d.get("Nombre")))
         alias, vistos = [], {propio}
