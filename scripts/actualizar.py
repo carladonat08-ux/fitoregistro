@@ -111,7 +111,8 @@ def serializar(fecha_datos, productos, usos):
         "c": [[c[0], c[1]] for c in cult],
         "a": [[a[0], a[1], tipo_plaga(a[0])] for a in ag],
         "p": [[p["id"], p["registro"], p["nombre"], p["titular"] or "", p["formulado"] or "", p["estado"],
-               p["fr"], p["cad"], p["can"], p["lv"], limpio(p["cond"]) or "", p["sus"]] for p in prods],
+               p["fr"], p["cad"], p["can"], p["lv"], limpio(p["cond"]) or "", p["sus"],
+               p.get("alias") or [], p.get("fabricante") or ""] for p in prods],
     }
     out = {}
     for u in usos:
@@ -140,20 +141,33 @@ def convertir_mapa(texto):
     if isinstance(contenido, str):
         contenido = json.loads(contenido)
     fecha_datos = fecha(obj.get("Fecha")) or str(obj.get("Fecha"))[:10]
-    productos, usos = [], []
+    productos, usos, vistos_id = [], [], set()
     for p in contenido["Productos"]:
         d = p["DATOSPRODUCTO"]
         pid = int(d["IdProducto"])
+        if pid in vistos_id:  # el MAPA a veces repite un producto: se conserva la primera aparición
+            continue
+        vistos_id.add(pid)
         sus = []
         for s in p.get("COMPOSICION") or []:
             nombre = limpio(s.get("Nombre Sustancia")) or limpio(s.get("NombreUE")) or ""
-            sus.append([nombre, limpio(s.get("Concentracion"))])
+            conc, nota = limpio(s.get("Concentracion")), limpio(s.get("DescripcionNota"))
+            sus.append([nombre, conc] + ([nota] if nota and nota != "%" else []))
+        propio = norm(limpio(d.get("Nombre")))
+        alias, vistos = [], {propio}
+        for lista, campo in (("OTRASDENOMINACIONES", "Nombre_Origen"), ("OTROSNOMBRES", "Nombre")):
+            for x in p.get(lista) or []:
+                n = limpio(x.get(campo)) if isinstance(x, dict) else None
+                if n and norm(n) not in vistos:
+                    vistos.add(norm(n))
+                    alias.append(n)
         productos.append(dict(
             id=pid, registro=limpio(d.get("Num_Registro")) or "", nombre=limpio(d.get("Nombre")) or "",
             titular=limpio(d.get("Titular")), formulado=limpio(d.get("Formulado")),
             estado=limpio(d.get("Estado")) or "Desconocido", fr=fecha(d.get("Fecha_Registro")),
             cad=fecha(d.get("Fecha_Caducidad")), can=fecha(d.get("Fecha_Cancelacion")),
-            lv=fecha(d.get("Fecha_LimiteVenta")), cond=d.get("Condicionamiento"), sus=sus))
+            lv=fecha(d.get("Fecha_LimiteVenta")), cond=d.get("Condicionamiento"), sus=sus, alias=alias,
+            fabricante=limpio(d.get("Fabricante"))))
         for u in p.get("USOS") or []:
             pl, pld = plazo(u.get("Plazo Seguridad"))
             usos.append(dict(

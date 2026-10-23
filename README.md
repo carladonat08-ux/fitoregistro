@@ -1,26 +1,55 @@
 # FitoRegistro Cítricos
 
-Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el día a día de calidad en cítricos.
+Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el trabajo diario de calidad en cítricos: consultar fichas sin tener que leerlas una a una en la web del Ministerio.
 
-- Busca por **nº de registro** (`24526`, `ES01196`, `ES-01196`), **nombre comercial** o **materia activa**.
-- Ficha de cada producto: titular, formulado, materias activas, inscripción, caducidad, límite de venta y cancelación.
-- Usos autorizados por cultivo (cítricos por defecto): dosis del registro y **convertida a cc/L o g/L**, caldo, **plazo de seguridad**, nº de aplicaciones, intervalo, estado fenológico, usuario y método, con su **condicionamiento específico**.
-- Calculadora de producto por superficie y caldo.
-- **Verificar lista**: pega una receta y separa fitosanitarios de abonos y bioestimulantes, comprobando vigencia y autorización en cítricos.
-- **Mi cuaderno**: añade usos y descárgalos en Excel con las columnas del cuaderno de tratamientos. Se guarda solo en el navegador de cada persona.
+## Qué hace
+
+**Producto**
+- Busca por nº de registro (`24526`, `ES01196`, `ES-01196`, `1196`), nombre comercial, **otras denominaciones comerciales**, materia activa o titular. Tolera errores de escritura (`tepeki` → TEPPEKI).
+- Filtros: solo vigentes, solo con uso en cítricos, por función (insecticida, acaricida, fungicida, herbicida, fitorregulador…).
+- Ficha con:
+  - **resumen en cítricos**, separado en **campo** y **postcosecha**: plazo de seguridad, dosis, nº de aplicaciones, caldo y plagas;
+  - materia activa y otros productos vigentes con la misma composición;
+  - datos del registro: titular, fabricante, inscripción, caducidad, límite de venta y cancelación;
+  - todos los usos autorizados: dosis del registro y **convertida a cc/L o g/L**, caldo, plazo, aplicaciones, intervalo, estado fenológico, usuario, método y condicionamiento específico;
+  - condiciones generales de uso;
+  - avisos de cancelación, caducidad en menos de 60 días y fecha límite de venta.
+- **Calculadora**: producto total, caldo y concentración por superficie. Avisa si el caldo está fuera del rango autorizado o si el condicionamiento fija un máximo por hectárea.
+- Exportar la ficha a **Excel**, **imprimir o guardar en PDF** (con fecha de consulta y fecha de los datos) y copiar un enlace directo a la ficha.
+
+**Por plaga**
+- «¿Qué puedo usar contra…?»: elige cultivo (cítricos campo, postcosecha o cualquier otro) y plaga o finalidad.
+- Lista todos los productos autorizados con dosis, plazo y aplicaciones. Se puede ordenar, filtrar por plazo máximo y descargar en Excel.
+- Incluye los usos registrados para el grupo superior (por ejemplo, «Ácaros» para el ácaro rojo), marcados como uso genérico.
+
+**Verificar lista**
+- Pega una receta o un parte de tratamientos.
+- Separa los fitosanitarios de los abonos y bioestimulantes y comprueba vigencia, nº de registro, otras denominaciones, autorización en cítricos (campo o postcosecha), plazo y caducidad.
+- Descarga el resultado en Excel.
+
+**Cuaderno**
+- Añade usos desde las fichas con las columnas del cuaderno de tratamientos y descárgalos en Excel.
+- Se guarda solo en el navegador de cada persona.
+
+**Sin conexión**
+- Tras la primera visita funciona sin cobertura en el campo.
+- En el móvil se puede añadir a la pantalla de inicio como una app.
 
 ## Cómo se actualiza
 
-Una GitHub Action (`.github/workflows/actualizar.yml`) se ejecuta los viernes por la tarde y el sábado temprano:
+La GitHub Action `.github/workflows/actualizar.yml` se ejecuta el viernes por la tarde, el viernes por la noche y el sábado temprano:
 
 1. Descarga la exportación oficial de productos autorizados del MAPA (regfiweb). Si la web del MAPA no responde, usa la copia pública [005Jan/sulfata-datos](https://github.com/005Jan/sulfata-datos).
 2. Convierte los datos (`scripts/actualizar.py`, solo Python estándar) y comprueba que están completos.
-3. Si la fecha de los datos es nueva, guarda `data/` y vuelve a publicar la web. El resumen de la ejecución lista los productos de cítricos cancelados, con nueva fecha límite de venta o recién autorizados.
+3. Si la fecha de los datos es nueva, guarda `data/` y vuelve a publicar la web.
+4. El resumen de la ejecución (pestaña **Actions**) lista los productos de cítricos cancelados, los que tienen nueva fecha límite de venta y los recién autorizados. Si algo falla, GitHub avisa por correo.
 
-Para forzar una actualización: pestaña **Actions** → *Actualizar registro y publicar* → **Run workflow**.
+Para forzar una actualización: **Actions** → *Actualizar registro y publicar* → **Run workflow**.
 
 ## Fuente y aviso
 
-Datos: Registro de Productos Fitosanitarios, Ministerio de Agricultura, Pesca y Alimentación (reutilización permitida citando la fuente). La fecha de los datos aparece en la cabecera de la web y en `data/version.json`.
+Datos: Registro de Productos Fitosanitarios, Ministerio de Agricultura, Pesca y Alimentación. Su reutilización está permitida citando la fuente. La fecha de los datos aparece en la cabecera de la web y en `data/version.json`.
+
+El registro no incluye en su exportación la clasificación de peligro, las frases de mitigación de riesgos, el plazo de reentrada ni los envases. Para eso, cada ficha enlaza con la ficha oficial.
 
 Herramienta de consulta sin afiliación con el MAPA. Ante cualquier duda prevalecen la resolución de inscripción y la etiqueta autorizada del producto.
