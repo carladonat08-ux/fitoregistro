@@ -1,15 +1,16 @@
 # FitoLupa
 
-Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el trabajo diario de calidad en cítricos: consultar fichas sin tener que leerlas una a una en la web del Ministerio.
+Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pensado para el trabajo diario de calidad: consultar fichas sin tener que leerlas una a una en la web del Ministerio.
 
 ## Qué hace
 
 **Especie**
-- En Inicio eliges la especie (cítricos, aguacate, uva de mesa… o cualquier cultivo del registro). Toda la app muestra solo la información de esa especie: búsqueda, fichas, resúmenes, por plaga, verificador y revisión de cuadernos. Se incluyen los usos registrados para sus grupos superiores (p. ej. «Árboles y arbustos frutales»).
+- En Inicio (o en la cabecera) pulsas «Elegir cultivo» y escribes: al teclear «c» salen los cultivos que empiezan por c, con su emoticono. Vale cualquier cultivo del registro. Toda la app muestra solo la información de esa especie: búsqueda, fichas, resúmenes, por plaga, verificador y revisión de cuadernos. Se incluyen los usos registrados para sus grupos superiores (p. ej. «Árboles y arbustos frutales»).
 - La especie elegida se ve siempre en la cabecera y se recuerda en el navegador. La pestaña WWF solo aparece con cítricos.
 
 **Inicio**
-- Presentación de la app con buscador directo, cifras del registro (productos vigentes, con uso en cítricos, usos autorizados y fecha de los datos), acceso a cada sección, cómo funciona y leyenda de las etiquetas.
+- Página corta: elegir cultivo, buscar producto, cifras del registro en una línea y acceso a cada herramienta.
+- Preparada para buscadores (SEO): título y descripción, URL canónica, vista previa al compartir (Open Graph), datos estructurados y `sitemap.xml`.
 
 **Producto**
 - Busca por nº de registro (`24526`, `ES01196`, `ES-01196`, `1196`), nombre comercial, **otras denominaciones comerciales**, materia activa o titular. Tolera errores de escritura (`tepeki` → TEPPEKI).

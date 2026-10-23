@@ -3,9 +3,25 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FitoLupa</title>
+<title>FitoLupa · Buscador de productos fitosanitarios por cultivo (Registro MAPA)</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA por especie (cítricos, aguacate, uva…): usos autorizados, dosis en cc/L y g/L, plazos de seguridad, condicionamientos y búsqueda por plaga.">
+<meta name="description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://carladonat08-ux.github.io/fitoregistro/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="FitoLupa">
+<meta property="og:title" content="FitoLupa · Buscador de productos fitosanitarios por cultivo">
+<meta property="og:description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
+<meta property="og:url" content="https://carladonat08-ux.github.io/fitoregistro/">
+<meta property="og:image" content="https://carladonat08-ux.github.io/fitoregistro/icons/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="FitoLupa · Buscador de productos fitosanitarios por cultivo">
+<meta name="twitter:description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
+<meta name="twitter:image" content="https://carladonat08-ux.github.io/fitoregistro/icons/og.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "FitoLupa", "url": "https://carladonat08-ux.github.io/fitoregistro/", "description": "Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.", "inLanguage": "es", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Web", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "keywords": "productos fitosanitarios, registro fitosanitario MAPA, plazo de seguridad, dosis, cítricos, aguacate, vid, cuaderno de campo"}</script>
 <meta name="theme-color" content="#1d4a30">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -54,15 +70,15 @@ header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3p
 .top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding-block:16px 12px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .brand svg{width:44px;height:44px;flex:none;filter:drop-shadow(0 3px 6px rgb(0 0 0 / .25))}
-.brand h1{margin:0;font-family:var(--f-display);font-weight:400;font-stretch:100%;font-size:30px;letter-spacing:-.01em;line-height:1;color:var(--head-ink)}
-.brand h1 b{color:var(--head-accent);font-weight:800}
+.brand .logo{margin:0;font-family:var(--f-display);font-weight:400;font-stretch:100%;font-size:30px;letter-spacing:-.01em;line-height:1;color:var(--head-ink)}
+.brand .logo b{color:var(--head-accent);font-weight:800}
 .brand small{display:block;margin-top:4px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--head-mute)}
 .tabs{display:flex;gap:4px;background:rgb(0 0 0 / .24);padding:4px;border-radius:999px;margin-left:auto;overflow-x:auto;max-width:100%;backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgb(246 239 224 / .08)}
 .tabs button{border:0;background:transparent;padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13px;color:var(--head-mute);white-space:nowrap;transition:background .15s,color .15s}
 .tabs button:hover{color:var(--head-ink);background:rgba(246,239,224,.08)}
 .tabs button[aria-selected="true"]{background:var(--head-ink);color:var(--head);box-shadow:0 2px 8px -2px rgb(0 0 0 / .3)}
 .tabs .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--citrus);color:#1d2a16;font-size:11px;line-height:18px;text-align:center}
-@media (max-width:700px){header.top{position:relative;top:auto}.tabs{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible;border-radius:16px}.tabs button{padding:8px 4px;white-space:normal;line-height:1.2;border-radius:12px}.brand h1{font-size:26px}.brand svg{width:38px;height:38px}}
+@media (max-width:700px){header.top{position:relative;top:auto}.tabs{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible;border-radius:16px}.tabs button{padding:8px 4px;white-space:normal;line-height:1.2;border-radius:12px}.brand .logo{font-size:26px}.brand svg{width:38px;height:38px}}
 @media (prefers-reduced-motion:reduce){.tabs button{transition:none}}
 .searchrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:0 12px}
 .search{position:relative;flex:1 1 380px;min-width:0}
@@ -195,40 +211,40 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 
 /* Paneles */
 /* Inicio */
-.home{display:grid;gap:22px}
-.hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px 32px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px 32px}
-@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);padding:22px 20px}}
-.hero-txt{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
-.hero-txt>*{min-width:0}
-.eyebrow{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf);font-weight:700}
-.hero h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(28px,3.6vw,44px);line-height:1.06;letter-spacing:-.015em;text-wrap:balance}
-.hero h2 em{font-style:normal;color:var(--accent-text)}
-.hero .lead{margin:0;color:var(--ink-2);max-width:66ch;font-size:15.5px}
-.hero-search{position:relative;display:flex;gap:8px;max-width:640px}
+.home{display:grid;gap:20px}
+.hero{display:grid;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:30px 32px}
+@media (max-width:700px){.hero{padding:22px 18px}}
+.hero h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(28px,3.8vw,44px);line-height:1.06;letter-spacing:-.015em;text-wrap:balance;max-width:22ch}
+.hero h1 em{font-style:normal;color:var(--accent-text)}
+.hero .lead{margin:0;color:var(--ink-2);max-width:62ch;font-size:16px}
+.hero-row{display:grid;grid-template-columns:minmax(220px,300px) minmax(0,1fr);gap:14px 18px;align-items:end;margin-top:6px}
+@media (max-width:700px){.hero-row{grid-template-columns:minmax(0,1fr)}}
+.hero-row>*{min-width:0}
+.lbl{display:block;margin:0 0 6px;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.bigpick{display:flex;align-items:center;gap:10px;width:100%;padding:11px 14px;border:2px solid var(--line);border-radius:14px;background:var(--bg);cursor:pointer;font-size:17px;color:var(--ink);text-align:left}
+.bigpick i{font-style:normal;font-size:24px;line-height:1}
+.bigpick b{flex:1;font-weight:700}
+.bigpick svg{width:14px;height:14px;color:var(--ink-3)}
+.bigpick:hover,.bigpick[aria-expanded="true"]{border-color:var(--head)}
+.hero-search{position:relative;display:flex;gap:8px}
 .hero-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--ink-3);pointer-events:none}
 .hero-search input{flex:1;min-width:0;width:100%;padding:13px 14px 13px 42px;border:2px solid var(--line);border-radius:14px;background:var(--bg);font-size:16px}
 .hero-search input:focus{border-color:var(--citrus);outline:none;box-shadow:0 0 0 4px rgb(240 138 44 / .22)}
-.hero-search .btn{border-radius:14px;padding:0 18px}
+.hero-search .btn{border-radius:14px;padding:0 20px}
 @media (max-width:520px){.hero-search{flex-direction:column}.hero-search input{flex:none}.hero-search .btn{padding:11px 18px;justify-content:center}.hero-search svg{top:26px}}
-.hero-ex{font-size:13px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.hero-ex button{border:1px solid var(--line-strong);background:transparent;border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
-.hero-ex button:hover{border-color:var(--leaf);color:var(--leaf)}
-.sppick{display:grid;gap:10px;padding:14px 16px;background:var(--bg);border-radius:14px;border:1px solid var(--line)}
-.sppick-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-weight:700;font-size:15px}
-.sppick-h .note{margin:0;font-weight:400}
-.step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--head);color:var(--head-ink);font-size:12px;font-weight:700;align-self:center}
-.spchips{display:flex;flex-wrap:wrap;gap:6px}
-.spchip{border:1.5px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink-2)}
-.spchip:hover{border-color:var(--leaf);color:var(--leaf)}
-.spchip[aria-pressed="true"]{background:var(--head);border-color:var(--head);color:var(--head-ink);box-shadow:0 2px 8px -3px rgb(29 74 48 / .6)}
+.hero-meta{margin:2px 0 0;font-size:13px;color:var(--ink-3)}
+.hero-meta b{color:var(--ink);font-variant-numeric:tabular-nums}
+.home-h{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:20px}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:560px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;border-left:4px solid var(--leaf)}
+.card.wwfcard{border-left-color:var(--wwf)}
+.card h3{margin:0;font-family:var(--f-display);font-size:17px;font-weight:700;grid-column:1}
+.card p{margin:0;color:var(--ink-2);font-size:14px;grid-column:1}
+.card .btn{grid-column:2;grid-row:1/3;border-radius:999px;white-space:nowrap}
+.home-note{margin:0;font-size:12.5px;color:var(--ink-3);max-width:110ch}
 /* Selector de cultivo (Inicio y cabecera) */
-.cropgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
-.croptile{display:grid;justify-items:center;gap:4px;padding:10px 6px 9px;border:1.5px solid var(--line);background:var(--surface);border-radius:14px;cursor:pointer;color:var(--ink-2);font-size:12.5px;font-weight:600;line-height:1.2;text-align:center;transition:transform .12s,border-color .12s,box-shadow .12s}
-.croptile i{font-style:normal;font-size:30px;line-height:1.1}
-.croptile:hover{transform:translateY(-2px);border-color:var(--head);box-shadow:0 6px 14px -10px rgb(0 0 0 / .5)}
-.croptile[aria-pressed="true"]{background:var(--head);border-color:var(--head);color:var(--head-ink);box-shadow:0 8px 18px -10px var(--head)}
-@media (max-width:560px){.cropgrid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}.croptile{padding:8px 4px;font-size:11.5px;border-radius:12px}.croptile i{font-size:25px}}
-@media (prefers-reduced-motion:reduce){.croptile{transition:none}.croptile:hover{transform:none}}
 .cropfind{position:relative}
 .cropfind input{width:100%;border:1.5px solid var(--line-strong);border-radius:12px;padding:10px 12px 10px 38px;background:var(--surface);font-size:15px}
 .cropfind input:focus{border-color:var(--head);outline:none;box-shadow:0 0 0 3px rgb(0 0 0 / .08)}
@@ -250,29 +266,8 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .spbadge i{font-style:normal;font-size:17px;line-height:1}
 .spbadge svg{width:12px;height:12px}
 .spbadge:hover{background:rgb(246 239 224 / .16)}
-@media (max-width:700px){.spwrap{order:3}}
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
-.stats div{background:var(--bg);border-radius:12px;padding:14px 16px;min-width:0}
-.stats dt{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
-.stats dd{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(22px,2.4vw,30px);font-variant-numeric:tabular-nums;color:var(--head);line-height:1.1}
-.home-h{margin:0 0 12px;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.005em}
-.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-@media (max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:620px){.cards{grid-template-columns:minmax(0,1fr)}}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--leaf)}
-.card.wwfcard{border-top-color:var(--wwf)}
-.card h4{margin:0;font-family:var(--f-display);font-size:18px;font-weight:700}
-.card p{margin:0;color:var(--ink-2);font-size:14px;flex:1}
-.card .btn{align-self:flex-start;border-radius:999px}
-.howto{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
-@media (max-width:900px){.howto{grid-template-columns:minmax(0,1fr)}}
-.howto>section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
-.how{margin:0;padding-left:18px;display:grid;gap:10px;color:var(--ink-2);font-size:14px}
-.how b{color:var(--ink)}
-.legend{display:grid;gap:8px;margin:0}
-.legend div{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:10px;align-items:center;font-size:13.5px}
-@media (max-width:420px){.legend div{grid-template-columns:1fr}}
-.legend dd{margin:0;color:var(--ink-2)}
+@media (max-width:700px){.brand~.spwrap,header .spwrap{order:3}.hero-pick{order:0}}
+.hero-pick .sppop{width:min(420px,calc(100vw - 32px))}
 .brand{cursor:pointer}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:14px;min-width:0}
 .panel h2{margin:0;font-family:var(--f-display);font-size:30px;font-weight:800;font-stretch:85%;line-height:1.05;text-transform:uppercase}
@@ -378,16 +373,17 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 </style>
 </head>
 <body>
+<noscript><p style="padding:16px">FitoLupa necesita JavaScript para buscar en el Registro de Productos Fitosanitarios del MAPA.</p></noscript>
 
 <header class="top">
   <div class="wrap">
     <div class="brand">
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="20" cy="20" r="14.5" fill="rgb(246 239 224 / .12)" stroke="#f7f0e1" stroke-width="3"/><path d="M29.8 30.2l9.5 9.5" stroke="#f08a2c" stroke-width="5" stroke-linecap="round"/><path d="M12.5 26.5c-.5-9 6-14.5 15-14 .8 9.2-5.5 15-15 14z" fill="#8cc56b"/><path d="M13.5 25.5c3.5-3.8 7.2-6.8 11.5-9" stroke="#1d4a30" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
-      <div><h1>Fito<b>Lupa</b></h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
+      <div><div class="logo">Fito<b>Lupa</b></div><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     </div>
     <div class="spwrap">
-      <button type="button" class="spbadge" id="spBadge" aria-haspopup="true" aria-expanded="false" title="Cambiar de cultivo"><i id="spEmoji" aria-hidden="true">🍊</i><span>Cultivo</span><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
-      <div class="sppop cropfind" id="spPop" data-cf="head" hidden>
+      <button type="button" class="spbadge cropbtn" aria-haspopup="true" aria-expanded="false" title="Elegir cultivo"><i class="sp-emoji" aria-hidden="true">🍊</i><span>Cultivo</span><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="sppop cropfind" hidden>
         <input type="search" autocomplete="off" spellcheck="false" placeholder="Escribe un cultivo: c, ce, cer…" aria-label="Buscar cultivo">
         <span aria-hidden="true" style="left:24px;top:23px">🔎</span>
         <ul class="croplist"></ul>
@@ -418,69 +414,42 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 </header>
 
 <main class="wrap">
-  <section id="view-inicio" class="home">
+  <section id="view-inicio" class="home" aria-labelledby="h-inicio">
     <div class="hero">
-      <div class="hero-txt">
-        <p class="eyebrow">Registro de Productos Fitosanitarios · MAPA</p>
-        <h2>Toda la información de cada ficha fitosanitaria, <em>sin leerlas una a una</em>.</h2>
-        <p class="lead">FitoLupa reúne el Registro oficial del Ministerio de Agricultura y lo cruza con lo que necesitas en el día a día: dosis convertidas a cc/L y g/L, plazos de seguridad, usos autorizados por plaga y cultivo, revisión de cuadernos y, en cítricos, las restricciones del Proyecto Zitrus EDEKA-WWF.</p>
-        <div class="sppick">
-          <div class="sppick-h"><span class="step">1</span> Elige el cultivo <span class="note">Toda la app mostrará solo la información de este cultivo.</span></div>
-          <div class="cropgrid" id="spChips" role="group" aria-label="Cultivo"></div>
-          <div class="cropfind" data-cf="home">
-            <span aria-hidden="true">🔎</span>
-            <input type="search" autocomplete="off" spellcheck="false" placeholder="¿Otro cultivo? Empieza a escribir: c, ce, cer…" aria-label="Buscar cualquier cultivo">
-            <ul class="croplist" hidden></ul>
+      <h1 id="h-inicio">Buscador de productos fitosanitarios <em>por cultivo</em></h1>
+      <p class="lead">Consulta el Registro oficial del MAPA sin leer ficha a ficha: usos autorizados, dosis en cc/L y g/L y plazos de seguridad.</p>
+      <div class="hero-row">
+        <div class="spwrap hero-pick">
+          <span class="lbl">Elegir cultivo</span>
+          <button type="button" class="cropbtn bigpick" aria-haspopup="true" aria-expanded="false"><i class="sp-emoji" aria-hidden="true">🍊</i><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+          <div class="sppop cropfind" hidden>
+            <input type="search" autocomplete="off" spellcheck="false" placeholder="Escribe un cultivo: c, ce, cer…" aria-label="Buscar cultivo">
+            <span aria-hidden="true" style="left:24px;top:23px">🔎</span>
+            <ul class="croplist"></ul>
           </div>
         </div>
-        <div class="sppick-h"><span class="step">2</span> Busca un producto <span class="note">o elige una sección más abajo.</span></div>
-        <form class="hero-search" id="homeForm" role="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-          <input id="hq" type="search" autocomplete="off" spellcheck="false" placeholder="Busca un producto: nº de registro, nombre o materia activa" aria-label="Buscar producto">
-          <button class="btn primary" type="submit">Buscar</button>
-        </form>
-        <div class="hero-ex">Prueba con <button type="button" data-hq="24526">24526</button><button type="button" data-hq="Cornalina">Cornalina</button><button type="button" data-hq="piriproxifen">piriproxifen</button></div>
+        <div class="hero-find">
+          <label class="lbl" for="hq">Buscar producto</label>
+          <form class="hero-search" id="homeForm" role="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input id="hq" type="search" autocomplete="off" spellcheck="false" placeholder="Nº de registro, nombre o materia activa">
+            <button class="btn primary" type="submit">Buscar</button>
+          </form>
+        </div>
       </div>
-      <dl class="stats" id="homeStats" aria-live="polite">
-        <div><dt>Productos vigentes</dt><dd>…</dd></div>
-        <div><dt>Con uso en <span class="sp-lower">cítricos</span></dt><dd>…</dd></div>
-        <div><dt>Usos autorizados en <span class="sp-lower">cítricos</span></dt><dd>…</dd></div>
-        <div><dt>Datos del MAPA a</dt><dd>…</dd></div>
-      </dl>
+      <p class="hero-meta" id="homeStats">Registro MAPA · cargando datos…</p>
     </div>
 
-    <h3 class="home-h">Qué puedes hacer</h3>
+    <h2 class="home-h">Herramientas</h2>
     <div class="cards">
-      <article class="card"><h4>Producto</h4><p>Busca por nº de registro, nombre comercial (también otras denominaciones), materia activa o titular. La ficha resume dosis, plazo, aplicaciones y caldo en <span class="sp-lower">cítricos</span>, con todos los usos y sus condicionamientos.</p><button class="btn" data-go="buscar">Buscar un producto →</button></article>
-      <article class="card"><h4>Por plaga</h4><p>«¿Qué puedo usar contra…?»: elige cultivo y plaga y obtén todos los productos autorizados, ordenables por plazo de seguridad y descargables en Excel.</p><button class="btn" data-go="plaga">Buscar por plaga →</button></article>
-      <article class="card"><h4>Verificar</h4><p>Pega una lista de productos de una receta. Separa abonos y bioestimulantes y comprueba vigencia, nº de registro y autorización en <span class="sp-lower">cítricos</span>.</p><button class="btn" data-go="verificar">Verificar una lista →</button></article>
-      <article class="card"><h4>Cuaderno</h4><p>Añade usos desde las fichas con las columnas de tu cuaderno de tratamientos y descárgalo en Excel. Se guarda solo en tu navegador.</p><button class="btn" data-go="cuaderno">Abrir mi cuaderno →</button></article>
-      <article class="card"><h4>Revisar cuaderno</h4><p>Sube tu cuaderno en Excel o el PDF de recetas y revisa cada aplicación: dosis, plazos, usos, vigencia y nº de aplicaciones. Revisión genérica o WWF.</p><button class="btn" data-go="revisar">Revisar un cuaderno →</button></article>
-      <article class="card wwfcard"><h4>WWF</h4><p>Las tablas del Proyecto Zitrus EDEKA-WWF por plaga: alternativas permitidas, excepcionales y muy excepcionales, límites por materia activa y reglas del proyecto.</p><button class="btn" data-go="wwf">Ver el Proyecto Zitrus →</button></article>
+      <article class="card"><h3>Producto</h3><p>Ficha completa: dosis, plazos, usos y condicionamientos.</p><button class="btn" data-go="buscar">Abrir →</button></article>
+      <article class="card"><h3>Por plaga</h3><p>Productos autorizados contra cada plaga, ordenados por plazo.</p><button class="btn" data-go="plaga">Abrir →</button></article>
+      <article class="card"><h3>Verificar</h3><p>Comprueba los productos de una receta de un vistazo.</p><button class="btn" data-go="verificar">Abrir →</button></article>
+      <article class="card"><h3>Cuaderno</h3><p>Prepara tu cuaderno de tratamientos y descárgalo en Excel.</p><button class="btn" data-go="cuaderno">Abrir →</button></article>
+      <article class="card"><h3>Revisar cuaderno</h3><p>Sube tu cuaderno en Excel o PDF y detecta incidencias.</p><button class="btn" data-go="revisar">Abrir →</button></article>
+      <article class="card wwfcard"><h3>WWF</h3><p>Restricciones del Proyecto Zitrus EDEKA-WWF para cítricos.</p><button class="btn" data-go="wwf">Abrir →</button></article>
     </div>
-
-    <div class="howto">
-      <section><h3 class="home-h">Cómo funciona</h3>
-        <ul class="how">
-          <li><b>Datos oficiales y al día.</b> Cada viernes y sábado se descarga automáticamente la exportación de productos autorizados del MAPA y se publica si hay datos nuevos. La fecha está siempre en la cabecera.</li>
-          <li><b>Tus archivos no salen de tu dispositivo.</b> Los cuadernos que revisas se leen dentro del navegador y desaparecen al cerrar. El cuaderno se guarda solo en este navegador.</li>
-          <li><b>Funciona sin cobertura.</b> Tras abrirla una vez con conexión, se puede consultar en el campo. En el móvil, añádela a la pantalla de inicio para usarla como una app.</li>
-          <li><b>Consulta informativa.</b> Ante cualquier duda prevalecen la resolución de inscripción y la etiqueta autorizada del producto.</li>
-        </ul>
-      </section>
-      <section><h3 class="home-h">Cómo leer las etiquetas</h3>
-        <dl class="legend">
-          <div><dt><span class="pill ok">Vigente</span></dt><dd>Autorizado en el registro.</dd></div>
-          <div><dt><span class="pill warn">Caduca 30/11</span></dt><dd>La autorización caduca en menos de 60 días.</dd></div>
-          <div><dt><span class="pill warn">Límite venta</span></dt><dd>Tiene fecha límite de venta: revisa el plazo de uso.</dd></div>
-          <div><dt><span class="pill bad">Cancelado</span></dt><dd>No se puede utilizar.</dd></div>
-          <div><dt><span class="pill cit sp-name">Cítricos</span></dt><dd>Con uso autorizado en <span class="sp-lower">cítricos</span>.</dd></div>
-          <div class="legend-post"><dt><span class="pill post">Postcosecha</span></dt><dd>Con uso autorizado en postcosecha de <span class="sp-lower">cítricos</span>.</dd></div>
-          <div class="wwf-only"><dt><span class="pill ok">Permitida</span> <span class="pill wex">Excepcional</span></dt><dd>Categoría en la tabla del Proyecto Zitrus EDEKA-WWF.</dd></div>
-          <div><dt><span class="conv" style="display:inline">= 0,5 cc/L</span></dt><dd>Dosis del registro convertida a cc o g por litro de caldo.</dd></div>
-        </dl>
-      </section>
-    </div>
+    <p class="home-note">Datos oficiales del MAPA, actualizados cada semana · Los archivos que revisas no salen de tu dispositivo · Consulta informativa: prevalecen la resolución y la etiqueta autorizada.</p>
   </section>
 
   <section id="view-buscar" class="grid" hidden>
@@ -624,15 +593,6 @@ const SP_FEATURED = [
   ["0101020304000000", "Kiwi"], ["0101020401000000", "Melocotonero"], ["0101020404000000", "Cerezo"], ["0101020501000000", "Manzano"],
   ["0101020502000000", "Peral"], ["0101020601000000", "Almendro"], ["0101020302000000", "Caqui"], ["0101020317000000", "Granado"]
 ];
-// Paletas de cabecera por tipo de cultivo: [cabecera, fondo oscuro, brillo, acento]
-const SP_THEMES = {
-  hoja: ["#1d4a30", "#163a25", "#2a6040", "#f08a2c"], naranja: ["#a5461a", "#7a3110", "#c25d24", "#ffd36e"], limon: ["#7a6610", "#594a08", "#95801c", "#fff09a"],
-  aguacate: ["#3a5a1d", "#283f13", "#4f7628", "#d9ec8a"], mango: ["#a05a16", "#77410d", "#bd7322", "#ffe08a"], uva: ["#55285f", "#3c1b44", "#6d3579", "#f3b8ff"],
-  vino: ["#6a1f36", "#4b1526", "#852b46", "#ffb8b8"], olivo: ["#535c22", "#3b4117", "#6b752d", "#ece78c"], rojo: ["#9a2323", "#721818", "#b6312f", "#ffd2a2"],
-  melocoton: ["#a54d38", "#7b3828", "#c06149", "#ffdcaa"], verdeclaro: ["#5a6a1f", "#414d14", "#71832a", "#f2ea90"], platano: ["#86670d", "#624b07", "#a07d16", "#fff0a0"],
-  fruto_seco: ["#6c4a2d", "#4e351f", "#87603a", "#ffd59c"], baya: ["#3b3f7c", "#2a2d5b", "#4c5296", "#cdd0ff"], cereal: ["#7a5c1c", "#5a4312", "#957227", "#ffe28c"],
-  flor: ["#8a2f5b", "#652142", "#a63f6f", "#ffc6e0"], bosque: ["#24452f", "#183220", "#335c40", "#f2c46e"], morado: ["#5b2a54", "#41203d", "#743768", "#ffc2ea"]
-};
 // [expresión sobre el nombre, emoticono, paleta]: gana la primera coincidencia
 const SP_ICONS = [
   [/^citric|naranj|mandarin|clement|pomelo|toronja|kumquat|frutos citricos/, "🍊", "naranja"], [/limon|^lima\b|limas/, "🍋", "limon"],
@@ -655,11 +615,6 @@ function spLook(name) {
   const n = norm(name);
   for (const [re, em, th] of SP_ICONS) if (re.test(n)) return { em, th };
   return { em: "🌱", th: "hoja" };
-}
-function applyTheme() {
-  const t = SP_THEMES[spLook(SP.name).th] || SP_THEMES.hoja, r = document.documentElement.style;
-  r.setProperty("--head", t[0]); r.setProperty("--head-deep", t[1]); r.setProperty("--head-hi", t[2]); r.setProperty("--head-accent", t[3]);
-  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", t[0]);
 }
 let SP = null;
 const IN_CLAUDE = !!window.claude;
@@ -1530,14 +1485,9 @@ function applySpeciesLabels() {
   renderSpeciesPicker();
 }
 function renderSpeciesPicker() {
-  const box = $("#spChips"); if (!box || !SP) return;
-  const feat = SP_FEATURED.filter(([c]) => IDX.c.some(x => x[0] === c));
-  const extra = feat.some(([c]) => c === SP.code) ? "" : tile(SP.code, SP.name, true);
-  box.innerHTML = feat.map(([c, n]) => tile(c, n, c === SP.code)).join("") + extra;
-  $("#spEmoji").textContent = spLook(SP.name).em;
-  applyTheme();
+  if (!SP) return;
+  document.querySelectorAll(".sp-emoji").forEach(e => e.textContent = spLook(SP.name).em);
 }
-const tile = (c, n, on) => `<button type="button" class="croptile" data-sp="${c}" aria-pressed="${on}"><i aria-hidden="true">${spLook(n).em}</i>${esc(n)}</button>`;
 let SP_LIST = null;
 function speciesList() {
   if (SP_LIST || !USOS) return SP_LIST || [];
@@ -1559,32 +1509,41 @@ function cropListHtml(q) {
   }
   const seen = new Set();
   const hits = speciesList().filter(c => c.n.startsWith(qn) && !seen.has(c.code + c.name) && seen.add(c.code + c.name));
+  const feat = new Set(SP_FEATURED.map(x => x[0]));
+  hits.sort((x, y) => (feat.has(y.code) ? 1 : 0) - (feat.has(x.code) ? 1 : 0) || x.name.localeCompare(y.name, "es"));
   if (!hits.length) return `<li class="note" style="padding:10px">Ningún cultivo del registro empieza por «${esc(q)}».</li>`;
   return `<li class="lt">${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span><mark>${esc(c.name.slice(0, q.length))}</mark>${esc(c.name.slice(q.length))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
 }
-function openCropFind(box, show) {
+function openCropFind(box) {
   const list = box.querySelector(".croplist"), inp = box.querySelector("input");
-  if (!show) { if (box.dataset.cf === "home") list.hidden = true; return; }
   list.innerHTML = cropListHtml(inp.value.trim()); list.hidden = false;
 }
-document.querySelectorAll(".cropfind").forEach(box => {
-  const inp = box.querySelector("input"), list = box.querySelector(".croplist");
-  inp.addEventListener("input", () => { if (box.dataset.cf === "home" && !inp.value.trim()) { list.hidden = true; return; } openCropFind(box, true); });
-  inp.addEventListener("focus", () => { if (box.dataset.cf === "head" || inp.value.trim()) openCropFind(box, true); });
+function closePop() {
+  document.querySelectorAll(".spwrap .sppop").forEach(p => { p.hidden = true; p.querySelector("input").value = ""; });
+  document.querySelectorAll(".cropbtn").forEach(b => b.setAttribute("aria-expanded", "false"));
+}
+document.querySelectorAll(".spwrap").forEach(w => {
+  const btn = w.querySelector(".cropbtn"), pop = w.querySelector(".sppop"), inp = pop.querySelector("input"), list = pop.querySelector(".croplist");
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const open = pop.hidden; closePop();
+    if (open) { pop.hidden = false; btn.setAttribute("aria-expanded", "true"); openCropFind(pop); inp.focus(); }
+  });
+  inp.addEventListener("input", () => openCropFind(pop));
   inp.addEventListener("keydown", e => {
-    const bs = [...list.querySelectorAll("button")]; if (!bs.length) return;
+    const bs = [...list.querySelectorAll("button")];
+    if (e.key === "Escape") { closePop(); btn.focus(); return; }
+    if (!bs.length) return;
     let i = bs.findIndex(b => b.classList.contains("on"));
     if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); bs.forEach(b => b.classList.remove("on")); i = e.key === "ArrowDown" ? Math.min(bs.length - 1, i + 1) : Math.max(0, i - 1); bs[i].classList.add("on"); bs[i].scrollIntoView({ block: "nearest" }); }
     if (e.key === "Enter") { e.preventDefault(); (bs[i] || bs[0]).click(); }
-    if (e.key === "Escape") { inp.value = ""; if (box.dataset.cf === "head") closePop(); else list.hidden = true; }
   });
   list.addEventListener("click", e => {
     const b = e.target.closest("[data-spc]"); if (!b) return;
-    inp.value = ""; if (box.dataset.cf === "head") closePop(); else list.hidden = true;
+    closePop(); btn.focus();
     if (!SP || b.dataset.spc !== SP.code) setSpecies(b.dataset.spc);
   });
 });
-function closePop() { $("#spPop").hidden = true; $("#spBadge").setAttribute("aria-expanded", "false"); }
 function setSpecies(code) {
   const sp = makeSpecies(code); if (!sp) return;
   SP = sp; store.set("fr_especie", code);
@@ -1607,24 +1566,12 @@ function renderHomeStats() {
   const cit = USOS && SP ? vig.filter(p => p.campo || p.post).length : null;
   let usos = null;
   if (USOS && SP) { usos = 0; for (const [pid, arr] of Object.entries(USOS.u)) { const p = byId.get(Number(pid)); if (!p || p.estado !== "Vigente") continue; for (const u of arr) { const c = cropCode(u); if (isCampo(c) || isPost(c)) usos++; } } }
-  const vals = [n(vig.length), cit == null ? "…" : n(cit), usos == null ? "…" : n(usos), fmtDate(IDX.fecha)];
-  document.querySelectorAll("#homeStats dd").forEach((d, i) => d.textContent = vals[i]);
+  $("#homeStats").innerHTML = `Datos del MAPA a <b>${fmtDate(IDX.fecha)}</b> · <b>${n(vig.length)}</b> productos vigentes` + (cit == null ? "" : ` · <b>${n(cit)}</b> con uso en ${esc(SP.lower)} · <b>${n(usos)}</b> usos autorizados`);
 }
-$("#spChips").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if (b && (!SP || b.dataset.sp !== SP.code)) setSpecies(b.dataset.sp); });
-$("#spBadge").addEventListener("click", e => {
-  e.stopPropagation();
-  const pop = $("#spPop"), open = pop.hidden;
-  pop.hidden = !open; $("#spBadge").setAttribute("aria-expanded", String(open));
-  if (open) { openCropFind(pop, true); pop.querySelector("input").focus(); }
-});
-document.addEventListener("click", e => {
-  if (!e.target.closest(".spwrap")) closePop();
-  if (!e.target.closest('.cropfind[data-cf="home"]')) { const l = document.querySelector('.cropfind[data-cf="home"] .croplist'); if (l) l.hidden = true; }
-});
+document.addEventListener("click", e => { if (!e.target.closest(".spwrap")) closePop(); });
 function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
 $("#homeForm").addEventListener("submit", e => { e.preventDefault(); homeSearch($("#hq").value.trim()); });
 $("#view-inicio").addEventListener("click", e => {
-  const ex = e.target.closest("[data-hq]"); if (ex) { homeSearch(ex.dataset.hq); return; }
   const go = e.target.closest("[data-go]"); if (go) { setView(go.dataset.go); window.scrollTo({ top: 0, behavior: "smooth" }); }
 });
 document.querySelector(".brand").addEventListener("click", () => { setView("inicio"); window.scrollTo({ top: 0, behavior: "smooth" }); });
