@@ -264,6 +264,20 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 .pill.wex{background:var(--warn-soft);color:var(--warn)}
 .pill.wmx{background:var(--bad-soft);color:var(--bad)}
 .wsearch{border:1.5px solid var(--line-strong);border-radius:6px;padding:7px 10px;background:var(--surface);font-size:14px;max-width:100%;width:340px}
+.drop{display:grid;gap:4px;place-items:center;text-align:center;border:2px dashed var(--line-strong);border-radius:10px;padding:28px 16px;background:var(--bg);cursor:pointer;color:var(--ink-2)}
+.drop:hover,.drop.over,.drop:focus-within{border-color:var(--leaf);background:var(--leaf-soft)}
+.drop span{font-size:13px;color:var(--ink-3)}
+.rvsum{display:grid;gap:8px;margin-top:6px;font-size:14px}
+.rvn{padding:3px 0 3px 8px;border-left:3px solid var(--line-strong);margin-bottom:4px}
+.rvn.bad{border-color:var(--bad)}.rvn.warn{border-color:var(--warn)}.rvn.info{border-color:var(--post)}.rvn.ok{border-color:var(--ok)}
+@media (max-width:700px){
+  table.rv{min-width:0!important}
+  table.rv thead{display:none}
+  table.rv tr{display:block;border-bottom:1px solid var(--line);padding:10px 12px}
+  table.rv td{display:block;border:0!important;padding:3px 0!important;min-width:0!important}
+  table.rv td[data-l]::before{content:attr(data-l);display:block;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-family:var(--f-body);font-weight:600}
+}
+.wwfchip[aria-pressed="true"]{background:var(--wwf);border-color:var(--wwf);color:#fff}
 .rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
 .rules section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
 .rules h4{margin:0 0 8px;font-size:14px;color:var(--wwf)}
@@ -297,6 +311,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
       <button role="tab" aria-selected="false" data-view="verificar">Verificar</button>
       <button role="tab" aria-selected="false" data-view="cuaderno">Cuaderno<span class="count" id="cnt" hidden>0</span></button>
+      <button role="tab" aria-selected="false" data-view="revisar">Revisar cuaderno</button>
       <button role="tab" aria-selected="false" data-view="wwf" class="wwf" id="tabWwf" hidden>WWF</button>
     </nav>
   </div>
@@ -363,6 +378,29 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       </div>
       <div class="vsum" id="vsum"></div>
       <div class="tblwrap" id="vout" hidden></div>
+    </div>
+  </section>
+
+  <section id="view-revisar" hidden>
+    <div class="panel">
+      <h2>Revisar un cuaderno de tratamientos</h2>
+      <p class="lead">Sube tu cuaderno en <b>Excel</b> (formato tipo Atalaya: una fila por aplicación) o el <b>PDF «Resumen recetas foliares»</b>. Cada aplicación se revisa contra el Registro del MAPA: nº de registro y nombre, materia activa, vigencia en la fecha, uso autorizado contra la plaga en cítricos, dosis, caldo, plazo de seguridad y nº de aplicaciones por materia activa.</p>
+      <div class="alert info"><b>Tu archivo no sale de este dispositivo.</b> Se lee y se revisa dentro del navegador, sin enviarlo a ningún servidor. Al pulsar «Borrar» o cerrar la pestaña, desaparece. Solo se guarda lo que tú descargues.</div>
+      <div class="formrow">
+        <div class="field">Tipo de revisión
+          <div class="chips" role="group" aria-label="Tipo de revisión">
+            <button class="chip" data-rmode="generica" aria-pressed="true">Genérica · registro MAPA</button>
+            <button class="chip wwfchip" data-rmode="wwf" aria-pressed="false" id="rvWwfBtn" hidden>WWF · registro + Proyecto Zitrus</button>
+          </div>
+        </div>
+      </div>
+      <label class="drop" id="rvDrop" for="rvFile">
+        <input type="file" id="rvFile" accept=".xlsx,.xls,.xlsm,.ods,.csv,.pdf,application/pdf" class="sr">
+        <b>Arrastra aquí el archivo o pulsa para elegirlo</b>
+        <span>Excel (.xlsx, .xls) o PDF de recetas</span>
+      </label>
+      <div class="f-actions"><button class="btn" id="rvClear">Borrar revisión</button></div>
+      <div id="rvOut"></div>
     </div>
   </section>
 
@@ -1075,6 +1113,7 @@ const W = { sec: "plaga", plaga: null, rows: [] };
 async function loadWWF() {
   try { const r = await fetch("data/wwf.json", { cache: "no-cache" }); if (!r.ok) return; WWF = await r.json(); } catch { return; }
   $("#tabWwf").hidden = false;
+  const rb = $("#rvWwfBtn"); if (rb) rb.hidden = false;
   $("#wwfDocs").textContent = `Campaña ${WWF.campana} · ${WWF.documentos.join(" · ")}. ${WWF.fuentes}.`;
   W.plaga = WWF.plagas[0].id;
   $("#wvplaga").insertAdjacentHTML("beforeend", WWF.plagas.filter(p => p.alternativas.some(a => a.ma)).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join(""));
@@ -1238,7 +1277,7 @@ $("#wvxlsx").addEventListener("click", () => { if (!W.rows.length) runWwfVerify(
   xlsx(`verificacion_WWF_${new Date().toISOString().slice(0, 10)}.xlsx`, [["WWF", `Verificación Proyecto Zitrus EDEKA-WWF (campaña ${WWF.campana}) · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado WWF", "Plagas en la tabla del proyecto", "Máx. aplicaciones", "Toxic load", "Observaciones"], W.rows, [24, 22, 12, 22, 60, 36, 12, 40]]]); });
 
 // ================================================================= Vistas y eventos
-const VIEWS = ["buscar", "plaga", "verificar", "cuaderno", "wwf"];
+const VIEWS = ["buscar", "plaga", "verificar", "cuaderno", "revisar", "wwf"];
 function setView(v) {
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach(x => $("#view-" + x).hidden = x !== v);
@@ -1351,5 +1390,6 @@ renderCuaderno();
 load().catch(err => { $("#ficha").innerHTML = `<p class="empty">No se pudieron cargar los datos del registro (${esc(err.message)}). Comprueba la conexión y recarga la página.</p>`; $("#rcount").textContent = "Sin datos"; });
 if (!IN_CLAUDE && "serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});
 </script>
+<script src="importar.js"></script>
 </body>
 </html>

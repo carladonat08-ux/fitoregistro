@@ -31,6 +31,12 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el t
 - Añade usos desde las fichas con las columnas del cuaderno de tratamientos y descárgalos en Excel.
 - Se guarda solo en el navegador de cada persona.
 
+**Revisar cuaderno**
+- Sube el cuaderno en Excel (tipo Atalaya, una fila por aplicación) o el PDF «Resumen recetas foliares».
+- Elige revisión **genérica** (registro MAPA) o **WWF** (registro + Proyecto Zitrus).
+- Revisa cada aplicación: nº de registro y nombre (incluidas otras denominaciones), materia activa y concentración, vigencia en la fecha, uso autorizado contra la plaga en cítricos, dosis, caldo, plazo de seguridad (incluida la fecha de cumplimiento) y nº de aplicaciones (por producto según el registro; por materia activa según WWF).
+- El archivo se procesa en el navegador: no se envía a ningún sitio ni se guarda. Informe descargable en Excel.
+
 **WWF (Proyecto Zitrus EDEKA-WWF)**
 - Pestaña separada con las tablas del proyecto (pesticidas y control de hierbas, campaña 2025-2026).
 - Por plaga: medidas culturales, control biológico, plantas auxiliares y alternativas químicas (permitida, excepcional o muy excepcional), con máximos de aplicaciones, toxic load y los productos comerciales del registro autorizados para esa plaga en cítricos.
