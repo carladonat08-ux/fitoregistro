@@ -197,6 +197,35 @@ function declaredConc(r, p) {
   }
   return null;
 }
+// ------------------------------------------------------------------ variedad → especie de cítricos
+// Se lee de la columna variedad (PDF) o parcela/sector (Excel). clem: true = clementina, false = otra mandarina.
+const VARIEDADES = [
+  [/\bclemenvilla\b|\bnova\b|satsuma|okitsu|owari|clausellina|iwasaki|hashimoto|ortanique|nadorcott|afourer|\btango\b|fortune|ellendale|\bkara\b|murcott|\borri\b|leanri|moncada|\bsafor\b|\bgarbi\b|primosole|gold ?nugget|tang ?gold|kinnow|setubalense/, "mandarino", false],
+  [/clemen|\bnules\b|oronules|marisol|oroval|hernandina|\besbal\b|arrufatina|\bfina\b|orogrande|loretina|\bbeatriz\b|tomatera|\bmioro\b/, "mandarino", true],
+  [/mandarin/, "mandarino", null],
+  [/navel|washington|lane ?late|newhall|salustiana|valencia ?late|barberina|powell|chislett|fukumoto|cara ?cara|sanguin|tarocco|doble fina|midknight|delta seedless|\brohde\b|ricalate|\bberna\b|naranj/, "naranjo", null],
+  [/\bverna\b|eureka|lisbon|\bfino\b|\bmesero\b|primofiori|limon/, "limonero", null],
+  [/star ruby|rio red|\bmarsh\b|pomel|toronj/, "pomelo", null],
+  [/\blimas?\b|tahiti/, "lima", null]
+];
+function varGroup(txt) {
+  const n = norm(txt);
+  if (!n) return null;
+  for (const [re, sub, clem] of VARIEDADES) if (re.test(n)) return { sub, clem, label: String(txt).trim() };
+  return null;
+}
+const SUB_TXT = { naranjo: "naranjo", mandarino: "mandarino", limonero: "limonero", pomelo: "pomelo", lima: "lima" };
+function scopeCheck(u, vg) {
+  const s = condScope(u);
+  if (!s.allowed) return { ok: true, s };
+  if (!s.allowed.has(vg.sub)) {
+    const why = s.sub && s.sub !== vg.sub ? `el uso está registrado solo para ${SUB_TXT[s.sub]}` : s.except && s.except.has(vg.sub) ? `el condicionamiento lo excluye («${s.marks[0]}»)` : `el condicionamiento lo limita a ${[...s.allowed].join(", ")}`;
+    return { ok: false, s, why };
+  }
+  if (s.clem && vg.clem === false) return { ok: false, s, why: "el uso es exclusivo de clementino" };
+  return { ok: true, s, warn: s.clem && vg.clem == null };
+}
+
 function revisar(r) {
   const out = { r, sev: "ok", notes: [], p: null, kind: "fito", uses: [], dosisAut: "", plazoReg: "", wwf: null };
   const add = (sev, msg) => out.notes.push([sev, msg]);
@@ -246,6 +275,33 @@ function revisar(r) {
     if (m.length && m.every(u => { const a = IDX.a[u[1]][0]; return !codes.some(c => a === c || a.startsWith(c + ".")); }))
       add("info", `Autorizado por un uso genérico del grupo (${[...new Set(m.map(u => IDX.a[u[1]][1]))].join(", ")}).`);
   } else if (r.objeto && !NO_FITO_HINT.test(norm(r.objeto))) add("info", `No reconozco la plaga en «${r.objeto}»: revisa que el uso esté autorizado.`);
+  // Especie y variedad (cítricos): el condicionamiento puede excluir la especie o limitarse a clementinas
+  if (SP.field.startsWith("01010201")) {
+    const spSub = citSubOf(SP.code);
+    const vg = varGroup(r.variedad || r.parcela || "") || (spSub ? { sub: spSub, clem: null, label: SP.name } : null);
+    const chk = uses.map(u => ({ u, ...(vg ? scopeCheck(u, vg) : { ok: true, s: condScope(u) }) }));
+    if (vg) {
+      const good = chk.filter(x => x.ok);
+      const vtxt = `${vg.label} es ${vg.sub === "mandarino" && vg.clem === false ? "mandarino (no clementina)" : SUB_TXT[vg.sub]}`;
+      const whys = [...new Set(chk.map(x => x.why))].join("; ");
+      // Fitorreguladores: puede quedar un uso general («Reguladores de crecimiento») sin esa limitación
+      const gen = !good.length ? cu.filter(u => !uses.includes(u) && /reguladores de crecimiento/i.test(IDX.a[u[1]][1]) && scopeCheck(u, vg).ok) : [];
+      if (!good.length && gen.length) { add("warn", `${vtxt}: el uso específico contra «${r.objeto}» no lo cubre (${whys}), pero el producto tiene un uso general «Reguladores de crecimiento» en ${[...new Set(gen.map(u => IDX.c[u[0]][1]))].join(", ")}. Confirma con la etiqueta o el técnico que ampara este tratamiento.`); uses = gen; }
+      else if (!good.length) add("bad", `${vtxt} y ningún uso autorizado contra esta plaga lo cubre (${whys}).`);
+      else {
+        if (good.length < chk.length) uses = good.map(x => x.u);
+        if (good.every(x => x.warn)) add("warn", `El uso es exclusivo de clementino: comprueba que «${vg.label}» es clementina.`);
+      }
+    } else {
+      const tg = [...new Set(chk.flatMap(x => x.s.tags.filter(t => t !== "Variedad")))];
+      if (tg.length && chk.every(x => x.s.tags.some(t => t !== "Variedad"))) add("info", `El uso tiene limitación de especie (${tg.join(", ")}) y no reconozco la variedad${r.variedad || r.parcela ? ` «${r.variedad || r.parcela}»` : ""}: compruébalo.`);
+    }
+    const vs = [...new Set(chk.filter(x => !vg || x.ok).flatMap(x => x.s.vars))];
+    if (vs.length) add("info", `El condicionamiento menciona variedades: «${vs[0]}»${vs.length > 1 ? ` (y ${vs.length - 1} más)` : ""}. Comprueba que aplica a ${vg ? "«" + vg.label + "»" : "la variedad tratada"}.`);
+  } else {
+    const vs = [...new Set(uses.flatMap(u => condScope(u).vars))];
+    if (vs.length) add("info", `El condicionamiento menciona variedades: «${vs[0]}»${vs.length > 1 ? ` (y ${vs.length - 1} más)` : ""}. Comprueba que aplica a la variedad tratada.`);
+  }
   out.uses = uses;
   // Dosis
   const dc = declaredConc(r, p);
@@ -279,7 +335,8 @@ function revisar(r) {
   }
   // Plazo de seguridad (si el registro lo da en texto, se busca la cláusula de la plaga: «30 DÍAS PARA TRIPS…»)
   const pls = uses.map(u => S(u[5])).filter(Boolean);
-  const days = pls.filter(x => /^\d+$/.test(x)).map(Number);
+  // «85 (AUMENTAR TAMAÑO DE FRUTO)»: el número inicial también es un plazo en días
+  const days = pls.map(x => (x.match(/^(\d+)(?:\s*d[ií]as?)?(?:\s*\(|$)/) || [])[1]).filter(Boolean).map(Number);
   const txts = [...new Set(pls.filter(x => !/^\d+$/.test(x) && x !== "NO PROCEDE"))];
   const objN = norm(r.objeto);
   const clauseDays = [];

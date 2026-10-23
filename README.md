@@ -8,6 +8,11 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pens
 - En Inicio (o en la cabecera) pulsas «Elegir cultivo» y escribes: al teclear «c» salen los cultivos que empiezan por c, con su emoticono. Vale cualquier cultivo del registro. Toda la app muestra solo la información de esa especie: búsqueda, fichas, resúmenes, por plaga, verificador y revisión de cuadernos. Se incluyen los usos registrados para sus grupos superiores (p. ej. «Árboles y arbustos frutales»).
 - La especie elegida se ve siempre en la cabecera y se recuerda en el navegador. La pestaña WWF solo aparece con cítricos.
 
+**Especie y variedad dentro del cultivo**
+- El registro autoriza por cultivo, no por variedad, pero algunos condicionamientos limitan la especie («Excepto limonero», «Uso en naranjo y mandarino») o nombran variedades («Exclusivamente clementino», «No aplicar en peral variedad Conference»).
+- Esos usos llevan una etiqueta ⚠ (Excepto…, Solo…, Solo clementinas, Variedad) en la ficha, «Por plaga» y «Verificar», y la frase se resalta en el condicionamiento.
+- En «Revisar cuaderno» se lee la variedad (columna variedad del PDF o parcela/sector del Excel: Navelina, Clemenules, Nadorcott, Verna…) y se avisa si el uso no la cubre. Los plazos y dosis se comparan solo con los usos que sí aplican a esa especie.
+
 **Inicio**
 - Página corta: elegir cultivo, buscar producto, cifras del registro en una línea y acceso a cada herramienta.
 - Preparada para buscadores (SEO): título y descripción, URL canónica, vista previa al compartir (Open Graph), datos estructurados y `sitemap.xml`.

@@ -191,6 +191,9 @@ td.plagas ul{margin:0;padding-left:16px}
 .ps small{font-family:var(--f-body);font-weight:500;font-size:11px;color:var(--ink-3);display:block}
 .pstext{font-family:var(--f-body);font-size:12px;font-weight:600}
 .caldo{white-space:pre-line;min-width:140px}
+.pill.vtag{background:var(--warn-soft);color:var(--warn);text-transform:none;letter-spacing:0;font-size:12px}
+.vtags{display:flex;flex-wrap:wrap;gap:4px;margin:0 0 6px}
+.condtxt mark{background:var(--warn-soft);color:inherit;border-radius:3px;padding:0 2px;box-shadow:inset 0 -2px 0 var(--warn)}
 .condtxt{white-space:pre-line;margin:0;padding:8px 10px;border-left:3px solid var(--line-strong);background:var(--surface);border-radius:0 4px 4px 0}
 details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12px}
 .longtext{white-space:pre-line;font-size:14px;color:var(--ink-2);max-width:80ch;margin:0}
@@ -654,6 +657,60 @@ function makeSpecies(code) {
 const isCampo = code => !!SP && (code.startsWith(SP.field) || SP.anc.has(code));
 const isCampoGen = code => !!SP && SP.anc.has(code);
 const isPost = code => !!(SP && SP.post) && (code.startsWith(SP.post) || SP.postAnc.has(code));
+// ---- Especie y variedad dentro del cultivo: lo que dice el condicionamiento de cada uso
+// Cítricos: el registro autoriza muchos usos para «Cítricos» pero el condicionamiento a veces lo limita
+// («Excepto limonero», «Uso en naranjo y mandarino», «Exclusivamente clementino»). Además hay
+// condicionamientos que nombran variedades («No aplicar en peral variedad Conference»).
+const CSUB = [["naranjo", /naranj/], ["mandarino", /mandarin|clementin/], ["pomelo", /pomel|toronj/], ["limonero", /limon/], ["lima", /\blimas?\b|\blimer[oa]s?\b/]];
+const CSUB_MAIN = ["naranjo", "mandarino", "limonero", "pomelo"];
+const subsIn = s => CSUB.filter(x => x[1].test(norm(s))).map(x => x[0]);
+function citSubOf(code) {
+  const k = code.startsWith("01010201") ? code.slice(8, 10) : code.startsWith("020101") ? code.slice(6, 8) : null;
+  return k && k !== "00" ? (CSUB[+k - 1] || [])[0] || null : null;
+}
+const CIT_REL = new Set(["0101020100000000", "0201010000000000", ...cropAnc("0101020100000000"), ...cropAnc("0201010000000000")]);
+const isCitRel = code => code.startsWith("01010201") || code.startsWith("020101") || CIT_REL.has(code);
+const VAR_GEN = /(t[íi]pic|caracter[íi]stic|propi|espec[íi]fic|esperad|final)\w*[^.;()]{0,30}(variedad|cultivar)|seg[úu]n\s+(la\s+|su\s+)?(especie\s*\/\s*)?variedad|(dependiente de|de acuerdo con|dependiendo de)\s+la\s+(especie\s*\/\s*)?variedad|(en\s+)?(las\s+)?variedades\s+sin\s+hojas|(sabor|tama[ñn]o)\s+varietal|especie\s*\/\s*variedad|todas las variedades|(incluye\w*|incluid[oa]s?|se incluyen)[^.;]{0,60}variedad(es)?|(y|otras)\s+variedades(\s+e\s+h[íi]bridos)?|tipos y variedades/gi;
+const VAR_KEY = /variedad|(cada|el|del|los|un)\s+cultivar(es)?\b|\bcv\.\s*\S|\bnavel\b|clearfield|full page/i;
+const CLEM_ONLY = /(exclusiva\w*|[úu]nicamente|s[óo]lo|solamente)\b[^.;]{0,30}clementin[^.;]*/i;
+const SCOPE_CACHE = new Map();
+function condScope(u) {
+  const key = u[0] + "|" + u[11];
+  if (SCOPE_CACHE.has(key)) return SCOPE_CACHE.get(key);
+  const flat = (Tx(u[11]) || "").replace(/\s+/g, " ").trim(), code = cropCode(u);
+  const r = { sub: citSubOf(code), only: null, except: null, clem: false, vars: [], marks: [], allowed: null, tags: [] };
+  if (isCitRel(code)) {
+    for (const m of flat.matchAll(/(?:excepto|salvo)\s+(?:en\s+)?([^.;:)]{0,60})/gi)) {
+      const s = subsIn(m[1]); if (s.length) { r.except = new Set([...(r.except || []), ...s]); r.marks.push(m[0]); }
+    }
+    const inc = flat.match(/(?:^\(?|[.(]\s*|\b(?:incluye|incluido|incluida|uso(?: al aire libre)? en|indicado (?:en|para)|exclusivamente(?: para)?|s[oó]lo|[uú]nicamente)\s*:?\s*)((?:naranj|mandarin|clementin|lim[oó]n|pomel|toronj)[^.;]{0,140})/i);
+    if (inc) { const s = subsIn(inc[1]); if (s.length) { r.only = new Set(s); r.marks.push(inc[1]); } }
+    const cl = flat.match(CLEM_ONLY);
+    if (cl && !/mandarin/i.test(cl[0])) { r.clem = true; r.marks.push(cl[0]); }
+    const allowed = new Set(r.sub ? [r.sub] : CSUB.map(x => x[0]));
+    if (r.only) for (const x of [...allowed]) if (!r.only.has(x)) allowed.delete(x);
+    if (r.except) for (const x of r.except) allowed.delete(x);
+    r.allowed = allowed;
+    const gone = CSUB_MAIN.filter(x => !allowed.has(x)), kept = CSUB_MAIN.filter(x => allowed.has(x));
+    const y = xs => xs.length > 1 ? xs.slice(0, -1).join(", ") + " y " + xs.at(-1) : xs[0] || "";
+    if (!r.sub && gone.length && (r.only || r.except)) r.tags.push(!kept.length ? "No en cítricos principales" : gone.length <= kept.length ? "Excepto " + y(gone) : "Solo " + y(kept));
+    if (r.clem) r.tags.push("Solo clementinas");
+  }
+  for (const s of flat.split(/(?<=[.;])\s+/)) if (VAR_KEY.test(s.replace(VAR_GEN, "")) && !CLEM_ONLY.test(s)) { r.vars.push(s); r.marks.push(s); }
+  if (r.vars.length) r.tags.push("Variedad");
+  SCOPE_CACHE.set(key, r);
+  return r;
+}
+const scopePills = (u, cls = "") => condScope(u).tags.map(t => `<span class="pill vtag ${cls}" title="${esc(t === "Variedad" ? "El condicionamiento menciona variedades concretas: revísalo" : "El condicionamiento limita las especies de cítricos: revísalo")}">⚠ ${esc(t)}</span>`).join("");
+function condHtml(u) {
+  let h = esc(Tx(u[11]) || "");
+  const marks = [...new Set(condScope(u).marks.map(m => m.trim()).filter(m => m.length > 3))].sort((a, b) => b.length - a.length);
+  for (const m of marks) {
+    const words = esc(m).split(/\s+/).map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+    h = h.replace(new RegExp(words.join("\\s+")), x => x.includes("<mark") ? x : `<mark>${x}</mark>`);
+  }
+  return h;
+}
 function daysTo(d) { if (!d) return null; return Math.round((new Date(d + "T00:00:00") - new Date(new Date().toDateString())) / 864e5); }
 const concTxt = s => s[1] ? s[1] + (s[2] ? " " + s[2] : "%") : "";
 const susTxt = p => p.sus.map(s => s[0] + (s[1] ? " " + concTxt(s) : "")).join(" + ");
@@ -918,7 +975,8 @@ function summaryFor(p, test) {
   const plagas = [...new Set(arr.map(u => IDX.a[u[1]][1]))];
   const crops = [...new Set(arr.map(u => IDX.c[u[0]][1]))];
   const gen = arr.some(u => isCampoGen(cropCode(u)));
-  return { plazo: parts.join(" · ") || "—", doses, apl, caldo, plagas, crops, n: arr.length, gen };
+  const tags = [...new Set(arr.flatMap(u => condScope(u).tags))];
+  return { plazo: parts.join(" · ") || "—", doses, apl, caldo, plagas, crops, n: arr.length, gen, tags };
 }
 const listShort = (xs, n = 3) => xs.length <= n ? xs.join(" · ") : xs.slice(0, n).join(" · ") + ` · y ${xs.length - n} más`;
 let GROUPS = [];
@@ -942,7 +1000,7 @@ function renderFicha() {
       <dt>Nº aplic.</dt><dd>${esc(listShort(s.apl, 3)) || "—"}</dd>
       <dt>Caldo</dt><dd>${esc(listShort(s.caldo.map(x => x.replace(/\n/g, " · ")), 2)) || "—"}</dd>
       <dt>Para</dt><dd>${esc(listShort(s.plagas, 14))}</dd>
-      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}${s.gen ? ` <span class="pill cit" title="Registrado para un grupo de cultivos que incluye ${esc(SP.lower)}">grupo que incluye ${esc(SP.lower)}</span>` : ""}</dd></dl></div>` : "";
+      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}${s.gen ? ` <span class="pill cit" title="Registrado para un grupo de cultivos que incluye ${esc(SP.lower)}">grupo que incluye ${esc(SP.lower)}</span>` : ""}</dd>${s.tags.length ? `<dt>Ojo</dt><dd><div class="vtags">${s.tags.map(t => `<span class="pill vtag">⚠ ${esc(t)}</span>`).join("")}</div><span class="note">Algún uso limita especies o variedades en su condicionamiento: míralo en la tabla de usos.</span></dd>` : ""}</dl></div>` : "";
   // Otros productos con la misma composición
   const key = p.sn;
   const same = key ? P.filter(o => o.id !== p.id && o.sn === key && o.estado === "Vigente") : [];
@@ -1015,7 +1073,7 @@ function useRow(p, g, gi) {
   const plag = g.plagas.length > 6 ? `<details class="cd"><summary>${g.plagas.length} plagas/finalidades</summary><ul>${g.plagas.map(x => `<li>${esc(x)}</li>`).join("")}</ul></details>` : `<ul>${g.plagas.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
   const conv = convText(p, u);
   return `<tr>
-    <td class="plagas">${plag}</td>
+    <td class="plagas">${scopePills(u) ? `<div class="vtags">${scopePills(u)}</div>` : ""}${plag}</td>
     <td><span class="dose">${esc(doseText(u))}</span>${conv ? `<span class="conv">${esc(conv)}</span>` : ""}</td>
     <td class="caldo">${esc(S(u[9]) || "—")}</td>
     <td class="ps">${plazoHtml(S(u[5]))}</td>
@@ -1024,7 +1082,7 @@ function useRow(p, g, gi) {
     <td>${esc(S(u[10]) || "—")}</td>
     <td>${um}</td>
     <td style="white-space:nowrap"><div style="display:grid;gap:6px"><button class="btn small primary" data-add="${gi}">+ Cuaderno</button><button class="btn small" data-calc="${gi}">Calcular</button></div></td>
-  </tr>${cond ? `<tr class="cond"><td colspan="9"><details class="cd" ${g.plagas.length <= 6 && cond.length < 260 ? "open" : ""}><summary>Condicionamiento específico</summary><p class="condtxt">${esc(cond)}</p></details></td></tr>` : ""}`;
+  </tr>${cond ? `<tr class="cond"><td colspan="9"><details class="cd" ${(g.plagas.length <= 6 && cond.length < 260) || condScope(u).tags.length ? "open" : ""}><summary>Condicionamiento específico</summary><p class="condtxt">${condHtml(u)}</p></details></td></tr>` : ""}`;
 }
 
 // ================================================================= Calculadora
@@ -1140,7 +1198,7 @@ function renderPlagaTable() {
     const conv = convText(r.p, r.u);
     return `<tr><td><button class="linkbtn" data-open="${r.p.id}">${esc(r.p.nombre)}</button><div class="mono" style="font-size:12px">${esc(r.p.reg)}</div>${estadoPill(r.p)}</td>
     <td>${esc(susTxt(r.p))}</td>
-    <td>${r.generic ? `<span class="gen">Uso genérico</span>` : ""}${esc([...r.ags].join(", "))}<div class="note">${esc([...r.crops].join(", "))}</div></td>
+    <td>${r.generic ? `<span class="gen">Uso genérico</span>` : ""}${esc([...r.ags].join(", "))}<div class="note">${esc([...r.crops].join(", "))}</div>${scopePills(r.u) ? `<div class="vtags">${scopePills(r.u)}</div>` : ""}</td>
     <td><span class="dose">${esc(doseText(r.u))}</span>${conv ? `<span class="conv">${esc(conv)}</span>` : ""}</td>
     <td class="ps">${plazoHtml(S(r.u[5]))}</td><td>${esc(S(r.u[7]) || "—")}</td><td class="caldo">${esc(S(r.u[9]) || "—")}</td><td class="mono">${fmtDate(r.p.cad)}</td></tr>`;
   }).join("")}</tbody></table>`;
@@ -1268,8 +1326,8 @@ function runVerify() {
       if (p.limV) extra = (extra ? extra + " " : "") + `Fecha límite de venta ${fmtDate(p.limV)}.`;
       else if (dd != null && dd < CAD_AVISO) extra = (extra ? extra + " " : "") + `Caduca el ${fmtDate(p.cad)} (en ${dd} días).`;
     } else { st = '<span class="pill ok">Correcto</span>'; stTxt = "Correcto"; ok++; }
-    VROWS.push([r.raw, p.nombre, p.reg, stTxt, extra || "", susTxt(p), [...p.funs].join(", "), s ? s.doses.join(" | ") : "", s ? s.plazo : "", fmtDate(p.cad)]);
-    return `<tr><td>${esc(r.raw)}</td><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div></td><td>${st}${extra ? `<div style="font-size:12px;margin-top:4px">${esc(extra)}</div>` : ""}</td><td>${esc(susTxt(p))}</td><td class="mono" style="font-size:12px">${s ? esc(listShort(s.doses, 3)) : "—"}</td><td class="mono">${s ? esc(s.plazo) : "—"}</td><td class="mono">${fmtDate(p.cad)}</td></tr>`;
+    VROWS.push([r.raw, p.nombre, p.reg, stTxt, [extra, s && s.tags.length ? "Ojo: " + s.tags.join(", ") : ""].filter(Boolean).join(" "), susTxt(p), [...p.funs].join(", "), s ? s.doses.join(" | ") : "", s ? s.plazo : "", fmtDate(p.cad)]);
+    return `<tr><td>${esc(r.raw)}</td><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div></td><td>${st}${extra ? `<div style="font-size:12px;margin-top:4px">${esc(extra)}</div>` : ""}${s && s.tags.length ? `<div class="vtags" style="margin-top:4px">${s.tags.map(t => `<span class="pill vtag" title="Algún uso limita especies o variedades: revisa la ficha">⚠ ${esc(t)}</span>`).join("")}</div>` : ""}</td><td>${esc(susTxt(p))}</td><td class="mono" style="font-size:12px">${s ? esc(listShort(s.doses, 3)) : "—"}</td><td class="mono">${s ? esc(s.plazo) : "—"}</td><td class="mono">${fmtDate(p.cad)}</td></tr>`;
   });
   $("#vsum").innerHTML = lines.length ? `<span class="pill ok">${ok} correctos</span><span class="pill warn">${warn} a revisar</span><span class="pill mute">${nr} sin registro fitosanitario</span>` : "";
   const out = $("#vout"); out.hidden = !lines.length;
