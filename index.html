@@ -23,6 +23,7 @@
   --accent:#c85a17; --accent-ink:#ffffff; --accent-soft:#fbe7d8;
   --ok:#1d7a45; --ok-soft:#d8f0e1; --warn:#8a5d00; --warn-soft:#fbefcc; --bad:#b3261e; --bad-soft:#f9dedc;
   --post:#2c5f8a; --post-soft:#dde9f4;
+  --wwf:#0f6b55; --wwf-soft:#d9efe7;
   --f-display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
@@ -35,6 +36,7 @@
   --accent:#f08a45; --accent-ink:#1a0e05; --accent-soft:#3a2414;
   --ok:#6fd398; --ok-soft:#173826; --warn:#f0c55a; --warn-soft:#3a2f10; --bad:#ff8a80; --bad-soft:#401b19;
   --post:#8cc2f0; --post-soft:#1a2c3d;
+  --wwf:#2f9e80; --wwf-soft:#143328;
   color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#0e1712; --surface:#15211a; --sunk:#1b2a21; --line:#2a3d31; --line-strong:#3f5747;
@@ -43,6 +45,7 @@
   --accent:#f08a45; --accent-ink:#1a0e05; --accent-soft:#3a2414;
   --ok:#6fd398; --ok-soft:#173826; --warn:#f0c55a; --warn-soft:#3a2f10; --bad:#ff8a80; --bad-soft:#401b19;
   --post:#8cc2f0; --post-soft:#1a2c3d;
+  --wwf:#2f9e80; --wwf-soft:#143328;
   color-scheme:dark}
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -220,6 +223,52 @@ textarea#vlist{width:100%;min-height:170px;border:1.5px solid var(--line-strong)
 mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px}
 .printonly{display:none}
 
+/* Pestaña WWF: banda verde-panda para distinguir lo que es del proyecto */
+.tabs button.wwf{color:var(--wwf)}
+.tabs button.wwf[aria-selected="true"]{background:var(--wwf);color:#fff}
+.wwfhead{border-left:6px solid var(--wwf);background:var(--surface);border-radius:var(--r);padding:16px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.wwfhead h2{margin:0;font-family:var(--f-display);font-size:28px;line-height:1.05}
+.wwfhead p{margin:2px 0 0;font-size:12.5px;color:var(--ink-3);max-width:70ch}
+.wwfnav .chip[aria-pressed="true"]{background:var(--wwf);border-color:var(--wwf);color:#fff}
+.wwfgrid{display:grid;grid-template-columns:260px minmax(0,1fr);gap:18px;align-items:start;margin-top:16px}
+@media (max-width:900px){.wwfgrid{grid-template-columns:minmax(0,1fr)}}
+.wlist{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.wlist button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;padding:9px 14px;cursor:pointer;font-size:14px;font-weight:600;color:var(--ink)}
+.wlist button small{font-weight:500;color:var(--ink-3);font-size:11.5px;display:block;font-style:italic}
+.wlist button:hover{background:var(--sunk)}
+.wlist button[aria-current="true"]{background:var(--wwf-soft);box-shadow:inset 3px 0 0 var(--wwf)}
+@media (max-width:900px){.wlist{display:flex;overflow-x:auto}.wlist button{flex:0 0 auto;border-bottom:0;border-right:1px solid var(--line);white-space:nowrap}.wlist button small{display:none}}
+.wcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);min-width:0}
+.wcard>header{padding:18px 22px 14px;border-bottom:3px solid var(--wwf)}
+.wcard>header h3{margin:0;font-family:var(--f-display);font-size:clamp(26px,3.5vw,36px);line-height:1.05}
+.wcard>header em{color:var(--ink-2);font-size:14px}
+.wbody{padding:16px 22px 22px;display:grid;gap:22px;min-width:0}
+.wbody>*{min-width:0}
+.wcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.wcols ul{margin:0;padding-left:18px;display:grid;gap:5px;font-size:13.5px;color:var(--ink-2)}
+.aux{display:flex;flex-wrap:wrap;gap:6px}
+.aux span{background:var(--ok-soft);color:var(--ok);border-radius:14px;padding:3px 10px;font-size:12.5px;font-weight:600}
+.alts{display:grid;gap:10px}
+.alt{border:1px solid var(--line);border-left:5px solid var(--ok);border-radius:6px;padding:12px 14px;display:grid;gap:6px}
+.alt.excepcional{border-left-color:var(--warn)}
+.alt.muy_excepcional{border-left-color:var(--bad)}
+.alt.fitofortificante,.alt.no_fito,.alt.biotecnico,.alt.no_tratar{border-left-color:var(--line-strong)}
+.alt h4{margin:0;font-size:15px;display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.alt .max{font-weight:700;color:var(--post);font-size:13px}
+.alt p{margin:0;font-size:13px;color:var(--ink-2)}
+.tl{display:flex;gap:16px;font-size:12px;color:var(--ink-3)}
+.tl b{font-family:var(--f-mono);color:var(--ink);font-size:13px}
+.alt details summary{cursor:pointer;color:var(--wwf);font-weight:700;font-size:12.5px}
+.alt table{margin-top:6px}
+.pill.wwf{background:var(--wwf);color:#fff}
+.pill.wex{background:var(--warn-soft);color:var(--warn)}
+.pill.wmx{background:var(--bad-soft);color:var(--bad)}
+.wsearch{border:1.5px solid var(--line-strong);border-radius:6px;padding:7px 10px;background:var(--surface);font-size:14px;max-width:100%;width:340px}
+.rules{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.rules section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px 16px}
+.rules h4{margin:0 0 8px;font-size:14px;color:var(--wwf)}
+.rules ul,.rules ol{margin:0;padding-left:18px;display:grid;gap:5px;font-size:13.5px;color:var(--ink-2)}
+
 @media print{
   @page{margin:12mm}
   body{background:#fff;color:#000;font-size:11px}
@@ -248,6 +297,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
       <button role="tab" aria-selected="false" data-view="verificar">Verificar</button>
       <button role="tab" aria-selected="false" data-view="cuaderno">Cuaderno<span class="count" id="cnt" hidden>0</span></button>
+      <button role="tab" aria-selected="false" data-view="wwf" class="wwf" id="tabWwf" hidden>WWF</button>
     </nav>
   </div>
   <div class="wrap searchrow" id="searchrow">
@@ -316,6 +366,36 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </div>
   </section>
 
+  <section id="view-wwf" hidden>
+    <div class="wwfhead">
+      <div><h2>Proyecto Zitrus EDEKA-WWF</h2><p id="wwfDocs"></p></div>
+      <div class="chips wwfnav" role="group" aria-label="Secciones WWF">
+        <button class="chip" data-w="plaga" aria-pressed="true">Por plaga</button>
+        <button class="chip" data-w="ma" aria-pressed="false">Materias activas</button>
+        <button class="chip" data-w="ver" aria-pressed="false">Verificar receta</button>
+        <button class="chip" data-w="reglas" aria-pressed="false">Reglas del proyecto</button>
+      </div>
+    </div>
+    <div id="w-plaga" class="wwfgrid"><nav class="wlist" id="wList" aria-label="Plagas del proyecto"></nav><article class="wcard" id="wCard"></article></div>
+    <div id="w-ma" hidden style="margin-top:16px" class="panel">
+      <p class="lead">Todas las materias activas de las tablas del proyecto, con su categoría en cada plaga, el límite de aplicaciones (por materia activa, sea cual sea la marca) y los productos comerciales vigentes del registro que las contienen.</p>
+      <input type="search" class="wsearch" id="wMaQ" placeholder="Filtrar materia activa o plaga" aria-label="Filtrar materias activas">
+      <div class="tblwrap" id="wMaOut"></div>
+    </div>
+    <div id="w-ver" hidden style="margin-top:16px" class="panel">
+      <p class="lead">Pega los productos de una receta, uno por línea (nº de registro o nombre comercial). Se comprueba si su materia activa está en la tabla del proyecto, en qué categoría y para qué plagas, y si el registro la autoriza para esa plaga en cítricos.</p>
+      <textarea id="wvlist" spellcheck="false" aria-label="Productos a verificar para WWF" style="width:100%;min-height:160px;border:1.5px solid var(--line-strong);border-radius:6px;padding:10px 12px;background:var(--bg);font-family:var(--f-mono);font-size:13px"></textarea>
+      <div class="f-actions">
+        <button class="btn primary" id="wvrun" style="background:var(--wwf);border-color:var(--wwf);color:#fff">Verificar para WWF</button>
+        <label class="filters">Plaga: <select id="wvplaga" aria-label="Plaga a comprobar"><option value="">Todas las plagas</option></select></label>
+        <button class="btn" id="wvxlsx">Descargar Excel</button>
+      </div>
+      <div class="vsum" id="wvsum"></div>
+      <div class="tblwrap" id="wvout" hidden></div>
+    </div>
+    <div id="w-reglas" hidden style="margin-top:16px"><div class="rules" id="wRules"></div></div>
+  </section>
+
   <section id="view-cuaderno" hidden>
     <div class="panel">
       <h2>Mi cuaderno</h2>
@@ -363,7 +443,12 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = fal
 const S = i => i < 0 || !USOS ? null : USOS.s[i];
 const Tx = i => i < 0 || !USOS ? null : USOS.t[i];
 const cropCode = u => IDX.c[u[0]][0];
-const isCampo = code => code.startsWith(CIT);
+// Usos registrados para un grupo superior de cultivos que incluye los cítricos (valen también para cítricos)
+const CIT_ANC = new Set(["0100000000000000", "0101000000000000", "0101020000000000"]);
+const isCampo = code => code.startsWith(CIT) || CIT_ANC.has(code);
+const isCampoGen = code => CIT_ANC.has(code);
+// Códigos de los grupos superiores de un cultivo (01 01 02 01 … → 0100…, 010100…, 01010200…)
+const cropAnc = code => { const out = []; for (let i = 2; i < 16; i += 2) { const a = code.slice(0, i).padEnd(16, "0"); if (a !== code) out.push(a); } return out; };
 const isPost = code => code.startsWith(POS);
 function daysTo(d) { if (!d) return null; return Math.round((new Date(d + "T00:00:00") - new Date(new Date().toDateString())) / 864e5); }
 const concTxt = s => s[1] ? s[1] + (s[2] ? " " + s[2] : "%") : "";
@@ -414,6 +499,7 @@ async function load() {
   $("#fFun").insertAdjacentHTML("beforeend", [...funsAll].sort((a, b) => a.localeCompare(b, "es")).map(f => `<option>${esc(f)}</option>`).join(""));
   initPlaga();
   runSearch();
+  loadWWF();
   const fromHash = productFromHash();
   const last = store.get("fr_recent", [])[0];
   const first = fromHash || (last && byId.get(last)) || P.find(p => p.reg === "24526") || P[0];
@@ -619,7 +705,8 @@ function summaryFor(p, test) {
   const caldo = [...new Set(arr.map(u => S(u[9])).filter(Boolean))];
   const plagas = [...new Set(arr.map(u => IDX.a[u[1]][1]))];
   const crops = [...new Set(arr.map(u => IDX.c[u[0]][1]))];
-  return { plazo: parts.join(" · ") || "—", doses, apl, caldo, plagas, crops, n: arr.length };
+  const gen = arr.some(u => isCampoGen(cropCode(u)));
+  return { plazo: parts.join(" · ") || "—", doses, apl, caldo, plagas, crops, n: arr.length, gen };
 }
 const listShort = (xs, n = 3) => xs.length <= n ? xs.join(" · ") : xs.slice(0, n).join(" · ") + ` · y ${xs.length - n} más`;
 let GROUPS = [];
@@ -643,7 +730,7 @@ function renderFicha() {
       <dt>Nº aplic.</dt><dd>${esc(listShort(s.apl, 3)) || "—"}</dd>
       <dt>Caldo</dt><dd>${esc(listShort(s.caldo.map(x => x.replace(/\n/g, " · ")), 2)) || "—"}</dd>
       <dt>Para</dt><dd>${esc(listShort(s.plagas, 14))}</dd>
-      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}</dd></dl></div>` : "";
+      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}${s.gen ? ' <span class="pill cit" title="Registrado para un grupo de cultivos que incluye los cítricos">grupo que incluye cítricos</span>' : ""}</dd></dl></div>` : "";
   // Otros productos con la misma composición
   const key = p.sn;
   const same = key ? P.filter(o => o.id !== p.id && o.sn === key && o.estado === "Vigente") : [];
@@ -653,7 +740,7 @@ function renderFicha() {
     if (!cs.length) return `<p class="empty">No hay usos que coincidan con el filtro.</p>`;
     return cs.map(c => {
       const rows = [...c.groups.values()].map(g => { GROUPS.push({ ...g, crop: c.name, cropCode: c.code }); return useRow(p, g, GROUPS.length - 1); }).join("");
-      return `<div class="crop"><h4>${esc(c.name)} ${isPost(c.code) ? '<span class="pill post">Postcosecha</span>' : ""}<span class="n">${(n => `${n} plaga${n === 1 ? "" : "s"}`)(new Set([...c.groups.values()].flatMap(g => g.plagas)).size)}</span></h4>
+      return `<div class="crop"><h4>${esc(c.name)} ${isPost(c.code) ? '<span class="pill post">Postcosecha</span>' : ""}${isCampoGen(c.code) ? '<span class="pill cit" title="Uso registrado para un grupo de cultivos que incluye los cítricos">Incluye cítricos</span>' : ""}<span class="n">${(n => `${n} plaga${n === 1 ? "" : "s"}`)(new Set([...c.groups.values()].flatMap(g => g.plagas)).size)}</span></h4>
         <div class="tblwrap"><table class="uses"><thead><tr><th>Plaga / finalidad</th><th>Dosis</th><th>Caldo</th><th>Plazo seg.</th><th>Nº aplic.</th><th>Intervalo</th><th>Estado fenol.</th><th>Usuario · método</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
     }).join("");
   })();
@@ -774,7 +861,9 @@ function initPlaga() {
 function cropTest(sel) {
   if (sel === "campo") return c => isCampo(c[0]);
   if (sel === "post") return c => isPost(c[0]);
-  const n = sel.slice(2); return c => c[1] === n;
+  const n = sel.slice(2), row = IDX.c.find(c => c[1] === n);
+  const codes = new Set(row ? [row[0], ...cropAnc(row[0])] : []);
+  return c => c[1] === n || codes.has(c[0]);
 }
 function agentsInScope() {
   const t = cropTest(PL.crop), m = new Map();
@@ -975,8 +1064,181 @@ function runVerify() {
   store.set("fr_vlist", $("#vlist").value);
 }
 
+// ================================================================= Proyecto Zitrus EDEKA-WWF
+let WWF = null;
+const WCAT = {
+  permitida: ["Permitida", "ok"], excepcional: ["Tratamiento excepcional", "wex"], muy_excepcional: ["Muy excepcional", "wmx"],
+  fitofortificante: ["Fitofortificante", "mute"], no_fito: ["Sin registro fitosanitario", "mute"], biotecnico: ["Medio biotécnico", "mute"], no_tratar: ["No se trata", "ok"]
+};
+const WRANK = { permitida: 0, excepcional: 1, muy_excepcional: 2 };
+const W = { sec: "plaga", plaga: null, rows: [] };
+async function loadWWF() {
+  try { const r = await fetch("data/wwf.json", { cache: "no-cache" }); if (!r.ok) return; WWF = await r.json(); } catch { return; }
+  $("#tabWwf").hidden = false;
+  $("#wwfDocs").textContent = `Campaña ${WWF.campana} · ${WWF.documentos.join(" · ")}. ${WWF.fuentes}.`;
+  W.plaga = WWF.plagas[0].id;
+  $("#wvplaga").insertAdjacentHTML("beforeend", WWF.plagas.filter(p => p.alternativas.some(a => a.ma)).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join(""));
+  $("#wvlist").value = store.get("fr_wwf_vlist", "") || "24526 TEPPEKI\nES-01312 BRAI\nCORNALINA\nFLASH UM\nSHOSHI\nLIMAGRAM\nSLUXX HP\nKDOS\nFENGIB\nUREA CRISTALINA";
+  renderWwf();
+}
+// ¿El producto encaja en una alternativa? Todas sus materias activas deben estar en la alternativa
+function concNum(s) { const v = parseFloat(String(s[1] || "").replace(",", ".")); return isNaN(v) ? null : v; }
+function altMatch(p, alt) {
+  if (!alt.ma || !p.sus.length) return false;
+  const ok = p.sus.every(s => { const n = norm(s[0]); return alt.ma.some(k => n.includes(k)); });
+  if (!ok) return false;
+  if (alt.maxConc != null && p.sus.some(s => { const c = concNum(s); return c != null && c > alt.maxConc + 1e-9; })) return false;
+  return true;
+}
+const isCebo = p => /\[(CB|RB|GB)\]/i.test(p.form) || /cebo/i.test(p.nombre);
+// Usos del registro en cítricos (campo) para los códigos de plaga del proyecto (incluye grupos superiores, p. ej. «Ácaros»)
+function regUsesFor(p, pl) {
+  const arr = (USOS && USOS.u[p.id]) || [];
+  return arr.filter(u => {
+    if (!isCampo(cropCode(u))) return false;
+    const a = IDX.a[u[1]][0];
+    return pl.codigos.some(code => a === code || a.startsWith(code + ".") || (code.startsWith(a + ".") && a.includes(".")));
+  });
+}
+function wwfEval(p, onlyPlaga) {
+  const out = [];
+  for (const pl of WWF.plagas) {
+    if (onlyPlaga && pl.id !== onlyPlaga) continue;
+    let best = null;
+    for (const alt of pl.alternativas) {
+      if (!(alt.cat in WRANK) || !altMatch(p, alt)) continue;
+      if (alt.soloCebo && !isCebo(p)) continue;
+      if (!best || WRANK[alt.cat] < WRANK[best.cat]) best = alt;
+    }
+    if (best) out.push({ pl, alt: best, reg: regUsesFor(p, pl) });
+  }
+  return out;
+}
+function altProducts(pl, alt) {
+  if (!alt.ma || !USOS) return { ok: [], noReg: 0 };
+  const ok = []; let noReg = 0;
+  for (const p of P) {
+    if (p.estado !== "Vigente" || !altMatch(p, alt)) continue;
+    if (alt.soloCebo && !isCebo(p)) continue;
+    const us = regUsesFor(p, pl);
+    if (us.length) ok.push({ p, us }); else noReg++;
+  }
+  ok.sort((a, b) => a.p.n.localeCompare(b.p.n));
+  return { ok, noReg };
+}
+function wwfPill(cat) { const c = WCAT[cat] || [cat, "mute"]; return `<span class="pill ${c[1]}">${esc(c[0])}</span>`; }
+function renderWwf() {
+  if (!WWF) return;
+  document.querySelectorAll(".wwfnav .chip").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.w === W.sec)));
+  ["plaga", "ma", "ver", "reglas"].forEach(k => $("#w-" + k).hidden = k !== W.sec);
+  if (W.sec === "plaga") renderWwfPlaga();
+  if (W.sec === "ma") renderWwfMa();
+  if (W.sec === "reglas") renderWwfReglas();
+  if (W.sec === "ver" && USOS && !$("#wvout").innerHTML) runWwfVerify();
+}
+function renderWwfPlaga() {
+  $("#wList").innerHTML = WWF.plagas.map(pl => `<button data-wp="${pl.id}" aria-current="${pl.id === W.plaga}">${esc(pl.nombre)}<small>${esc(pl.cientifico)}</small></button>`).join("");
+  const pl = WWF.plagas.find(x => x.id === W.plaga);
+  const altHtml = alt => {
+    let prods = "";
+    if (alt.ma) {
+      if (!USOS) prods = `<p class="note">Cargando productos del registro…</p>`;
+      else {
+        const r = altProducts(pl, alt);
+        prods = r.ok.length ? `<details><summary>${r.ok.length} producto${r.ok.length === 1 ? "" : "s"} comercial${r.ok.length === 1 ? "" : "es"} del registro autorizado${r.ok.length === 1 ? "" : "s"} para esta plaga en cítricos</summary>
+          <div class="tblwrap"><table class="v" style="min-width:640px"><thead><tr><th>Producto</th><th>Materia activa</th><th>Dosis en cítricos</th><th>Plazo seg.</th><th>Caducidad</th></tr></thead><tbody>${r.ok.map(({ p, us }) => {
+            const u = us[0], gen = us.every(x => { const a = IDX.a[x[1]][0]; return !pl.codigos.some(c => a === c || a.startsWith(c + ".")); });
+            return `<tr><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div>${estadoPill(p)}</td><td>${esc(susTxt(p))}</td><td><span class="dose">${esc(doseText(u))}</span>${convText(p, u) ? `<span class="conv">${esc(convText(p, u))}</span>` : ""}${gen ? '<span class="gen">Uso genérico del grupo</span>' : ""}</td><td class="ps">${plazoHtml(S(u[5]))}</td><td class="mono">${fmtDate(p.cad)}</td></tr>`;
+          }).join("")}</tbody></table></div></details>${r.noReg ? `<p class="note">Otros ${r.noReg} productos vigentes con esta materia activa no tienen uso autorizado para esta plaga en cítricos.</p>` : ""}`
+          : `<p class="note">Ningún producto vigente del registro con esta materia activa tiene uso autorizado para esta plaga en cítricos${r.noReg ? ` (hay ${r.noReg} con la materia activa para otros usos)` : ""}.</p>`;
+      }
+    }
+    return `<div class="alt ${alt.cat}"><h4>${esc(alt.n)} ${wwfPill(alt.cat)}${alt.prioritario ? '<span class="pill ok">Prioritario</span>' : ""}${alt.soloCebo ? '<span class="pill mute">Solo en cebo</span>' : ""}</h4>
+      ${alt.max ? `<div class="max">Máx.: ${esc(alt.max)}</div>` : ""}${alt.notas ? `<p>${esc(alt.notas)}</p>` : ""}
+      ${alt.tl || alt.tlha ? `<div class="tl"><span>Toxic load <b>${esc(alt.tl || "-")}</b></span><span>Toxic load/ha <b>${esc(alt.tlha || "-")}</b></span></div>` : ""}${prods}</div>`;
+  };
+  const list = (t, xs) => xs && xs.length ? `<section class="sec"><h3>${t}</h3><ul>${xs.map(x => `<li>${esc(x)}</li>`).join("")}</ul></section>` : "";
+  $("#wCard").innerHTML = `<header><h3>${esc(pl.nombre)}</h3><em>${esc(pl.cientifico)}</em> <span class="note">· ${esc(pl.documento || "Tabla de pesticidas")}, pág. ${pl.pagina}</span></header>
+    <div class="wbody">
+      ${pl.aviso ? `<div class="alert warn">${esc(pl.aviso)}</div>` : ""}
+      <section class="sec"><h3>${pl.tipo === "finalidad" ? "Alternativas químicas permitidas" : "Alternativa química permitida en el proyecto"}</h3><div class="alts">${pl.alternativas.map(altHtml).join("")}</div></section>
+      <div class="wcols">${list(pl.tipo === "finalidad" ? "Medidas culturales y alternativas no químicas" : "Medidas culturales y preventivas", pl.culturales)}${list(pl.tipo === "hierbas" ? "" : "Control biológico", pl.biologico)}</div>
+      ${pl.auxiliares && pl.auxiliares.length ? `<section class="sec"><h3>Plantas auxiliares</h3><div class="aux">${pl.auxiliares.map(a => `<span>${esc(a)}</span>`).join("")}</div></section>` : ""}
+      <p class="note">Niveles de acción del control biológico: + bajo · ++ medio · +++ alto. Las materias activas excepcionales requieren la evaluación del consultor en BPA y, si no están en la tabla, la aprobación del equipo del proyecto.</p>
+    </div>`;
+}
+function maRows() {
+  const m = new Map();
+  for (const pl of WWF.plagas) for (const alt of pl.alternativas) {
+    const key = norm(alt.n.replace(/\(.*?\)/g, "").replace(/\s+\d.*$/, "")).trim() || norm(alt.n);
+    if (!m.has(key)) m.set(key, { n: alt.n, ma: alt.ma, uses: [] });
+    m.get(key).uses.push({ pl, alt });
+  }
+  return [...m.values()].sort((a, b) => a.n.localeCompare(b.n, "es"));
+}
+function renderWwfMa() {
+  const q = norm($("#wMaQ").value);
+  const rows = maRows().filter(r => !q || norm(r.n).includes(q) || r.uses.some(u => norm(u.pl.nombre).includes(q)));
+  $("#wMaOut").innerHTML = `<table class="v" style="min-width:820px"><thead><tr><th>Materia activa</th><th>Plaga · categoría</th><th>Máx. aplicaciones</th><th>Toxic load</th><th>Toxic load/ha</th><th>Productos vigentes</th></tr></thead><tbody>${rows.map(r => {
+    const prods = r.ma && USOS ? P.filter(p => p.estado === "Vigente" && r.uses.some(u => altMatch(p, u.alt))) : [];
+    const uniq = (f) => [...new Set(r.uses.map(f).filter(Boolean))].join(" · ") || "—";
+    return `<tr><td><b>${esc(r.n)}</b></td><td>${r.uses.map(u => `<div style="margin-bottom:3px">${esc(u.pl.nombre)} ${wwfPill(u.alt.cat)}</div>`).join("")}</td><td>${esc(uniq(u => u.alt.max))}</td><td class="mono">${esc(uniq(u => u.alt.tl))}</td><td class="mono">${esc(uniq(u => u.alt.tlha))}</td>
+      <td>${r.ma ? (prods.length ? `<details><summary class="linkbtn" style="text-decoration:none">${prods.length} producto${prods.length === 1 ? "" : "s"}</summary>${prods.slice(0, 60).map(p => `<div><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button> <span class="mono" style="font-size:12px">${esc(p.reg)}</span></div>`).join("")}${prods.length > 60 ? "<div>…</div>" : ""}</details>` : "Ninguno vigente") : '<span class="note">No es un fitosanitario del registro</span>'}</td></tr>`;
+  }).join("")}</tbody></table>`;
+}
+function renderWwfReglas() {
+  const R = WWF.reglas, ul = xs => `<ul>${xs.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
+  $("#wRules").innerHTML = `<section><h4>Objetivo</h4><p class="longtext" style="font-size:13.5px">${esc(R.objetivo)}</p></section>
+    <section><h4>Prevención (prioritaria)</h4><ol>${R.prevencion.map(x => `<li>${esc(x)}</li>`).join("")}</ol></section>
+    <section><h4>Uso de plaguicidas</h4>${ul(R.uso)}</section>
+    <section><h4>Selección de pesticidas y límites</h4>${ul(R.seleccion)}</section>
+    <section><h4>Protocolo de tratamientos excepcionales</h4>${ul(R.excepcional)}</section>
+    <section><h4>Control de hierbas</h4>${ul(R.hierbas)}</section>
+    <section><h4>Cambios 2026</h4><p class="longtext" style="font-size:13.5px">${esc(R.modificaciones)}</p></section>`;
+}
+function runWwfVerify() {
+  if (!USOS || !WWF) return;
+  const only = $("#wvplaga").value;
+  const lines = $("#wvlist").value.split(/\n/).map(matchLine).filter(Boolean);
+  let ok = 0, ex = 0, no = 0, nr = 0; W.rows = [];
+  const html = lines.map(r => {
+    if (!r.p) { nr++; W.rows.push([r.raw, "", "", "Sin registro fitosanitario", "", "", "", "Si se usa para controlar plagas necesita autorización del proyecto"]);
+      return `<tr class="nr"><td>${esc(r.raw)}</td><td colspan="5"><span class="pill mute">Sin registro fitosanitario</span> Abono, corrector o bioestimulante: no requiere tabla WWF. Recuerda: no se pueden emplear fertilizantes o fitofortificantes para el control de plagas sin autorización del proyecto.</td></tr>`; }
+    const p = r.p, ev = wwfEval(p, only);
+    const best = ev.reduce((m, e) => Math.min(m, WRANK[e.alt.cat]), 9);
+    let st;
+    if (!ev.length) { no++; st = `<span class="pill bad">${only ? "No permitido para esta plaga" : "No incluido en la tabla WWF"}</span>`; }
+    else if (best === 0) { ok++; st = '<span class="pill ok">Permitido</span>'; }
+    else if (best === 1) { ex++; st = '<span class="pill wex">Solo excepcional</span>'; }
+    else { ex++; st = '<span class="pill wmx">Solo muy excepcional</span>'; }
+    const det = ev.map(e => `<div style="margin-bottom:4px"><b>${esc(e.pl.nombre)}</b> ${wwfPill(e.alt.cat)}${e.reg.length ? "" : ' <span class="pill bad" title="El registro no autoriza este producto para esa plaga en cítricos">sin uso en registro</span>'}</div>`).join("") || `<span class="note">Su materia activa (${esc(susTxt(p))}) no está en la tabla del proyecto${only ? " para esta plaga" : ""}.</span>`;
+    const maxs = [...new Set(ev.map(e => e.alt.max).filter(Boolean))].join(" · ");
+    const tl = [...new Set(ev.map(e => e.alt.tl).filter(x => x && x !== "-"))].join(" · ");
+    const gen = [];
+    if (p.estado !== "Vigente") gen.push("Cancelado en el registro");
+    else { const d = daysTo(p.cad); if (d != null && d < CAD_AVISO) gen.push(`Caduca el ${fmtDate(p.cad)}`); }
+    if (r.note) gen.push(r.note);
+    W.rows.push([r.raw, p.nombre, p.reg, !ev.length ? (only ? "No permitido para esta plaga" : "No incluido en la tabla WWF") : best === 0 ? "Permitido" : best === 1 ? "Solo excepcional" : "Solo muy excepcional", ev.map(e => `${e.pl.nombre} (${WCAT[e.alt.cat][0]}${e.reg.length ? "" : ", sin uso en registro"})`).join("; "), maxs, tl, gen.join(" ")]);
+    return `<tr><td>${esc(r.raw)}</td><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div><div class="note">${esc(susTxt(p))}</div></td><td>${st}${gen.length ? `<div style="font-size:12px;margin-top:4px">${esc(gen.join(" "))}</div>` : ""}</td><td>${det}</td><td style="font-size:12.5px">${esc(maxs) || "—"}</td><td class="mono">${esc(tl) || "—"}</td></tr>`;
+  });
+  $("#wvsum").innerHTML = lines.length ? `<span class="pill ok">${ok} permitidos</span><span class="pill wex">${ex} solo excepcionales</span><span class="pill bad">${no} no permitidos</span><span class="pill mute">${nr} sin registro fitosanitario</span>` : "";
+  const out = $("#wvout"); out.hidden = !lines.length;
+  out.innerHTML = `<table class="v" style="min-width:900px"><thead><tr><th>Entrada</th><th>Producto en registro</th><th>Resultado WWF</th><th>Plagas en la tabla del proyecto</th><th>Máx. aplicaciones</th><th>Toxic load</th></tr></thead><tbody>${html.join("")}</tbody></table>`;
+  store.set("fr_wwf_vlist", $("#wvlist").value);
+}
+$("#view-wwf").addEventListener("click", e => {
+  const c = e.target.closest("[data-w]"); if (c) { W.sec = c.dataset.w; renderWwf(); return; }
+  const b = e.target.closest("[data-wp]"); if (b) { W.plaga = b.dataset.wp; renderWwfPlaga(); if (window.matchMedia("(max-width:900px)").matches) $("#wCard").scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+  const o = e.target.closest("[data-open]"); if (o) { e.preventDefault(); openFromAnywhere(Number(o.dataset.open)); }
+});
+$("#wMaQ").addEventListener("input", () => { clearTimeout(st); st = setTimeout(renderWwfMa, 150); });
+$("#wvrun").addEventListener("click", runWwfVerify);
+$("#wvplaga").addEventListener("change", runWwfVerify);
+$("#wvxlsx").addEventListener("click", () => { if (!W.rows.length) runWwfVerify(); if (!W.rows.length) return toast("La lista está vacía");
+  xlsx(`verificacion_WWF_${new Date().toISOString().slice(0, 10)}.xlsx`, [["WWF", `Verificación Proyecto Zitrus EDEKA-WWF (campaña ${WWF.campana}) · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado WWF", "Plagas en la tabla del proyecto", "Máx. aplicaciones", "Toxic load", "Observaciones"], W.rows, [24, 22, 12, 22, 60, 36, 12, 40]]]); });
+
 // ================================================================= Vistas y eventos
-const VIEWS = ["buscar", "plaga", "verificar", "cuaderno"];
+const VIEWS = ["buscar", "plaga", "verificar", "cuaderno", "wwf"];
 function setView(v) {
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach(x => $("#view-" + x).hidden = x !== v);
@@ -984,6 +1246,7 @@ function setView(v) {
   if (v === "cuaderno") renderCuaderno();
   if (v === "verificar" && USOS && !$("#vout").innerHTML) runVerify();
   if (v === "plaga") setTimeout(() => $("#pQ").focus(), 50);
+  if (v === "wwf") renderWwf();
   store.set("fr_view", v);
 }
 function openFromAnywhere(id) { setView("buscar"); openProduct(id); window.scrollTo({ top: 0, behavior: "smooth" }); }

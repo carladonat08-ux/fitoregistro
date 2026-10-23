@@ -222,9 +222,13 @@ def validar(productos, usos):
         raise ValueError("No aparece ningún uso en cítricos")
 
 
+GRUPOS_CON_CITRICOS = {"0100000000000000", "0101000000000000", "0101020000000000"}
+
+
 def citricos(indice, usos):
     cods = [c[0] for c in indice["c"]]
-    return {int(pid) for pid, arr in usos["u"].items() if any(cods[u[0]].startswith(CITRICOS) for u in arr)}
+    es_cit = lambda c: c.startswith(CITRICOS) or c.startswith("020101") or c in GRUPOS_CON_CITRICOS
+    return {int(pid) for pid, arr in usos["u"].items() if any(es_cit(cods[u[0]]) for u in arr)}
 
 
 def resumen_cambios(viejo_i, viejo_u, nuevo_i, nuevo_u):

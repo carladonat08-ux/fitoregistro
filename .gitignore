@@ -3,3 +3,4 @@ __pycache__/
 *.db
 *.db.gz
 .DS_Store
+data/wwf.json
