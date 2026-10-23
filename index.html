@@ -22,7 +22,7 @@
 :root{
   --bg:#ece2cf; --surface:#f8f2e6; --sunk:#e3d6bf; --line:#d2c3a6; --line-strong:#a6957a;
   --ink:#1c1a16; --ink-2:#48423a; --ink-3:#6d6557;
-  --head:#1d4a30; --head-deep:#163a25; --head-2:rgba(246,239,224,.10); --head-ink:#f7f0e1; --head-mute:#c6d6bf; --citrus:#f08a2c;
+  --head:#1d4a30; --head-deep:#163a25; --head-hi:#2a6040; --head-accent:#f08a2c; --head-2:rgba(246,239,224,.10); --head-ink:#f7f0e1; --head-mute:#c6d6bf; --citrus:#f08a2c;
   --leaf:#2f5e34; --leaf-soft:#dbe2c4;
   --accent:#e2661b; --accent-text:#ad4710; --accent-ink:#1c1a16; --accent-soft:#f4d6bb;
   --ok:#2f6b35; --ok-soft:#d8e3c2; --warn:#875800; --warn-soft:#f1dea6; --bad:#a3271d; --bad-soft:#f0ccc2;
@@ -48,16 +48,16 @@ button,input,select,textarea{font:inherit;color:inherit}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 
 /* Cabecera */
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;color:var(--head-ink);overflow:hidden;isolation:isolate;
-  background:radial-gradient(120% 140% at 100% 0%,#2a6040 0%,var(--head) 45%,var(--head-deep) 100%);box-shadow:0 6px 24px -14px rgb(22 58 37 / .55)}
-header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--citrus);z-index:1}
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;color:var(--head-ink);isolation:isolate;transition:background-color .4s;
+  background-color:var(--head);background-image:radial-gradient(120% 140% at 100% 0%,var(--head-hi) 0%,var(--head) 45%,var(--head-deep) 100%);box-shadow:0 6px 24px -14px rgb(22 58 37 / .55)}
+header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--head-accent);z-index:1}
 .top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding-block:16px 12px}
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
 .brand svg{width:44px;height:44px;flex:none;filter:drop-shadow(0 3px 6px rgb(0 0 0 / .25))}
 .brand h1{margin:0;font-family:var(--f-display);font-weight:400;font-stretch:100%;font-size:30px;letter-spacing:-.01em;line-height:1;color:var(--head-ink)}
-.brand h1 b{color:var(--citrus);font-weight:800}
+.brand h1 b{color:var(--head-accent);font-weight:800}
 .brand small{display:block;margin-top:4px;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--head-mute)}
-.tabs{display:flex;gap:4px;background:rgb(18 48 30 / .78);padding:4px;border-radius:999px;margin-left:auto;overflow-x:auto;max-width:100%;backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgb(246 239 224 / .08)}
+.tabs{display:flex;gap:4px;background:rgb(0 0 0 / .24);padding:4px;border-radius:999px;margin-left:auto;overflow-x:auto;max-width:100%;backdrop-filter:blur(6px);box-shadow:inset 0 0 0 1px rgb(246 239 224 / .08)}
 .tabs button{border:0;background:transparent;padding:7px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:13px;color:var(--head-mute);white-space:nowrap;transition:background .15s,color .15s}
 .tabs button:hover{color:var(--head-ink);background:rgba(246,239,224,.08)}
 .tabs button[aria-selected="true"]{background:var(--head-ink);color:var(--head);box-shadow:0 2px 8px -2px rgb(0 0 0 / .3)}
@@ -221,14 +221,36 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .spchip{border:1.5px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink-2)}
 .spchip:hover{border-color:var(--leaf);color:var(--leaf)}
 .spchip[aria-pressed="true"]{background:var(--head);border-color:var(--head);color:var(--head-ink);box-shadow:0 2px 8px -3px rgb(29 74 48 / .6)}
-.spother input{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:8px 11px;background:var(--surface);font-size:14px}
-.spother input:focus{border-color:var(--citrus);outline:none}
+/* Selector de cultivo (Inicio y cabecera) */
+.cropgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(104px,1fr));gap:8px}
+.croptile{display:grid;justify-items:center;gap:4px;padding:10px 6px 9px;border:1.5px solid var(--line);background:var(--surface);border-radius:14px;cursor:pointer;color:var(--ink-2);font-size:12.5px;font-weight:600;line-height:1.2;text-align:center;transition:transform .12s,border-color .12s,box-shadow .12s}
+.croptile i{font-style:normal;font-size:30px;line-height:1.1}
+.croptile:hover{transform:translateY(-2px);border-color:var(--head);box-shadow:0 6px 14px -10px rgb(0 0 0 / .5)}
+.croptile[aria-pressed="true"]{background:var(--head);border-color:var(--head);color:var(--head-ink);box-shadow:0 8px 18px -10px var(--head)}
+@media (max-width:560px){.cropgrid{grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:6px}.croptile{padding:8px 4px;font-size:11.5px;border-radius:12px}.croptile i{font-size:25px}}
+@media (prefers-reduced-motion:reduce){.croptile{transition:none}.croptile:hover{transform:none}}
+.cropfind{position:relative}
+.cropfind input{width:100%;border:1.5px solid var(--line-strong);border-radius:12px;padding:10px 12px 10px 38px;background:var(--surface);font-size:15px}
+.cropfind input:focus{border-color:var(--head);outline:none;box-shadow:0 0 0 3px rgb(0 0 0 / .08)}
+.cropfind>span{position:absolute;left:12px;top:11px;font-size:16px;pointer-events:none}
+.croplist{list-style:none;margin:6px 0 0;padding:4px;background:var(--surface);border:1px solid var(--line-strong);border-radius:12px;max-height:300px;overflow:auto;box-shadow:0 10px 26px -12px rgb(0 0 0 / .35)}
+.croplist button{display:flex;align-items:center;gap:10px;width:100%;text-align:left;border:0;background:none;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:14px;color:var(--ink)}
+.croplist button i{font-style:normal;font-size:18px;width:24px;text-align:center}
+.croplist button small{margin-left:auto;color:var(--ink-3);font-size:11.5px;text-align:right}
+.croplist button:hover,.croplist button.on{background:var(--sunk)}
+.croplist button[aria-current="true"]{font-weight:700}
+.croplist .lt{padding:6px 10px 2px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);font-weight:700}
+.croplist mark{background:none;color:var(--head);font-weight:800;padding:0}
+.sppop{position:absolute;z-index:30;top:calc(100% + 8px);left:0;width:min(380px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:16px;padding:12px;box-shadow:0 18px 40px -16px rgb(0 0 0 / .45);display:grid;gap:8px}
+.sppop .croplist{margin:0;box-shadow:none;border:0;padding:0;max-height:min(360px,55vh)}
+.spwrap{position:relative}
 .spbadge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgb(246 239 224 / .25);background:rgb(246 239 224 / .08);color:var(--head-ink);border-radius:999px;padding:5px 12px 5px 13px;cursor:pointer;font-size:13px}
 .spbadge span{color:var(--head-mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-.spbadge b{font-weight:700;color:var(--citrus)}
+.spbadge b{font-weight:700;color:var(--head-accent)}
+.spbadge i{font-style:normal;font-size:17px;line-height:1}
 .spbadge svg{width:12px;height:12px}
 .spbadge:hover{background:rgb(246 239 224 / .16)}
-@media (max-width:700px){.spbadge{order:3}}
+@media (max-width:700px){.spwrap{order:3}}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
 .stats div{background:var(--bg);border-radius:12px;padding:14px 16px;min-width:0}
 .stats dt{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
@@ -363,7 +385,14 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="20" cy="20" r="14.5" fill="rgb(246 239 224 / .12)" stroke="#f7f0e1" stroke-width="3"/><path d="M29.8 30.2l9.5 9.5" stroke="#f08a2c" stroke-width="5" stroke-linecap="round"/><path d="M12.5 26.5c-.5-9 6-14.5 15-14 .8 9.2-5.5 15-15 14z" fill="#8cc56b"/><path d="M13.5 25.5c3.5-3.8 7.2-6.8 11.5-9" stroke="#1d4a30" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
       <div><h1>Fito<b>Lupa</b></h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     </div>
-    <button type="button" class="spbadge" id="spBadge" title="Cambiar de especie"><span>Especie</span><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <div class="spwrap">
+      <button type="button" class="spbadge" id="spBadge" aria-haspopup="true" aria-expanded="false" title="Cambiar de cultivo"><i id="spEmoji" aria-hidden="true">🍊</i><span>Cultivo</span><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="sppop cropfind" id="spPop" data-cf="head" hidden>
+        <input type="search" autocomplete="off" spellcheck="false" placeholder="Escribe un cultivo: c, ce, cer…" aria-label="Buscar cultivo">
+        <span aria-hidden="true" style="left:24px;top:23px">🔎</span>
+        <ul class="croplist"></ul>
+      </div>
+    </div>
     <nav class="tabs" role="tablist" aria-label="Secciones">
       <button role="tab" aria-selected="true" data-view="inicio">Inicio</button>
       <button role="tab" aria-selected="false" data-view="buscar">Producto</button>
@@ -396,11 +425,12 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
         <h2>Toda la información de cada ficha fitosanitaria, <em>sin leerlas una a una</em>.</h2>
         <p class="lead">FitoLupa reúne el Registro oficial del Ministerio de Agricultura y lo cruza con lo que necesitas en el día a día: dosis convertidas a cc/L y g/L, plazos de seguridad, usos autorizados por plaga y cultivo, revisión de cuadernos y, en cítricos, las restricciones del Proyecto Zitrus EDEKA-WWF.</p>
         <div class="sppick">
-          <div class="sppick-h"><span class="step">1</span> Elige la especie <span class="note">Toda la app mostrará solo la información de esta especie.</span></div>
-          <div class="spchips" id="spChips" role="group" aria-label="Especie"></div>
-          <div class="spother ac">
-            <input type="search" id="spQ" autocomplete="off" placeholder="¿Otra especie? Escribe: naranjo, lechuga, tomate, vid, almendro…" aria-label="Buscar otra especie">
-            <ul id="spSug" hidden></ul>
+          <div class="sppick-h"><span class="step">1</span> Elige el cultivo <span class="note">Toda la app mostrará solo la información de este cultivo.</span></div>
+          <div class="cropgrid" id="spChips" role="group" aria-label="Cultivo"></div>
+          <div class="cropfind" data-cf="home">
+            <span aria-hidden="true">🔎</span>
+            <input type="search" autocomplete="off" spellcheck="false" placeholder="¿Otro cultivo? Empieza a escribir: c, ce, cer…" aria-label="Buscar cualquier cultivo">
+            <ul class="croplist" hidden></ul>
           </div>
         </div>
         <div class="sppick-h"><span class="step">2</span> Busca un producto <span class="note">o elige una sección más abajo.</span></div>
@@ -589,11 +619,48 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 const SP_DEFAULT = "0101020100000000";
 const POST_MAP = [["01010201", "020101"], ["01010205", "020102"], ["01010204", "020103"]];
 const SP_FEATURED = [
-  ["0101020100000000", "Cítricos"], ["0101020301000000", "Aguacate"], ["0101020306000000", "Mango"], ["0101020302000000", "Caqui"],
-  ["0101020317000000", "Granado"], ["0101020701000000", "Uva de mesa"], ["0101020702000000", "Uva de vinificación"], ["0101020200000000", "Olivo"],
-  ["0101020601000000", "Almendro"], ["0101020400000000", "Frutales de hueso"], ["0101020500000000", "Frutales de pepita"], ["0101020304000000", "Kiwi"],
-  ["0101020312000000", "Platanera"], ["0103030000000000", "Fresa"]
+  ["0101020100000000", "Cítricos"], ["0101020301000000", "Aguacate"], ["0101020306000000", "Mango"], ["0101020701000000", "Uva de mesa"],
+  ["0101020702000000", "Uva de vinificación"], ["0101020200000000", "Olivo"], ["0103030000000000", "Fresa"], ["0101020312000000", "Plátano"],
+  ["0101020304000000", "Kiwi"], ["0101020401000000", "Melocotonero"], ["0101020404000000", "Cerezo"], ["0101020501000000", "Manzano"],
+  ["0101020502000000", "Peral"], ["0101020601000000", "Almendro"], ["0101020302000000", "Caqui"], ["0101020317000000", "Granado"]
 ];
+// Paletas de cabecera por tipo de cultivo: [cabecera, fondo oscuro, brillo, acento]
+const SP_THEMES = {
+  hoja: ["#1d4a30", "#163a25", "#2a6040", "#f08a2c"], naranja: ["#a5461a", "#7a3110", "#c25d24", "#ffd36e"], limon: ["#7a6610", "#594a08", "#95801c", "#fff09a"],
+  aguacate: ["#3a5a1d", "#283f13", "#4f7628", "#d9ec8a"], mango: ["#a05a16", "#77410d", "#bd7322", "#ffe08a"], uva: ["#55285f", "#3c1b44", "#6d3579", "#f3b8ff"],
+  vino: ["#6a1f36", "#4b1526", "#852b46", "#ffb8b8"], olivo: ["#535c22", "#3b4117", "#6b752d", "#ece78c"], rojo: ["#9a2323", "#721818", "#b6312f", "#ffd2a2"],
+  melocoton: ["#a54d38", "#7b3828", "#c06149", "#ffdcaa"], verdeclaro: ["#5a6a1f", "#414d14", "#71832a", "#f2ea90"], platano: ["#86670d", "#624b07", "#a07d16", "#fff0a0"],
+  fruto_seco: ["#6c4a2d", "#4e351f", "#87603a", "#ffd59c"], baya: ["#3b3f7c", "#2a2d5b", "#4c5296", "#cdd0ff"], cereal: ["#7a5c1c", "#5a4312", "#957227", "#ffe28c"],
+  flor: ["#8a2f5b", "#652142", "#a63f6f", "#ffc6e0"], bosque: ["#24452f", "#183220", "#335c40", "#f2c46e"], morado: ["#5b2a54", "#41203d", "#743768", "#ffc2ea"]
+};
+// [expresión sobre el nombre, emoticono, paleta]: gana la primera coincidencia
+const SP_ICONS = [
+  [/^citric|naranj|mandarin|clement|pomelo|toronja|kumquat|frutos citricos/, "🍊", "naranja"], [/limon|^lima\b|limas/, "🍋", "limon"],
+  [/aguacate/, "🥑", "aguacate"], [/mango|tropical/, "🥭", "mango"], [/vinificacion/, "🍷", "vino"], [/uva|vid\b|^vid/, "🍇", "uva"],
+  [/olivo|aceituna/, "🫒", "olivo"], [/fresa|fresal/, "🍓", "rojo"], [/platan(era|o)|banan/, "🍌", "platano"], [/kiwi/, "🥝", "verdeclaro"],
+  [/melocot|nectarin|albaricoq|hueso|nisper/, "🍑", "melocoton"], [/cerez|guind/, "🍒", "rojo"], [/ciruel|endrino/, "🫐", "morado"],
+  [/manzan|pepita|membrill/, "🍎", "rojo"], [/peral\b|^pera/, "🍐", "verdeclaro"], [/almendr|avellan|nogal|castan|pistach|pacano|macadamia|cascara|algarrob/, "🌰", "fruto_seco"],
+  [/caqui/, "🟠", "naranja"], [/granad/, "🔴", "vino"], [/higuera|higo/, "🟣", "morado"], [/pina/, "🍍", "platano"], [/papaya|chirimoy|guayab|lichi|pitaya|maracuya|pasion/, "🥭", "mango"],
+  [/frambues|zarzamor|arandan|grosell|arbustos frutales/, "🫐", "baya"], [/tomate/, "🍅", "rojo"], [/pimient/, "🫑", "aguacate"], [/berenjen/, "🍆", "uva"],
+  [/pepino|calabac|pepinillo/, "🥒", "aguacate"], [/melon/, "🍈", "verdeclaro"], [/sandia/, "🍉", "rojo"], [/calabaza/, "🎃", "naranja"],
+  [/lechug|escarol|endibia|espinac|acelga|^col\b|coles|repollo|hortalizas de hoja|canonig|ruca/, "🥬", "hoja"], [/brocol|coliflor|romanesco/, "🥦", "hoja"],
+  [/zanahori|chirivia|rabano|remolacha/, "🥕", "naranja"], [/patata|boniato/, "🥔", "fruto_seco"], [/cebolla|puerro|cebollet|chalota/, "🧅", "morado"], [/ajo/, "🧄", "cereal"],
+  [/maiz/, "🌽", "cereal"], [/trigo|cebada|avena|centeno|triticale|cereal|sorgo|arroz|mijo|tritordeum/, "🌾", "cereal"], [/girasol|oleaginos/, "🌻", "cereal"],
+  [/cacahuet/, "🥜", "fruto_seco"], [/judia|guisant|haba|lentej|garbanz|leguminos|altramuz|soja/, "🫛", "aguacate"], [/champin|seta/, "🍄", "fruto_seco"],
+  [/ornamental|flor|rosal|clavel/, "🌸", "flor"], [/conifer|pino|abeto|forestal/, "🌲", "bosque"], [/frondos|arbol|platanos de sombra|eucalipt/, "🌳", "bosque"],
+  [/palmer|datil|palmace/, "🌴", "mango"], [/cesped/, "🌿", "hoja"], [/tabaco/, "🍂", "fruto_seco"], [/cafe/, "☕", "fruto_seco"], [/te\b|infusion|aromatic|especia/, "🍵", "hoja"],
+  [/algodon|textil/, "☁️", "baya"], [/lupulo/, "🍺", "cereal"], [/alfalfa|trebol|forraj/, "🍀", "hoja"]
+];
+function spLook(name) {
+  const n = norm(name);
+  for (const [re, em, th] of SP_ICONS) if (re.test(n)) return { em, th };
+  return { em: "🌱", th: "hoja" };
+}
+function applyTheme() {
+  const t = SP_THEMES[spLook(SP.name).th] || SP_THEMES.hoja, r = document.documentElement.style;
+  r.setProperty("--head", t[0]); r.setProperty("--head-deep", t[1]); r.setProperty("--head-hi", t[2]); r.setProperty("--head-accent", t[3]);
+  const m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", t[0]);
+}
 let SP = null;
 const IN_CLAUDE = !!window.claude;
 const CAD_AVISO = 60;      // días: a partir de aquí se avisa de caducidad próxima   // dentro del visor de Claude no hay impresión ni service worker
@@ -1465,17 +1532,59 @@ function applySpeciesLabels() {
 function renderSpeciesPicker() {
   const box = $("#spChips"); if (!box || !SP) return;
   const feat = SP_FEATURED.filter(([c]) => IDX.c.some(x => x[0] === c));
-  const extra = feat.some(([c]) => c === SP.code) ? "" : `<button type="button" class="spchip" data-sp="${SP.code}" aria-pressed="true">${esc(SP.name)}</button>`;
-  box.innerHTML = feat.map(([c, n]) => `<button type="button" class="spchip" data-sp="${c}" aria-pressed="${c === SP.code}">${esc(n)}</button>`).join("") + extra;
+  const extra = feat.some(([c]) => c === SP.code) ? "" : tile(SP.code, SP.name, true);
+  box.innerHTML = feat.map(([c, n]) => tile(c, n, c === SP.code)).join("") + extra;
+  $("#spEmoji").textContent = spLook(SP.name).em;
+  applyTheme();
 }
+const tile = (c, n, on) => `<button type="button" class="croptile" data-sp="${c}" aria-pressed="${on}"><i aria-hidden="true">${spLook(n).em}</i>${esc(n)}</button>`;
 let SP_LIST = null;
 function speciesList() {
   if (SP_LIST || !USOS) return SP_LIST || [];
   const used = new Set();
   for (const arr of Object.values(USOS.u)) for (const u of arr) used.add(cropCode(u));
-  SP_LIST = IDX.c.filter(c => c[0].startsWith("01") && [...used].some(k => k.startsWith(prefOf(c[0])))).map(c => ({ code: c[0], name: c[1], n: norm(c[1]), depth: prefOf(c[0]).length / 2 }));
+  const parentName = code => (IDX.c.find(x => x[0] === cropAnc(code).slice(-1)[0]) || [])[1] || "";
+  SP_LIST = IDX.c.filter(c => c[0].startsWith("01") && [...used].some(k => k.startsWith(prefOf(c[0]))))
+    .map(c => ({ code: c[0], name: c[1], n: norm(c[1]), parent: parentName(c[0]) }));
+  // Nombres de uso común como alias (Uva de mesa, Fresa, Plátano…)
+  for (const [c, n] of SP_FEATURED) { const o = SP_LIST.find(x => x.code === c); if (o && norm(n) !== o.n) SP_LIST.push({ ...o, name: n, n: norm(n), alias: o.name }); }
+  SP_LIST.sort((a, b) => a.name.localeCompare(b.name, "es"));
   return SP_LIST;
 }
+// Lista de cultivos cuyo nombre empieza por lo escrito
+function cropListHtml(q) {
+  const qn = norm(q);
+  if (!qn) {
+    return `<li class="lt">Cultivos frecuentes</li>` + SP_FEATURED.map(([c, n]) => `<li><button type="button" data-spc="${c}" aria-current="${SP && SP.code === c}"><i>${spLook(n).em}</i><span>${esc(n)}</span></button></li>`).join("");
+  }
+  const seen = new Set();
+  const hits = speciesList().filter(c => c.n.startsWith(qn) && !seen.has(c.code + c.name) && seen.add(c.code + c.name));
+  if (!hits.length) return `<li class="note" style="padding:10px">Ningún cultivo del registro empieza por «${esc(q)}».</li>`;
+  return `<li class="lt">${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span><mark>${esc(c.name.slice(0, q.length))}</mark>${esc(c.name.slice(q.length))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
+}
+function openCropFind(box, show) {
+  const list = box.querySelector(".croplist"), inp = box.querySelector("input");
+  if (!show) { if (box.dataset.cf === "home") list.hidden = true; return; }
+  list.innerHTML = cropListHtml(inp.value.trim()); list.hidden = false;
+}
+document.querySelectorAll(".cropfind").forEach(box => {
+  const inp = box.querySelector("input"), list = box.querySelector(".croplist");
+  inp.addEventListener("input", () => { if (box.dataset.cf === "home" && !inp.value.trim()) { list.hidden = true; return; } openCropFind(box, true); });
+  inp.addEventListener("focus", () => { if (box.dataset.cf === "head" || inp.value.trim()) openCropFind(box, true); });
+  inp.addEventListener("keydown", e => {
+    const bs = [...list.querySelectorAll("button")]; if (!bs.length) return;
+    let i = bs.findIndex(b => b.classList.contains("on"));
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); bs.forEach(b => b.classList.remove("on")); i = e.key === "ArrowDown" ? Math.min(bs.length - 1, i + 1) : Math.max(0, i - 1); bs[i].classList.add("on"); bs[i].scrollIntoView({ block: "nearest" }); }
+    if (e.key === "Enter") { e.preventDefault(); (bs[i] || bs[0]).click(); }
+    if (e.key === "Escape") { inp.value = ""; if (box.dataset.cf === "head") closePop(); else list.hidden = true; }
+  });
+  list.addEventListener("click", e => {
+    const b = e.target.closest("[data-spc]"); if (!b) return;
+    inp.value = ""; if (box.dataset.cf === "head") closePop(); else list.hidden = true;
+    if (!SP || b.dataset.spc !== SP.code) setSpecies(b.dataset.spc);
+  });
+});
+function closePop() { $("#spPop").hidden = true; $("#spBadge").setAttribute("aria-expanded", "false"); }
 function setSpecies(code) {
   const sp = makeSpecies(code); if (!sp) return;
   SP = sp; store.set("fr_especie", code);
@@ -1489,7 +1598,7 @@ function setSpecies(code) {
   if (!$("#view-wwf").hidden && !SP.wwf) setView("inicio");
   if (!SP.wwf && typeof REV !== "undefined" && REV.mode === "wwf") { REV.mode = "generica"; document.querySelectorAll("[data-rmode]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.rmode === "generica"))); }
   renderHomeStats();
-  toast(`Especie seleccionada: ${SP.name}`);
+  toast(`${spLook(SP.name).em} Cultivo seleccionado: ${SP.name}`);
 }
 function renderHomeStats() {
   if (!IDX) return;
@@ -1502,16 +1611,16 @@ function renderHomeStats() {
   document.querySelectorAll("#homeStats dd").forEach((d, i) => d.textContent = vals[i]);
 }
 $("#spChips").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if (b && (!SP || b.dataset.sp !== SP.code)) setSpecies(b.dataset.sp); });
-$("#spBadge").addEventListener("click", () => { setView("inicio"); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => $("#spChips button[aria-pressed=true]")?.focus(), 300); });
-$("#spQ").addEventListener("input", () => {
-  const q = norm($("#spQ").value), box = $("#spSug");
-  if (q.length < 2 || !USOS) { box.hidden = true; return; }
-  const hits = speciesList().filter(c => c.n.includes(q)).sort((a, b) => (a.n.startsWith(q) ? 0 : 1) - (b.n.startsWith(q) ? 0 : 1) || a.depth - b.depth || a.name.localeCompare(b.name, "es")).slice(0, 14);
-  box.innerHTML = hits.length ? hits.map(c => `<li><button type="button" data-spc="${c.code}"><span>${esc(c.name)}</span><small>${esc(cropAnc(c.code).map(a => (IDX.c.find(x => x[0] === a) || [])[1]).filter(Boolean).slice(-1)[0] || "")}</small></button></li>`).join("") : `<li class="note" style="padding:8px">Sin especies con ese nombre en el registro.</li>`;
-  box.hidden = false;
+$("#spBadge").addEventListener("click", e => {
+  e.stopPropagation();
+  const pop = $("#spPop"), open = pop.hidden;
+  pop.hidden = !open; $("#spBadge").setAttribute("aria-expanded", String(open));
+  if (open) { openCropFind(pop, true); pop.querySelector("input").focus(); }
 });
-$("#spSug").addEventListener("click", e => { const b = e.target.closest("[data-spc]"); if (!b) return; $("#spSug").hidden = true; $("#spQ").value = ""; setSpecies(b.dataset.spc); });
-document.addEventListener("click", e => { if (!e.target.closest(".spother")) $("#spSug").hidden = true; });
+document.addEventListener("click", e => {
+  if (!e.target.closest(".spwrap")) closePop();
+  if (!e.target.closest('.cropfind[data-cf="home"]')) { const l = document.querySelector('.cropfind[data-cf="home"] .croplist'); if (l) l.hidden = true; }
+});
 function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
 $("#homeForm").addEventListener("submit", e => { e.preventDefault(); homeSearch($("#hq").value.trim()); });
 $("#view-inicio").addEventListener("click", e => {
