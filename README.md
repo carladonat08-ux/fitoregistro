@@ -4,6 +4,9 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el t
 
 ## Qué hace
 
+**Inicio**
+- Presentación de la app con buscador directo, cifras del registro (productos vigentes, con uso en cítricos, usos autorizados y fecha de los datos), acceso a cada sección, cómo funciona y leyenda de las etiquetas.
+
 **Producto**
 - Busca por nº de registro (`24526`, `ES01196`, `ES-01196`, `1196`), nombre comercial, **otras denominaciones comerciales**, materia activa o titular. Tolera errores de escritura (`tepeki` → TEPPEKI).
 - Filtros: solo vigentes, solo con uso en cítricos, por función (insecticida, acaricida, fungicida, herbicida, fitorregulador…).

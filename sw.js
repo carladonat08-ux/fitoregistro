@@ -1,7 +1,7 @@
 // FitoLupa: funciona sin conexión en el campo.
 // La página y los datos se piden primero a la red (siempre lo más reciente) y, si no hay cobertura,
 // se sirven desde la copia guardada en el móvil o el ordenador.
-const CACHE = "fitoregistro-v9";
+const CACHE = "fitoregistro-v10";
 const BASE = ["./", "index.html", "data/indice.json", "data/usos.json", "data/version.json", "data/wwf.json", "manifest.webmanifest", "icon.svg", "importar.js", "vendor/pdf.min.js", "vendor/pdf.worker.min.js"];
 
 self.addEventListener("install", e => {

@@ -60,7 +60,7 @@ header.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:3p
 .tabs button:hover{color:var(--head-ink);background:rgba(246,239,224,.08)}
 .tabs button[aria-selected="true"]{background:var(--head-ink);color:var(--head);box-shadow:0 2px 8px -2px rgb(0 0 0 / .3)}
 .tabs .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:5px;border-radius:9px;background:var(--citrus);color:#1d2a16;font-size:11px;line-height:18px;text-align:center}
-@media (max-width:700px){header.top{position:relative;top:auto}.tabs{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(3,1fr);overflow:visible;border-radius:16px}.tabs button{padding:8px 4px;white-space:normal;line-height:1.2;border-radius:12px}.brand h1{font-size:26px}.brand svg{width:38px;height:38px}}
+@media (max-width:700px){header.top{position:relative;top:auto}.tabs{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(4,1fr);overflow:visible;border-radius:16px}.tabs button{padding:8px 4px;white-space:normal;line-height:1.2;border-radius:12px}.brand h1{font-size:26px}.brand svg{width:38px;height:38px}}
 @media (prefers-reduced-motion:reduce){.tabs button{transition:none}}
 .searchrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:0 12px}
 .search{position:relative;flex:1 1 380px;min-width:0}
@@ -192,6 +192,48 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .calc .which{font-size:13px;color:var(--ink-2)}
 
 /* Paneles */
+/* Inicio */
+.home{display:grid;gap:22px}
+.hero{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:22px 32px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:30px 32px}
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr);padding:22px 20px}}
+.hero-txt{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;min-width:0}
+.hero-txt>*{min-width:0}
+.eyebrow{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf);font-weight:700}
+.hero h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:clamp(28px,3.6vw,44px);line-height:1.06;letter-spacing:-.015em;text-wrap:balance}
+.hero h2 em{font-style:normal;color:var(--accent-text)}
+.hero .lead{margin:0;color:var(--ink-2);max-width:66ch;font-size:15.5px}
+.hero-search{position:relative;display:flex;gap:8px;max-width:640px}
+.hero-search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;stroke:var(--ink-3);pointer-events:none}
+.hero-search input{flex:1;min-width:0;width:100%;padding:13px 14px 13px 42px;border:2px solid var(--line);border-radius:14px;background:var(--bg);font-size:16px}
+.hero-search input:focus{border-color:var(--citrus);outline:none;box-shadow:0 0 0 4px rgb(240 138 44 / .22)}
+.hero-search .btn{border-radius:14px;padding:0 18px}
+@media (max-width:520px){.hero-search{flex-direction:column}.hero-search input{flex:none}.hero-search .btn{padding:11px 18px;justify-content:center}.hero-search svg{top:26px}}
+.hero-ex{font-size:13px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.hero-ex button{border:1px solid var(--line-strong);background:transparent;border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
+.hero-ex button:hover{border-color:var(--leaf);color:var(--leaf)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+.stats div{background:var(--bg);border-radius:12px;padding:14px 16px;min-width:0}
+.stats dt{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.stats dd{margin:4px 0 0;font-family:var(--f-display);font-weight:700;font-size:clamp(22px,2.4vw,30px);font-variant-numeric:tabular-nums;color:var(--head);line-height:1.1}
+.home-h{margin:0 0 12px;font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:-.005em}
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+@media (max-width:1000px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:620px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;border-top:4px solid var(--leaf)}
+.card.wwfcard{border-top-color:var(--wwf)}
+.card h4{margin:0;font-family:var(--f-display);font-size:18px;font-weight:700}
+.card p{margin:0;color:var(--ink-2);font-size:14px;flex:1}
+.card .btn{align-self:flex-start;border-radius:999px}
+.howto{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.howto{grid-template-columns:minmax(0,1fr)}}
+.howto>section{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;min-width:0}
+.how{margin:0;padding-left:18px;display:grid;gap:10px;color:var(--ink-2);font-size:14px}
+.how b{color:var(--ink)}
+.legend{display:grid;gap:8px;margin:0}
+.legend div{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:10px;align-items:center;font-size:13.5px}
+@media (max-width:420px){.legend div{grid-template-columns:1fr}}
+.legend dd{margin:0;color:var(--ink-2)}
+.brand{cursor:pointer}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:14px;min-width:0}
 .panel h2{margin:0;font-family:var(--f-display);font-size:30px;font-weight:800;font-stretch:85%;line-height:1.05;text-transform:uppercase}
 .panel p.lead{margin:0;color:var(--ink-2);max-width:78ch}
@@ -304,7 +346,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <div><h1>Fito<b>Lupa</b></h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     </div>
     <nav class="tabs" role="tablist" aria-label="Secciones">
-      <button role="tab" aria-selected="true" data-view="buscar">Producto</button>
+      <button role="tab" aria-selected="true" data-view="inicio">Inicio</button>
+      <button role="tab" aria-selected="false" data-view="buscar">Producto</button>
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
       <button role="tab" aria-selected="false" data-view="verificar">Verificar</button>
       <button role="tab" aria-selected="false" data-view="cuaderno">Cuaderno<span class="count" id="cnt" hidden>0</span></button>
@@ -312,7 +355,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <button role="tab" aria-selected="false" data-view="wwf" class="wwf" id="tabWwf" hidden>WWF</button>
     </nav>
   </div>
-  <div class="wrap searchrow" id="searchrow">
+  <div class="wrap searchrow" id="searchrow" hidden>
     <div class="search">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Nº de registro, nombre comercial, materia activa o titular" aria-label="Buscar producto">
@@ -327,7 +370,62 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 </header>
 
 <main class="wrap">
-  <section id="view-buscar" class="grid">
+  <section id="view-inicio" class="home">
+    <div class="hero">
+      <div class="hero-txt">
+        <p class="eyebrow">Registro de Productos Fitosanitarios · MAPA</p>
+        <h2>Toda la información de cada ficha fitosanitaria, <em>sin leerlas una a una</em>.</h2>
+        <p class="lead">FitoLupa reúne el Registro oficial del Ministerio de Agricultura y lo cruza con lo que necesitas en el día a día: dosis convertidas a cc/L y g/L, plazos de seguridad, usos autorizados por plaga y cultivo, revisión de cuadernos y las restricciones del Proyecto Zitrus EDEKA-WWF.</p>
+        <form class="hero-search" id="homeForm" role="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <input id="hq" type="search" autocomplete="off" spellcheck="false" placeholder="Busca un producto: nº de registro, nombre o materia activa" aria-label="Buscar producto">
+          <button class="btn primary" type="submit">Buscar</button>
+        </form>
+        <div class="hero-ex">Prueba con <button type="button" data-hq="24526">24526</button><button type="button" data-hq="Cornalina">Cornalina</button><button type="button" data-hq="piriproxifen">piriproxifen</button></div>
+      </div>
+      <dl class="stats" id="homeStats" aria-live="polite">
+        <div><dt>Productos vigentes</dt><dd>…</dd></div>
+        <div><dt>Con uso en cítricos</dt><dd>…</dd></div>
+        <div><dt>Usos autorizados</dt><dd>…</dd></div>
+        <div><dt>Datos del MAPA a</dt><dd>…</dd></div>
+      </dl>
+    </div>
+
+    <h3 class="home-h">Qué puedes hacer</h3>
+    <div class="cards">
+      <article class="card"><h4>Producto</h4><p>Busca por nº de registro, nombre comercial (también otras denominaciones), materia activa o titular. La ficha resume dosis, plazo, aplicaciones y caldo en cítricos, con todos los usos y sus condicionamientos.</p><button class="btn" data-go="buscar">Buscar un producto →</button></article>
+      <article class="card"><h4>Por plaga</h4><p>«¿Qué puedo usar contra…?»: elige cultivo y plaga y obtén todos los productos autorizados, ordenables por plazo de seguridad y descargables en Excel.</p><button class="btn" data-go="plaga">Buscar por plaga →</button></article>
+      <article class="card"><h4>Verificar</h4><p>Pega una lista de productos de una receta. Separa abonos y bioestimulantes y comprueba vigencia, nº de registro y autorización en cítricos.</p><button class="btn" data-go="verificar">Verificar una lista →</button></article>
+      <article class="card"><h4>Cuaderno</h4><p>Añade usos desde las fichas con las columnas de tu cuaderno de tratamientos y descárgalo en Excel. Se guarda solo en tu navegador.</p><button class="btn" data-go="cuaderno">Abrir mi cuaderno →</button></article>
+      <article class="card"><h4>Revisar cuaderno</h4><p>Sube tu cuaderno en Excel o el PDF de recetas y revisa cada aplicación: dosis, plazos, usos, vigencia y nº de aplicaciones. Revisión genérica o WWF.</p><button class="btn" data-go="revisar">Revisar un cuaderno →</button></article>
+      <article class="card wwfcard"><h4>WWF</h4><p>Las tablas del Proyecto Zitrus EDEKA-WWF por plaga: alternativas permitidas, excepcionales y muy excepcionales, límites por materia activa y reglas del proyecto.</p><button class="btn" data-go="wwf">Ver el Proyecto Zitrus →</button></article>
+    </div>
+
+    <div class="howto">
+      <section><h3 class="home-h">Cómo funciona</h3>
+        <ul class="how">
+          <li><b>Datos oficiales y al día.</b> Cada viernes y sábado se descarga automáticamente la exportación de productos autorizados del MAPA y se publica si hay datos nuevos. La fecha está siempre en la cabecera.</li>
+          <li><b>Tus archivos no salen de tu dispositivo.</b> Los cuadernos que revisas se leen dentro del navegador y desaparecen al cerrar. El cuaderno se guarda solo en este navegador.</li>
+          <li><b>Funciona sin cobertura.</b> Tras abrirla una vez con conexión, se puede consultar en el campo. En el móvil, añádela a la pantalla de inicio para usarla como una app.</li>
+          <li><b>Consulta informativa.</b> Ante cualquier duda prevalecen la resolución de inscripción y la etiqueta autorizada del producto.</li>
+        </ul>
+      </section>
+      <section><h3 class="home-h">Cómo leer las etiquetas</h3>
+        <dl class="legend">
+          <div><dt><span class="pill ok">Vigente</span></dt><dd>Autorizado en el registro.</dd></div>
+          <div><dt><span class="pill warn">Caduca 30/11</span></dt><dd>La autorización caduca en menos de 60 días.</dd></div>
+          <div><dt><span class="pill warn">Límite venta</span></dt><dd>Tiene fecha límite de venta: revisa el plazo de uso.</dd></div>
+          <div><dt><span class="pill bad">Cancelado</span></dt><dd>No se puede utilizar.</dd></div>
+          <div><dt><span class="pill cit">Cítricos campo</span></dt><dd>Con uso autorizado en cítricos en campo.</dd></div>
+          <div><dt><span class="pill post">Postcosecha</span></dt><dd>Con uso autorizado en postcosecha de cítricos.</dd></div>
+          <div><dt><span class="pill ok">Permitida</span> <span class="pill wex">Excepcional</span></dt><dd>Categoría en la tabla del Proyecto Zitrus EDEKA-WWF.</dd></div>
+          <div><dt><span class="conv" style="display:inline">= 0,5 cc/L</span></dt><dd>Dosis del registro convertida a cc o g por litro de caldo.</dd></div>
+        </dl>
+      </section>
+    </div>
+  </section>
+
+  <section id="view-buscar" class="grid" hidden>
     <aside class="results" aria-label="Resultados">
       <div class="head"><span id="rcount">Cargando registro…</span><span id="rhint"></span></div>
       <ol id="rlist"></ol>
@@ -520,10 +618,11 @@ async function load() {
   const age = -daysTo(IDX.fecha);
   if (age > 21) { const b = $("#stale"); b.hidden = false; b.firstElementChild.textContent = `Los datos son del ${fmtDate(IDX.fecha)} (hace ${age} días). Para decisiones importantes confirma en el Registro oficial.`; }
   runSearch();
+  renderHomeStats();
   const fromHash = productFromHash();
   const last = store.get("fr_recent", [])[0];
   const first = fromHash || (last && byId.get(last)) || P.find(p => p.reg === "24526") || P[0];
-  openProduct(first.id, false);
+  openProduct(first.id, false, !fromHash);
   if (fromHash) setView("buscar");
   try { USOS = await usosP; }
   catch (e) { toast("No se pudieron cargar los usos autorizados. Comprueba la conexión y recarga."); throw e; }
@@ -546,6 +645,7 @@ async function load() {
   if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; renderFicha(); }
   if (!$("#view-wwf").hidden) renderWwf();
   if (!$("#view-verificar").hidden && !$("#vout").innerHTML) runVerify();
+  renderHomeStats();
 }
 function productFromHash() {
   const m = /^#p-(\d+)$/.exec(location.hash || "");
@@ -691,7 +791,7 @@ function plazoHtml(pl) {
 }
 
 // ================================================================= Ficha de producto
-function openProduct(id, scroll = true) {
+function openProduct(id, scroll = true, keepUrl = false) {
   const p = byId.get(id); if (!p) return;
   if (!current || current.id !== id) {
     ui.calc.gi = null; ui.plaga = ""; ui.cropSel = "";
@@ -699,7 +799,7 @@ function openProduct(id, scroll = true) {
   }
   current = p;
   const rec = [id, ...store.get("fr_recent", []).filter(x => x !== id)].slice(0, 12); store.set("fr_recent", rec);
-  try { history.replaceState(null, "", "#p-" + id); } catch {}
+  if (!keepUrl) try { history.replaceState(null, "", "#p-" + id); } catch {}
   document.querySelectorAll("#rlist button[data-id]").forEach(b => b.setAttribute("aria-current", String(Number(b.dataset.id) === id)));
   renderFicha();
   if (!$("#q").value.trim()) runSearch();
@@ -1280,7 +1380,7 @@ $("#wvxlsx").addEventListener("click", () => { if (!W.rows.length) runWwfVerify(
   xlsx(`verificacion_WWF_${new Date().toISOString().slice(0, 10)}.xlsx`, [["WWF", `Verificación Proyecto Zitrus EDEKA-WWF (campaña ${WWF.campana}) · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado WWF", "Plagas en la tabla del proyecto", "Máx. aplicaciones", "Toxic load", "Observaciones"], W.rows, [24, 22, 12, 22, 60, 36, 12, 40]]]); });
 
 // ================================================================= Vistas y eventos
-const VIEWS = ["buscar", "plaga", "verificar", "cuaderno", "revisar", "wwf"];
+const VIEWS = ["inicio", "buscar", "plaga", "verificar", "cuaderno", "revisar", "wwf"];
 function setView(v) {
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach(x => $("#view-" + x).hidden = x !== v);
@@ -1289,8 +1389,25 @@ function setView(v) {
   if (v === "verificar" && USOS && !$("#vout").innerHTML) runVerify();
   if (v === "plaga") setTimeout(() => $("#pQ").focus(), 50);
   if (v === "wwf") renderWwf();
+  if (v === "inicio" && location.hash) try { history.replaceState(null, "", location.pathname + location.search); } catch {}
   store.set("fr_view", v);
 }
+function renderHomeStats() {
+  if (!IDX) return;
+  const n = x => x.toLocaleString("es-ES");
+  const vig = P.filter(p => p.estado === "Vigente");
+  const cit = USOS ? vig.filter(p => p.campo || p.post).length : null;
+  const usos = USOS ? Object.values(USOS.u).reduce((a, arr) => a + arr.length, 0) : null;
+  const vals = [n(vig.length), cit == null ? "…" : n(cit), usos == null ? "…" : n(usos), fmtDate(IDX.fecha)];
+  document.querySelectorAll("#homeStats dd").forEach((d, i) => d.textContent = vals[i]);
+}
+function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
+$("#homeForm").addEventListener("submit", e => { e.preventDefault(); homeSearch($("#hq").value.trim()); });
+$("#view-inicio").addEventListener("click", e => {
+  const ex = e.target.closest("[data-hq]"); if (ex) { homeSearch(ex.dataset.hq); return; }
+  const go = e.target.closest("[data-go]"); if (go) { setView(go.dataset.go); window.scrollTo({ top: 0, behavior: "smooth" }); }
+});
+document.querySelector(".brand").addEventListener("click", () => { setView("inicio"); window.scrollTo({ top: 0, behavior: "smooth" }); });
 function openFromAnywhere(id) { setView("buscar"); openProduct(id); window.scrollTo({ top: 0, behavior: "smooth" }); }
 document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if (b) setView(b.dataset.view); });
 let st;
