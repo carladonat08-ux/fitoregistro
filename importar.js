@@ -234,15 +234,15 @@ function revisar(r) {
     if (p.cad && p.cad < f) add("bad", `Autorización caducada el ${fmtDate(p.cad)}, antes de la aplicación.`);
     if (p.limV && p.limV < f) add("warn", `La fecha límite de venta (${fmtDate(p.limV)}) es anterior a la aplicación: comprueba el plazo de uso de existencias.`);
   }
-  // Uso autorizado en cítricos para el objeto anotado
+  // Uso autorizado en la especie seleccionada para el objeto anotado
   const cu = campoUses(p);
   const codes = objetoCodes(r.objeto).filter(c => !c.startsWith("__"));
-  if (!cu.length) { add("bad", p.post ? "Solo tiene usos autorizados en postcosecha, no en cítricos en campo." : "No tiene ningún uso autorizado en cítricos."); out.sev = worst(out.notes); return finishWwf(out, codes); }
+  if (!cu.length) { add("bad", p.post ? `Solo tiene usos autorizados en postcosecha, no en ${SP.lower} en campo.` : `No tiene ningún uso autorizado en ${SP.lower}.`); out.sev = worst(out.notes); return finishWwf(out, codes); }
   let uses = cu;
   if (codes.length) {
     const m = usesForCodes(cu, codes);
     if (m.length) uses = m;
-    else add("bad", `No está autorizado en cítricos contra «${r.objeto}». Autorizado para: ${listShort([...new Set(cu.map(u => IDX.a[u[1]][1]))], 4)}.`);
+    else add("bad", `No está autorizado en ${SP.lower} contra «${r.objeto}». Autorizado para: ${listShort([...new Set(cu.map(u => IDX.a[u[1]][1]))], 4)}.`);
     if (m.length && m.every(u => { const a = IDX.a[u[1]][0]; return !codes.some(c => a === c || a.startsWith(c + ".")); }))
       add("info", `Autorizado por un uso genérico del grupo (${[...new Set(m.map(u => IDX.a[u[1]][1]))].join(", ")}).`);
   } else if (r.objeto && !NO_FITO_HINT.test(norm(r.objeto))) add("info", `No reconozco la plaga en «${r.objeto}»: revisa que el uso esté autorizado.`);

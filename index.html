@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>FitoLupa</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA: usos en cítricos (campo y postcosecha), dosis en cc/L y g/L, plazos de seguridad, condicionamientos y búsqueda por plaga.">
+<meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA por especie (cítricos, aguacate, uva…): usos autorizados, dosis en cc/L y g/L, plazos de seguridad, condicionamientos y búsqueda por plaga.">
 <meta name="theme-color" content="#1d4a30">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
@@ -211,6 +211,22 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .hero-ex{font-size:13px;color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .hero-ex button{border:1px solid var(--line-strong);background:transparent;border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;color:var(--ink-2)}
 .hero-ex button:hover{border-color:var(--leaf);color:var(--leaf)}
+.sppick{display:grid;gap:10px;padding:14px 16px;background:var(--bg);border-radius:14px;border:1px solid var(--line)}
+.sppick-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;font-weight:700;font-size:15px}
+.sppick-h .note{margin:0;font-weight:400}
+.step{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--head);color:var(--head-ink);font-size:12px;font-weight:700;align-self:center}
+.spchips{display:flex;flex-wrap:wrap;gap:6px}
+.spchip{border:1.5px solid var(--line-strong);background:var(--surface);border-radius:999px;padding:6px 13px;font-size:13.5px;font-weight:600;cursor:pointer;color:var(--ink-2)}
+.spchip:hover{border-color:var(--leaf);color:var(--leaf)}
+.spchip[aria-pressed="true"]{background:var(--head);border-color:var(--head);color:var(--head-ink);box-shadow:0 2px 8px -3px rgb(29 74 48 / .6)}
+.spother input{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:8px 11px;background:var(--surface);font-size:14px}
+.spother input:focus{border-color:var(--citrus);outline:none}
+.spbadge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgb(246 239 224 / .25);background:rgb(246 239 224 / .08);color:var(--head-ink);border-radius:999px;padding:5px 12px 5px 13px;cursor:pointer;font-size:13px}
+.spbadge span{color:var(--head-mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.spbadge b{font-weight:700;color:var(--citrus)}
+.spbadge svg{width:12px;height:12px}
+.spbadge:hover{background:rgb(246 239 224 / .16)}
+@media (max-width:700px){.spbadge{order:3}}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
 .stats div{background:var(--bg);border-radius:12px;padding:14px 16px;min-width:0}
 .stats dt{font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
@@ -345,6 +361,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="20" cy="20" r="14.5" fill="rgb(246 239 224 / .12)" stroke="#f7f0e1" stroke-width="3"/><path d="M29.8 30.2l9.5 9.5" stroke="#f08a2c" stroke-width="5" stroke-linecap="round"/><path d="M12.5 26.5c-.5-9 6-14.5 15-14 .8 9.2-5.5 15-15 14z" fill="#8cc56b"/><path d="M13.5 25.5c3.5-3.8 7.2-6.8 11.5-9" stroke="#1d4a30" stroke-width="1.6" stroke-linecap="round" fill="none"/></svg>
       <div><h1>Fito<b>Lupa</b></h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     </div>
+    <button type="button" class="spbadge" id="spBadge" title="Cambiar de especie"><span>Especie</span><b class="sp-name">Cítricos</b><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5l3 3 3-3" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
     <nav class="tabs" role="tablist" aria-label="Secciones">
       <button role="tab" aria-selected="true" data-view="inicio">Inicio</button>
       <button role="tab" aria-selected="false" data-view="buscar">Producto</button>
@@ -362,7 +379,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </div>
     <div class="filters">
       <label><input type="checkbox" id="fVig" checked> Solo vigentes</label>
-      <label><input type="checkbox" id="fCit"> Solo con uso en cítricos</label>
+      <label><input type="checkbox" id="fCit" checked> Solo con uso en <span class="sp-lower">cítricos</span></label>
       <select id="fFun" aria-label="Función"><option value="">Todas las funciones</option></select>
     </div>
   </div>
@@ -375,7 +392,16 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <div class="hero-txt">
         <p class="eyebrow">Registro de Productos Fitosanitarios · MAPA</p>
         <h2>Toda la información de cada ficha fitosanitaria, <em>sin leerlas una a una</em>.</h2>
-        <p class="lead">FitoLupa reúne el Registro oficial del Ministerio de Agricultura y lo cruza con lo que necesitas en el día a día: dosis convertidas a cc/L y g/L, plazos de seguridad, usos autorizados por plaga y cultivo, revisión de cuadernos y las restricciones del Proyecto Zitrus EDEKA-WWF.</p>
+        <p class="lead">FitoLupa reúne el Registro oficial del Ministerio de Agricultura y lo cruza con lo que necesitas en el día a día: dosis convertidas a cc/L y g/L, plazos de seguridad, usos autorizados por plaga y cultivo, revisión de cuadernos y, en cítricos, las restricciones del Proyecto Zitrus EDEKA-WWF.</p>
+        <div class="sppick">
+          <div class="sppick-h"><span class="step">1</span> Elige la especie <span class="note">Toda la app mostrará solo la información de esta especie.</span></div>
+          <div class="spchips" id="spChips" role="group" aria-label="Especie"></div>
+          <div class="spother ac">
+            <input type="search" id="spQ" autocomplete="off" placeholder="¿Otra especie? Escribe: naranjo, lechuga, tomate, vid, almendro…" aria-label="Buscar otra especie">
+            <ul id="spSug" hidden></ul>
+          </div>
+        </div>
+        <div class="sppick-h"><span class="step">2</span> Busca un producto <span class="note">o elige una sección más abajo.</span></div>
         <form class="hero-search" id="homeForm" role="search">
           <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
           <input id="hq" type="search" autocomplete="off" spellcheck="false" placeholder="Busca un producto: nº de registro, nombre o materia activa" aria-label="Buscar producto">
@@ -385,17 +411,17 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       </div>
       <dl class="stats" id="homeStats" aria-live="polite">
         <div><dt>Productos vigentes</dt><dd>…</dd></div>
-        <div><dt>Con uso en cítricos</dt><dd>…</dd></div>
-        <div><dt>Usos autorizados</dt><dd>…</dd></div>
+        <div><dt>Con uso en <span class="sp-lower">cítricos</span></dt><dd>…</dd></div>
+        <div><dt>Usos autorizados en <span class="sp-lower">cítricos</span></dt><dd>…</dd></div>
         <div><dt>Datos del MAPA a</dt><dd>…</dd></div>
       </dl>
     </div>
 
     <h3 class="home-h">Qué puedes hacer</h3>
     <div class="cards">
-      <article class="card"><h4>Producto</h4><p>Busca por nº de registro, nombre comercial (también otras denominaciones), materia activa o titular. La ficha resume dosis, plazo, aplicaciones y caldo en cítricos, con todos los usos y sus condicionamientos.</p><button class="btn" data-go="buscar">Buscar un producto →</button></article>
+      <article class="card"><h4>Producto</h4><p>Busca por nº de registro, nombre comercial (también otras denominaciones), materia activa o titular. La ficha resume dosis, plazo, aplicaciones y caldo en <span class="sp-lower">cítricos</span>, con todos los usos y sus condicionamientos.</p><button class="btn" data-go="buscar">Buscar un producto →</button></article>
       <article class="card"><h4>Por plaga</h4><p>«¿Qué puedo usar contra…?»: elige cultivo y plaga y obtén todos los productos autorizados, ordenables por plazo de seguridad y descargables en Excel.</p><button class="btn" data-go="plaga">Buscar por plaga →</button></article>
-      <article class="card"><h4>Verificar</h4><p>Pega una lista de productos de una receta. Separa abonos y bioestimulantes y comprueba vigencia, nº de registro y autorización en cítricos.</p><button class="btn" data-go="verificar">Verificar una lista →</button></article>
+      <article class="card"><h4>Verificar</h4><p>Pega una lista de productos de una receta. Separa abonos y bioestimulantes y comprueba vigencia, nº de registro y autorización en <span class="sp-lower">cítricos</span>.</p><button class="btn" data-go="verificar">Verificar una lista →</button></article>
       <article class="card"><h4>Cuaderno</h4><p>Añade usos desde las fichas con las columnas de tu cuaderno de tratamientos y descárgalo en Excel. Se guarda solo en tu navegador.</p><button class="btn" data-go="cuaderno">Abrir mi cuaderno →</button></article>
       <article class="card"><h4>Revisar cuaderno</h4><p>Sube tu cuaderno en Excel o el PDF de recetas y revisa cada aplicación: dosis, plazos, usos, vigencia y nº de aplicaciones. Revisión genérica o WWF.</p><button class="btn" data-go="revisar">Revisar un cuaderno →</button></article>
       <article class="card wwfcard"><h4>WWF</h4><p>Las tablas del Proyecto Zitrus EDEKA-WWF por plaga: alternativas permitidas, excepcionales y muy excepcionales, límites por materia activa y reglas del proyecto.</p><button class="btn" data-go="wwf">Ver el Proyecto Zitrus →</button></article>
@@ -416,9 +442,9 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
           <div><dt><span class="pill warn">Caduca 30/11</span></dt><dd>La autorización caduca en menos de 60 días.</dd></div>
           <div><dt><span class="pill warn">Límite venta</span></dt><dd>Tiene fecha límite de venta: revisa el plazo de uso.</dd></div>
           <div><dt><span class="pill bad">Cancelado</span></dt><dd>No se puede utilizar.</dd></div>
-          <div><dt><span class="pill cit">Cítricos campo</span></dt><dd>Con uso autorizado en cítricos en campo.</dd></div>
-          <div><dt><span class="pill post">Postcosecha</span></dt><dd>Con uso autorizado en postcosecha de cítricos.</dd></div>
-          <div><dt><span class="pill ok">Permitida</span> <span class="pill wex">Excepcional</span></dt><dd>Categoría en la tabla del Proyecto Zitrus EDEKA-WWF.</dd></div>
+          <div><dt><span class="pill cit sp-name">Cítricos</span></dt><dd>Con uso autorizado en <span class="sp-lower">cítricos</span>.</dd></div>
+          <div class="legend-post"><dt><span class="pill post">Postcosecha</span></dt><dd>Con uso autorizado en postcosecha de <span class="sp-lower">cítricos</span>.</dd></div>
+          <div class="wwf-only"><dt><span class="pill ok">Permitida</span> <span class="pill wex">Excepcional</span></dt><dd>Categoría en la tabla del Proyecto Zitrus EDEKA-WWF.</dd></div>
           <div><dt><span class="conv" style="display:inline">= 0,5 cc/L</span></dt><dd>Dosis del registro convertida a cc o g por litro de caldo.</dd></div>
         </dl>
       </section>
@@ -479,7 +505,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
   <section id="view-revisar" hidden>
     <div class="panel">
       <h2>Revisar un cuaderno de tratamientos</h2>
-      <p class="lead">Sube tu cuaderno en <b>Excel</b> (formato tipo Atalaya: una fila por aplicación) o el <b>PDF «Resumen recetas foliares»</b>. Cada aplicación se revisa contra el Registro del MAPA: nº de registro y nombre, materia activa, vigencia en la fecha, uso autorizado contra la plaga en cítricos, dosis, caldo, plazo de seguridad y nº de aplicaciones por materia activa.</p>
+      <p class="lead">Sube tu cuaderno en <b>Excel</b> (formato tipo Atalaya: una fila por aplicación) o el <b>PDF «Resumen recetas foliares»</b>. Cada aplicación se revisa contra el Registro del MAPA: nº de registro y nombre, materia activa, vigencia en la fecha, uso autorizado contra la plaga en <span class="sp-lower">cítricos</span>, dosis, caldo, plazo de seguridad y nº de aplicaciones por materia activa.</p>
       <div class="alert info"><b>Tu archivo no sale de este dispositivo.</b> Se lee y se revisa dentro del navegador, sin enviarlo a ningún servidor. Al pulsar «Borrar» o cerrar la pestaña, desaparece. Solo se guarda lo que tú descargues.</div>
       <div class="formrow">
         <div class="field">Tipo de revisión
@@ -554,8 +580,19 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 <script>
 "use strict";
 // ================================================================= Constantes y utilidades
-const CIT = "01010201";   // Cítricos en campo: Cítricos, Naranjo, Mandarino, Pomelo, Limonero
-const POS = "020101";     // Frutos cítricos (postcosecha)
+// ---- Especie seleccionada (cultivo). Por defecto, cítricos.
+// Campo: el código del cultivo y todos sus subcultivos, más los usos registrados para sus grupos superiores
+// (p. ej. «Árboles y arbustos frutales» vale para el aguacate). Postcosecha: solo donde el registro tiene
+// producto cosechado equivalente (frutos cítricos, de pepita y de hueso).
+const SP_DEFAULT = "0101020100000000";
+const POST_MAP = [["01010201", "020101"], ["01010205", "020102"], ["01010204", "020103"]];
+const SP_FEATURED = [
+  ["0101020100000000", "Cítricos"], ["0101020301000000", "Aguacate"], ["0101020306000000", "Mango"], ["0101020302000000", "Caqui"],
+  ["0101020317000000", "Granado"], ["0101020701000000", "Uva de mesa"], ["0101020702000000", "Uva de vinificación"], ["0101020200000000", "Olivo"],
+  ["0101020601000000", "Almendro"], ["0101020400000000", "Frutales de hueso"], ["0101020500000000", "Frutales de pepita"], ["0101020304000000", "Kiwi"],
+  ["0101020312000000", "Platanera"], ["0103030000000000", "Fresa"]
+];
+let SP = null;
 const IN_CLAUDE = !!window.claude;
 const CAD_AVISO = 60;      // días: a partir de aquí se avisa de caducidad próxima   // dentro del visor de Claude no hay impresión ni service worker
 let IDX = null, USOS = null, P = [], byId = new Map(), current = null;
@@ -576,13 +613,23 @@ function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = fal
 const S = i => i < 0 || !USOS ? null : USOS.s[i];
 const Tx = i => i < 0 || !USOS ? null : USOS.t[i];
 const cropCode = u => IDX.c[u[0]][0];
-// Usos registrados para un grupo superior de cultivos que incluye los cítricos (valen también para cítricos)
-const CIT_ANC = new Set(["0100000000000000", "0101000000000000", "0101020000000000"]);
-const isCampo = code => code.startsWith(CIT) || CIT_ANC.has(code);
-const isCampoGen = code => CIT_ANC.has(code);
 // Códigos de los grupos superiores de un cultivo (01 01 02 01 … → 0100…, 010100…, 01010200…)
 const cropAnc = code => { const out = []; for (let i = 2; i < 16; i += 2) { const a = code.slice(0, i).padEnd(16, "0"); if (a !== code) out.push(a); } return out; };
-const isPost = code => code.startsWith(POS);
+const prefOf = code => code.replace(/(00)+$/, "");
+function makeSpecies(code) {
+  const row = IDX && IDX.c.find(c => c[0] === code);
+  if (!row) return null;
+  const feat = SP_FEATURED.find(x => x[0] === code);
+  const name = feat ? feat[1] : row[1].replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim();
+  const field = prefOf(code);
+  const pm = POST_MAP.find(([f]) => field.startsWith(f));
+  const post = pm ? pm[1] + field.slice(pm[0].length) : null;
+  const postAnc = new Set(post ? cropAnc(post.padEnd(16, "0")).filter(c => c.startsWith(pm[1])) : []);
+  return { code, name, lower: name.charAt(0).toLowerCase() + name.slice(1), field, post, postAnc, anc: new Set(cropAnc(code)), wwf: field.startsWith("01010201") };
+}
+const isCampo = code => !!SP && (code.startsWith(SP.field) || SP.anc.has(code));
+const isCampoGen = code => !!SP && SP.anc.has(code);
+const isPost = code => !!(SP && SP.post) && (code.startsWith(SP.post) || SP.postAnc.has(code));
 function daysTo(d) { if (!d) return null; return Math.round((new Date(d + "T00:00:00") - new Date(new Date().toDateString())) / 864e5); }
 const concTxt = s => s[1] ? s[1] + (s[2] ? " " + s[2] : "%") : "";
 const susTxt = p => p.sus.map(s => s[0] + (s[1] ? " " + concTxt(s) : "")).join(" + ");
@@ -613,6 +660,8 @@ async function load() {
     return o;
   });
   P.forEach(o => byId.set(o.id, o));
+  SP = makeSpecies(store.get("fr_especie", SP_DEFAULT)) || makeSpecies(SP_DEFAULT);
+  applySpeciesLabels();
   $("#fechaTop").textContent = "Registro MAPA · datos a " + fmtDate(IDX.fecha);
   $("#fuente").textContent = `Fuente: Registro de Productos Fitosanitarios del MAPA, exportación de productos autorizados a ${fmtDate(IDX.fecha)} (${P.length.toLocaleString("es-ES")} productos).`;
   const age = -daysTo(IDX.fecha);
@@ -633,12 +682,10 @@ async function load() {
       if (u[3] === 0 && u[2] > 0) u[3] = u[2];
       if (u[3] == null && u[2] != null) u[3] = u[2];
       if (!u[2] && !u[3]) { u[2] = null; u[3] = null; }
-      const c = cropCode(u);
-      if (isCampo(c)) p.campo = true;
-      if (isPost(c)) p.post = true;
       const f = funOf(IDX.a[u[1]][0]); p.funs.add(f); funsAll.add(f);
     }
   }
+  computeSpeciesFlags();
   $("#fFun").insertAdjacentHTML("beforeend", [...funsAll].sort((a, b) => a.localeCompare(b, "es")).map(f => `<option>${esc(f)}</option>`).join(""));
   initPlaga();
   runSearch();
@@ -700,7 +747,7 @@ function runSearch() {
   const item = p => `<li><button data-id="${p.id}" ${current && current.id === p.id ? 'aria-current="true"' : ""}>
       <span class="r-name">${hl(p.nombre)}</span><span class="r-reg">${esc(p.reg)}</span>
       <span class="r-ma">${p.sus.map(s => hl(s[0]) + (s[1] ? " " + esc(concTxt(s)) : "")).join(" + ") || esc(p.form)}${aliasHit(p, qn)}</span>
-      <span class="r-tags">${estadoPill(p)}${USOS && p.campo ? '<span class="pill cit">Cítricos</span>' : ""}${USOS && p.post ? '<span class="pill post">Postcosecha</span>' : ""}</span>
+      <span class="r-tags">${estadoPill(p)}${USOS && p.campo ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post ? '<span class="pill post">Postcosecha</span>' : ""}</span>
     </button></li>`;
   let html = "";
   const narrow = window.matchMedia("(max-width:900px)").matches;
@@ -862,7 +909,7 @@ function renderFicha() {
     else if (d != null && d < CAD_AVISO) alerts.push(`<div class="alert warn"><b>La autorización caduca el ${fmtDate(p.cad)}</b> (en ${d} día${d === 1 ? "" : "s"}). Las renovaciones suelen publicarse cerca de la fecha; revísalo antes de planificar tratamientos.</div>`);
     else if (d != null && d < 180) alerts.push(`<div class="alert info">La autorización caduca el ${fmtDate(p.cad)} (en ${d} días).</div>`);
   }
-  if (USOS && p.estado === "Vigente" && !p.campo && !p.post) alerts.push(`<div class="alert info">Este producto <b>no tiene usos autorizados en cítricos</b>, ni en campo ni en postcosecha.</div>`);
+  if (USOS && p.estado === "Vigente" && !p.campo && !p.post) alerts.push(`<div class="alert info">Este producto <b>no tiene usos autorizados en ${esc(SP.lower)}</b>${SP.post ? ", ni en campo ni en postcosecha" : ""}. Puedes verlos todos con «Todos los cultivos».</div>`);
   const crops = allCrops(p);
   const sc = USOS && summaryFor(p, isCampo), sp = USOS && summaryFor(p, isPost);
   const sumCard = (s, cls, title) => s ? `<div class="sumcard ${cls}"><h4>${title}<span class="pill ${cls === "post" ? "post" : "cit"}" title="Autorizaciones del registro: combinaciones de cultivo y plaga o finalidad">${s.plagas.length} plaga${s.plagas.length === 1 ? "" : "s"}${s.crops.length > 1 ? ` · ${s.crops.length} cultivos` : ""}</span></h4><dl>
@@ -871,7 +918,7 @@ function renderFicha() {
       <dt>Nº aplic.</dt><dd>${esc(listShort(s.apl, 3)) || "—"}</dd>
       <dt>Caldo</dt><dd>${esc(listShort(s.caldo.map(x => x.replace(/\n/g, " · ")), 2)) || "—"}</dd>
       <dt>Para</dt><dd>${esc(listShort(s.plagas, 14))}</dd>
-      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}${s.gen ? ' <span class="pill cit" title="Registrado para un grupo de cultivos que incluye los cítricos">grupo que incluye cítricos</span>' : ""}</dd></dl></div>` : "";
+      <dt>Cultivos</dt><dd>${esc(s.crops.join(", "))}${s.gen ? ` <span class="pill cit" title="Registrado para un grupo de cultivos que incluye ${esc(SP.lower)}">grupo que incluye ${esc(SP.lower)}</span>` : ""}</dd></dl></div>` : "";
   // Otros productos con la misma composición
   const key = p.sn;
   const same = key ? P.filter(o => o.id !== p.id && o.sn === key && o.estado === "Vigente") : [];
@@ -881,7 +928,7 @@ function renderFicha() {
     if (!cs.length) return `<p class="empty">No hay usos que coincidan con el filtro.</p>`;
     return cs.map(c => {
       const rows = [...c.groups.values()].map(g => { GROUPS.push({ ...g, crop: c.name, cropCode: c.code }); return useRow(p, g, GROUPS.length - 1); }).join("");
-      return `<div class="crop"><h4>${esc(c.name)} ${isPost(c.code) ? '<span class="pill post">Postcosecha</span>' : ""}${isCampoGen(c.code) ? '<span class="pill cit" title="Uso registrado para un grupo de cultivos que incluye los cítricos">Incluye cítricos</span>' : ""}<span class="n">${(n => `${n} plaga${n === 1 ? "" : "s"}`)(new Set([...c.groups.values()].flatMap(g => g.plagas)).size)}</span></h4>
+      return `<div class="crop"><h4>${esc(c.name)} ${isPost(c.code) ? '<span class="pill post">Postcosecha</span>' : ""}${isCampoGen(c.code) ? `<span class="pill cit" title="Uso registrado para un grupo de cultivos que incluye ${esc(SP.lower)}">Incluye ${esc(SP.lower)}</span>` : ""}<span class="n">${(n => `${n} plaga${n === 1 ? "" : "s"}`)(new Set([...c.groups.values()].flatMap(g => g.plagas)).size)}</span></h4>
         <div class="tblwrap"><table class="uses"><thead><tr><th>Plaga / finalidad</th><th>Dosis</th><th>Caldo</th><th>Plazo seg.</th><th>Nº aplic.</th><th>Intervalo</th><th>Estado fenol.</th><th>Usuario · método</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
     }).join("");
   })();
@@ -889,7 +936,7 @@ function renderFicha() {
   <div class="f-head">
     <div class="printonly">FitoLupa · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
     <div class="f-title"><h2>${esc(p.nombre)}</h2><span class="regbox" title="Nº de registro">${esc(p.reg)}</span>${estadoPill(p)}</div>
-    <div class="f-tags">${USOS && p.campo ? '<span class="pill cit">Cítricos campo</span>' : ""}${USOS && p.post ? '<span class="pill post">Postcosecha cítricos</span>' : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
+    <div class="f-tags">${USOS && p.campo ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post ? `<span class="pill post">Postcosecha ${esc(SP.lower)}</span>` : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
     <div class="f-form">${esc(p.form)}</div>
     ${alerts.length ? `<div class="alerts">${alerts.join("")}</div>` : ""}
     <div class="f-actions">
@@ -901,7 +948,7 @@ function renderFicha() {
     </div>
   </div>
   <div class="f-body">
-    ${sc || sp ? `<section class="sec"><h3>Resumen en cítricos</h3><div class="sum">${sumCard(sc, "", "Cítricos en campo")}${sumCard(sp, "post", "Postcosecha de cítricos")}</div></section>` : ""}
+    ${sc || sp ? `<section class="sec"><h3>Resumen en ${esc(SP.lower)}</h3><div class="sum">${sumCard(sc, "", SP.post ? `${esc(SP.name)} en campo` : esc(SP.name))}${sumCard(sp, "post", `Postcosecha de ${esc(SP.lower)}`)}</div></section>` : ""}
     <section class="sec"><h3>Materia activa</h3>
       <div class="ma">${p.sus.map(s => `<span>${esc(s[0])}<b>${esc(concTxt(s))}</b></span>`).join("") || "—"}</div>
       ${same.length ? `<div class="same noprint">Misma composición (${same.length} vigente${same.length === 1 ? "" : "s"}): ${same.slice(0, 12).map(o => `<button class="linkbtn" data-open="${o.id}">${esc(o.nombre)}</button>`).join("")}${same.length > 12 ? "…" : ""}</div>` : ""}
@@ -921,7 +968,7 @@ function renderFicha() {
     <section class="sec"><h3>Usos autorizados y dosis</h3>
       <div class="usebar">
         <div class="chips" role="group" aria-label="Cultivo">
-          ${p.campo ? `<button class="chip" data-crop="cit" aria-pressed="${ui.crop === "cit"}">Cítricos campo</button>` : ""}
+          ${p.campo ? `<button class="chip" data-crop="cit" aria-pressed="${ui.crop === "cit"}">${esc(SP.name)}${SP.post ? " campo" : ""}</button>` : ""}
           ${p.post ? `<button class="chip" data-crop="post" aria-pressed="${ui.crop === "post"}">Postcosecha</button>` : ""}
           <button class="chip" data-crop="all" aria-pressed="${ui.crop === "all"}">Todos (${crops.length} cultivos)</button>
         </div>
@@ -994,10 +1041,11 @@ let AG_INDEX = null;
 function initPlaga() {
   const crops = new Map();
   for (const arr of Object.values(USOS.u)) for (const u of arr) { const c = IDX.c[u[0]]; crops.set(c[1], (crops.get(c[1]) || 0) + 1); }
-  const top = `<option value="campo">Cítricos en campo (todas las especies)</option><option value="post">Postcosecha de cítricos</option>`;
-  const citricos = IDX.c.filter(c => (isCampo(c[0]) || isPost(c[0])) && c[0] !== CIT + "00000000" && crops.has(c[1])).map(c => `<option value="c:${esc(c[1])}">· ${esc(c[1])}</option>`).join("");
-  const others = [...crops.keys()].filter(n => !IDX.c.some(c => c[1] === n && (isCampo(c[0]) || isPost(c[0])))).sort((a, b) => a.localeCompare(b, "es")).map(n => `<option value="c:${esc(n)}">${esc(n)}</option>`).join("");
-  $("#pCrop").innerHTML = `<optgroup label="Cítricos">${top}${citricos}</optgroup><optgroup label="Otros cultivos">${others}</optgroup>`;
+  const top = `<option value="campo">${esc(SP.name)}${SP.post ? " en campo" : ""} (incluye variedades y grupos)</option>${SP.post ? `<option value="post">Postcosecha de ${esc(SP.lower)}</option>` : ""}`;
+  const citricos = IDX.c.filter(c => (c[0].startsWith(SP.field) || (SP.post && c[0].startsWith(SP.post))) && c[0] !== SP.code && crops.has(c[1])).map(c => `<option value="c:${esc(c[1])}">· ${esc(c[1])}</option>`).join("");
+  const others = [...crops.keys()].filter(n => !IDX.c.some(c => c[1] === n && (c[0].startsWith(SP.field) || (SP.post && c[0].startsWith(SP.post))))).sort((a, b) => a.localeCompare(b, "es")).map(n => `<option value="c:${esc(n)}">${esc(n)}</option>`).join("");
+  $("#pCrop").innerHTML = `<optgroup label="${esc(SP.name)}">${top}${citricos}</optgroup><optgroup label="Otros cultivos">${others}</optgroup>`;
+  PL.crop = "campo";
 }
 function cropTest(sel) {
   if (sel === "campo") return c => isCampo(c[0]);
@@ -1131,12 +1179,12 @@ const safeName = s => s.replace(/[^\w\-]+/g, "_").replace(/_+/g, "_").slice(0, 6
 function exportFicha(p) {
   const arr = (USOS && USOS.u[p.id]) || [];
   const rows = arr.map(u => { const c = IDX.c[u[0]], a = IDX.a[u[1]], cv = convPair(p, u);
-    return [c[1], isPost(c[0]) ? "Postcosecha" : isCampo(c[0]) ? "Cítricos campo" : "", a[1], funOf(a[0]), u[2], u[3], S(u[4]) || "", cv && cv.per === "L" ? +cv.min.toFixed(4) : "", cv && cv.per === "L" ? +cv.max.toFixed(4) : "", cv && cv.per === "L" ? cv.u : "", S(u[9]) || "", S(u[5]) || "", S(u[7]) || "", S(u[8]) || "", S(u[10]) || "", S(u[12]) || "", S(u[15]) || "", Tx(u[11]) || ""]; })
+    return [c[1], isPost(c[0]) ? "Postcosecha" : isCampo(c[0]) ? SP.name : "", a[1], funOf(a[0]), u[2], u[3], S(u[4]) || "", cv && cv.per === "L" ? +cv.min.toFixed(4) : "", cv && cv.per === "L" ? +cv.max.toFixed(4) : "", cv && cv.per === "L" ? cv.u : "", S(u[9]) || "", S(u[5]) || "", S(u[7]) || "", S(u[8]) || "", S(u[10]) || "", S(u[12]) || "", S(u[15]) || "", Tx(u[11]) || ""]; })
     .sort((x, y) => (y[1] ? 1 : 0) - (x[1] ? 1 : 0) || String(x[0]).localeCompare(y[0], "es"));
   const datos = [["Nombre comercial", p.nombre], ["Nº registro", p.reg], ["Estado", p.estado], ["Titular", p.titular], ["Fabricante", p.fab], ["Otras denominaciones", p.alias.join(", ")], ["Formulado", p.form], ["Materia activa", susTxt(p)], ["Función", [...p.funs].join(", ")], ["Inscripción", fmtDate(p.fReg)], ["Caducidad", fmtDate(p.cad)], ["Límite de venta", fmtDate(p.limV)], ["Cancelación", fmtDate(p.canc)], ["Condiciones generales", p.cond || ""], ["Ficha oficial", "https://servicio.mapa.gob.es/regfiweb/Productos/DetalleProducto/" + p.id]];
   xlsx(`ficha_${safeName(p.nombre)}_${p.reg}.xlsx`, [
     ["Producto", `${p.nombre} (${p.reg}) · ${stamp()}`, ["Campo", "Valor"], datos, [24, 100]],
-    ["Usos", `Usos autorizados de ${p.nombre} (${p.reg}) · ${stamp()}`, ["Cultivo", "Ámbito cítricos", "Plaga / finalidad", "Función", "Dosis mín.", "Dosis máx.", "Unidad", "Conv. mín.", "Conv. máx.", "Unidad conv.", "Caldo", "Plazo seguridad", "Nº aplicaciones", "Intervalo", "Estado fenológico", "Usuario", "Método", "Condicionamiento específico"], rows, [26, 14, 34, 12, 9, 9, 9, 9, 9, 9, 26, 14, 12, 12, 14, 12, 18, 80]]
+    ["Usos", `Usos autorizados de ${p.nombre} (${p.reg}) · ${stamp()}`, ["Cultivo", `Ámbito ${SP.lower}`, "Plaga / finalidad", "Función", "Dosis mín.", "Dosis máx.", "Unidad", "Conv. mín.", "Conv. máx.", "Unidad conv.", "Caldo", "Plazo seguridad", "Nº aplicaciones", "Intervalo", "Estado fenológico", "Usuario", "Método", "Condicionamiento específico"], rows, [26, 14, 34, 12, 9, 9, 9, 9, 9, 9, 26, 14, 12, 12, 14, 12, 18, 80]]
   ]);
 }
 
@@ -1181,7 +1229,7 @@ function runVerify() {
   const lines = $("#vlist").value.split(/\n/).map(matchLine).filter(Boolean);
   const scope = $("#vscope").value;
   const test = scope === "campo" ? isCampo : scope === "post" ? isPost : scope === "cualquiera" ? (c => isCampo(c) || isPost(c)) : null;
-  const scopeName = scope === "campo" ? "cítricos (campo)" : scope === "post" ? "postcosecha de cítricos" : "cítricos";
+  const scopeName = scope === "campo" ? SP.lower + (SP.post ? " (campo)" : "") : scope === "post" ? "postcosecha de " + SP.lower : SP.lower;
   let ok = 0, warn = 0, nr = 0; VROWS = [];
   const rows = lines.map(r => {
     if (!r.p) { nr++; VROWS.push([r.raw, "", "", "Sin registro fitosanitario", r.note || "Fertilizante, corrector, bioestimulante o nombre no encontrado", "", "", "", "", ""]); return `<tr class="nr"><td>${esc(r.raw)}</td><td colspan="6"><span class="pill mute">Sin registro fitosanitario</span> ${esc(r.note || "Fertilizante, corrector, bioestimulante o nombre no encontrado. No necesita nº de registro fitosanitario.")}</td></tr>`; }
@@ -1215,8 +1263,7 @@ const WRANK = { permitida: 0, excepcional: 1, muy_excepcional: 2 };
 const W = { sec: "plaga", plaga: null, rows: [] };
 async function loadWWF() {
   try { const r = await fetch("data/wwf.json", { cache: "no-cache" }); if (!r.ok) return; WWF = await r.json(); } catch { return; }
-  $("#tabWwf").hidden = false;
-  const rb = $("#rvWwfBtn"); if (rb) rb.hidden = false;
+  applySpeciesLabels();
   $("#wwfDocs").textContent = `Campaña ${WWF.campana} · ${WWF.documentos.join(" · ")}. ${WWF.fuentes}.`;
   W.plaga = WWF.plagas[0].id;
   $("#wvplaga").insertAdjacentHTML("beforeend", WWF.plagas.filter(p => p.alternativas.some(a => a.ma)).map(p => `<option value="${p.id}">${esc(p.nombre)}</option>`).join(""));
@@ -1392,15 +1439,77 @@ function setView(v) {
   if (v === "inicio" && location.hash) try { history.replaceState(null, "", location.pathname + location.search); } catch {}
   store.set("fr_view", v);
 }
+function computeSpeciesFlags() {
+  if (!USOS) return;
+  for (const p of P) { p.campo = false; p.post = false; }
+  for (const [pid, arr] of Object.entries(USOS.u)) {
+    const p = byId.get(Number(pid)); if (!p) continue;
+    for (const u of arr) { const c = cropCode(u); if (!p.campo && isCampo(c)) p.campo = true; if (!p.post && isPost(c)) p.post = true; }
+  }
+}
+function applySpeciesLabels() {
+  if (!SP) return;
+  document.querySelectorAll(".sp-name").forEach(e => e.textContent = SP.name);
+  document.querySelectorAll(".sp-lower").forEach(e => e.textContent = SP.lower);
+  $("#vscope").innerHTML = `<option value="campo">Comprobar uso en ${esc(SP.lower)}${SP.post ? " (campo)" : ""}</option>${SP.post ? `<option value="post">Comprobar uso en postcosecha de ${esc(SP.lower)}</option><option value="cualquiera">${esc(SP.name)}, campo o postcosecha</option>` : ""}<option value="">No comprobar cultivo</option>`;
+  document.querySelectorAll(".legend-post").forEach(e => e.hidden = !SP.post);
+  // Proyecto Zitrus EDEKA-WWF: solo para cítricos
+  const showW = !!(WWF && SP.wwf);
+  $("#tabWwf").hidden = !showW;
+  const rb = $("#rvWwfBtn"); if (rb) rb.hidden = !showW;
+  document.querySelectorAll(".wwfcard,.wwf-only").forEach(e => e.hidden = !showW);
+  renderSpeciesPicker();
+}
+function renderSpeciesPicker() {
+  const box = $("#spChips"); if (!box || !SP) return;
+  const feat = SP_FEATURED.filter(([c]) => IDX.c.some(x => x[0] === c));
+  const extra = feat.some(([c]) => c === SP.code) ? "" : `<button type="button" class="spchip" data-sp="${SP.code}" aria-pressed="true">${esc(SP.name)}</button>`;
+  box.innerHTML = feat.map(([c, n]) => `<button type="button" class="spchip" data-sp="${c}" aria-pressed="${c === SP.code}">${esc(n)}</button>`).join("") + extra;
+}
+let SP_LIST = null;
+function speciesList() {
+  if (SP_LIST || !USOS) return SP_LIST || [];
+  const used = new Set();
+  for (const arr of Object.values(USOS.u)) for (const u of arr) used.add(cropCode(u));
+  SP_LIST = IDX.c.filter(c => c[0].startsWith("01") && [...used].some(k => k.startsWith(prefOf(c[0])))).map(c => ({ code: c[0], name: c[1], n: norm(c[1]), depth: prefOf(c[0]).length / 2 }));
+  return SP_LIST;
+}
+function setSpecies(code) {
+  const sp = makeSpecies(code); if (!sp) return;
+  SP = sp; store.set("fr_especie", code);
+  computeSpeciesFlags();
+  applySpeciesLabels();
+  if (USOS) { initPlaga(); PL.agent = null; AG_INDEX = null; runPlaga(); }
+  runSearch();
+  if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; ui.cropSel = ""; ui.calc.gi = null; renderFicha(); }
+  $("#vout").innerHTML = ""; $("#vout").hidden = true; $("#vsum").innerHTML = "";
+  if (typeof limpiarRevision === "function" && REV.res.length) { REV.file = null; REV.res = []; REV.counts = []; $("#rvOut").innerHTML = ""; }
+  if (!$("#view-wwf").hidden && !SP.wwf) setView("inicio");
+  if (!SP.wwf && typeof REV !== "undefined" && REV.mode === "wwf") { REV.mode = "generica"; document.querySelectorAll("[data-rmode]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.rmode === "generica"))); }
+  renderHomeStats();
+  toast(`Especie seleccionada: ${SP.name}`);
+}
 function renderHomeStats() {
   if (!IDX) return;
   const n = x => x.toLocaleString("es-ES");
   const vig = P.filter(p => p.estado === "Vigente");
-  const cit = USOS ? vig.filter(p => p.campo || p.post).length : null;
-  const usos = USOS ? Object.values(USOS.u).reduce((a, arr) => a + arr.length, 0) : null;
+  const cit = USOS && SP ? vig.filter(p => p.campo || p.post).length : null;
+  let usos = null;
+  if (USOS && SP) { usos = 0; for (const [pid, arr] of Object.entries(USOS.u)) { const p = byId.get(Number(pid)); if (!p || p.estado !== "Vigente") continue; for (const u of arr) { const c = cropCode(u); if (isCampo(c) || isPost(c)) usos++; } } }
   const vals = [n(vig.length), cit == null ? "…" : n(cit), usos == null ? "…" : n(usos), fmtDate(IDX.fecha)];
   document.querySelectorAll("#homeStats dd").forEach((d, i) => d.textContent = vals[i]);
 }
+$("#spChips").addEventListener("click", e => { const b = e.target.closest("[data-sp]"); if (b && (!SP || b.dataset.sp !== SP.code)) setSpecies(b.dataset.sp); });
+$("#spBadge").addEventListener("click", () => { setView("inicio"); window.scrollTo({ top: 0, behavior: "smooth" }); setTimeout(() => $("#spChips button[aria-pressed=true]")?.focus(), 300); });
+$("#spQ").addEventListener("input", () => {
+  const q = norm($("#spQ").value), box = $("#spSug");
+  if (q.length < 2 || !USOS) { box.hidden = true; return; }
+  const hits = speciesList().filter(c => c.n.includes(q)).sort((a, b) => (a.n.startsWith(q) ? 0 : 1) - (b.n.startsWith(q) ? 0 : 1) || a.depth - b.depth || a.name.localeCompare(b.name, "es")).slice(0, 14);
+  box.innerHTML = hits.length ? hits.map(c => `<li><button type="button" data-spc="${c.code}"><span>${esc(c.name)}</span><small>${esc(cropAnc(c.code).map(a => (IDX.c.find(x => x[0] === a) || [])[1]).filter(Boolean).slice(-1)[0] || "")}</small></button></li>`).join("") : `<li class="note" style="padding:8px">Sin especies con ese nombre en el registro.</li>`;
+  box.hidden = false;
+});
+$("#spSug").addEventListener("click", e => { const b = e.target.closest("[data-spc]"); if (!b) return; $("#spSug").hidden = true; $("#spQ").value = ""; setSpecies(b.dataset.spc); });
+document.addEventListener("click", e => { if (!e.target.closest(".spother")) $("#spSug").hidden = true; });
 function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
 $("#homeForm").addEventListener("submit", e => { e.preventDefault(); homeSearch($("#hq").value.trim()); });
 $("#view-inicio").addEventListener("click", e => {
@@ -1441,8 +1550,8 @@ $("#ficha").addEventListener("click", e => {
   if (act.dataset.act === "resumen") {
     const sc = summaryFor(p, isCampo), sp = summaryFor(p, isPost);
     copyText([`${p.nombre} · Nº Reg. ${p.reg} · ${p.estado}`, p.form, `Materia activa: ${susTxt(p)}`, `Titular: ${p.titular}`, `Caducidad: ${fmtDate(p.cad)}${p.limV ? " · Límite de venta: " + fmtDate(p.limV) : ""}`,
-      sc ? `Cítricos campo: ${sc.doses.join(" | ")} · Plazo seguridad ${sc.plazo} · Aplicaciones ${sc.apl.join(" | ") || "—"}` : "",
-      sp ? `Postcosecha cítricos: ${sp.doses.join(" | ")} · Plazo ${sp.plazo}` : "",
+      sc ? `${SP.name}: ${sc.doses.join(" | ")} · Plazo seguridad ${sc.plazo} · Aplicaciones ${sc.apl.join(" | ") || "—"}` : "",
+      sp ? `Postcosecha ${SP.lower}: ${sp.doses.join(" | ")} · Plazo ${sp.plazo}` : "",
       `Fuente: ${stamp()}`].filter(Boolean).join("\n"), "Resumen copiado");
   }
 });

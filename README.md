@@ -4,6 +4,10 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** pensado para el t
 
 ## Qué hace
 
+**Especie**
+- En Inicio eliges la especie (cítricos, aguacate, uva de mesa… o cualquier cultivo del registro). Toda la app muestra solo la información de esa especie: búsqueda, fichas, resúmenes, por plaga, verificador y revisión de cuadernos. Se incluyen los usos registrados para sus grupos superiores (p. ej. «Árboles y arbustos frutales»).
+- La especie elegida se ve siempre en la cabecera y se recuerda en el navegador. La pestaña WWF solo aparece con cítricos.
+
 **Inicio**
 - Presentación de la app con buscador directo, cifras del registro (productos vigentes, con uso en cítricos, usos autorizados y fecha de los datos), acceso a cada sección, cómo funciona y leyenda de las etiquetas.
 
