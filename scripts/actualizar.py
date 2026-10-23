@@ -1,4 +1,4 @@
-"""Actualiza los datos de FitoRegistro desde el Registro de Productos Fitosanitarios del MAPA.
+"""Actualiza los datos del Buscador Fitosanitario Cítricos desde el Registro de Productos Fitosanitarios del MAPA.
 
 Fuente principal: exportación oficial «Productos autorizados (JSON)» de regfiweb (MAPA).
 Respaldo: copia SQLite publicada en github.com/005Jan/sulfata-datos, por si la web del MAPA no responde.
@@ -25,7 +25,7 @@ URL_MAPA = "https://servicio.mapa.gob.es/regfiweb/Exportaciones/ExportJsonProduc
 URL_RESPALDO = "https://github.com/005Jan/sulfata-datos/releases/latest/download/sulfata.db.gz"
 CITRICOS = "01010201"  # código de cultivo: Cítricos y sus especies
 MIN_PRODUCTOS, MIN_USOS = 1500, 50000
-UA = {"User-Agent": "FitoRegistro/1.0 (actualizacion semanal; datos publicos MAPA)"}
+UA = {"User-Agent": "BuscadorFitosanitarioCitricos/1.0 (actualizacion semanal; datos publicos MAPA)"}
 
 
 # ---------------------------------------------------------------- utilidades

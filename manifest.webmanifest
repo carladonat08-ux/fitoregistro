@@ -1,6 +1,6 @@
 {
-  "name": "FitoRegistro Cítricos",
-  "short_name": "FitoRegistro",
+  "name": "Buscador Fitosanitario Cítricos",
+  "short_name": "Fito Cítricos",
   "description": "Buscador del Registro de Productos Fitosanitarios del MAPA para cítricos: usos, dosis, plazos de seguridad y condicionamientos.",
   "lang": "es",
   "start_url": "./",

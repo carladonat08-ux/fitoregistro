@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>FitoRegistro Cítricos</title>
+<title>Buscador Fitosanitario Cítricos</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Buscador del Registro de Productos Fitosanitarios del MAPA: usos en cítricos (campo y postcosecha), dosis en cc/L y g/L, plazos de seguridad, condicionamientos y búsqueda por plaga.">
 <meta name="theme-color" content="#1f5a3a">
@@ -62,7 +62,6 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* Cabecera */
 header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
-@media (max-width:700px){header.top{position:static}.tabs{margin-left:0;width:100%}.tabs button{flex:1 1 auto;padding:6px 8px}}
 .top .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding-block:12px}
 .brand{display:flex;align-items:baseline;gap:10px;min-width:0;flex-wrap:wrap}
 .brand h1{margin:0;font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:.01em;line-height:1;color:var(--leaf)}
@@ -71,6 +70,7 @@ header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background
 .tabs button{border:0;background:transparent;padding:6px 12px;border-radius:6px;cursor:pointer;font-weight:600;font-size:13px;color:var(--ink-2);white-space:nowrap}
 .tabs button[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgb(0 0 0 / .12)}
 .tabs .count{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-size:11px;line-height:18px;text-align:center}
+@media (max-width:700px){header.top{position:static}.tabs{margin-left:0;width:100%;display:grid;grid-template-columns:repeat(3,1fr);overflow:visible}.tabs button{padding:7px 4px;white-space:normal;line-height:1.2}}
 .searchrow{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding-block:0 12px}
 .search{position:relative;flex:1 1 380px;min-width:0}
 .search input{width:100%;padding:12px 14px 12px 42px;border:1.5px solid var(--line-strong);border-radius:8px;background:var(--bg);font-size:16px}
@@ -305,7 +305,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 
 <header class="top">
   <div class="wrap">
-    <div class="brand"><h1>FitoRegistro</h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
+    <div class="brand"><h1>Buscador Fitosanitario Cítricos</h1><small id="fechaTop">Registro de Productos Fitosanitarios · MAPA</small></div>
     <nav class="tabs" role="tablist" aria-label="Secciones">
       <button role="tab" aria-selected="true" data-view="buscar">Producto</button>
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
@@ -784,7 +784,7 @@ function renderFicha() {
   })();
   $("#ficha").innerHTML = `
   <div class="f-head">
-    <div class="printonly">FitoRegistro · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
+    <div class="printonly">Buscador Fitosanitario Cítricos · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
     <div class="f-title"><h2>${esc(p.nombre)}</h2><span class="regbox" title="Nº de registro">${esc(p.reg)}</span>${estadoPill(p)}</div>
     <div class="f-tags">${USOS && p.campo ? '<span class="pill cit">Cítricos campo</span>' : ""}${USOS && p.post ? '<span class="pill post">Postcosecha cítricos</span>' : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
     <div class="f-form">${esc(p.form)}</div>

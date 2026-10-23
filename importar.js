@@ -1,6 +1,6 @@
 "use strict";
 // =====================================================================================
-// FitoRegistro · Revisar cuaderno
+// Buscador Fitosanitario Cítricos · Revisar cuaderno
 // Lee un cuaderno de tratamientos (Excel tipo Atalaya o PDF «Resumen recetas foliares»)
 // y revisa cada aplicación contra el Registro del MAPA y, si se pide, contra la tabla del
 // Proyecto Zitrus EDEKA-WWF. Todo se procesa en el navegador: el archivo no se envía a
