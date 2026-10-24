@@ -8,7 +8,7 @@
 // Usa funciones y datos del script principal (P, byId, USOS, IDX, WWF, norm, regKey…).
 // =====================================================================================
 
-const REV = { file: null, text: "", mode: "generica", scope: "campo", recs: [], res: [], counts: [], filter: "todo", parcela: "", q: "" };
+const REV = { file: null, text: "", prots: new Set(store.get("fr_rv_prots", [])), scope: "campo", recs: [], res: [], counts: [], filter: "todo", parcela: "", q: "" };
 
 // ------------------------------------------------------------------ utilidades
 const isoFromDMY = s => { const m = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s || ""); return m ? `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}` : null; };
@@ -680,7 +680,7 @@ function revisar(r) {
       out.kind = "nofito";
       if (r.src === "gen" && !NO_FITO_HINT.test(norm(r.raw || r.nombre))) add("info", `No encuentro «${(r.nombre || r.raw || "").slice(0, 60)}» entre los productos autorizados. Si es un abono, corrector o bioestimulante, no necesita registro; si es un fitosanitario, revisa el nombre o el nº (puede estar cancelado).`);
       else add("info", "Sin nº de registro y no figura como fitosanitario: abono, corrector, bioestimulante u otro producto.");
-      if (REV.mode === "wwf" && objetoCodes(r.objeto).length && !NO_FITO_HINT.test(norm(r.objeto)))
+      if (wwfOn() && objetoCodes(r.objeto).length && !NO_FITO_HINT.test(norm(r.objeto)))
         add("warn", "WWF: no se pueden emplear fertilizantes o fitofortificantes para el control de plagas sin autorización del proyecto.");
     }
     out.sev = id.regNoExiste ? "bad" : (worst(out.notes) === "warn" ? "warn" : "nr"); return out;
@@ -806,9 +806,29 @@ function revisar(r) {
   }
   return finishWwf(out, codes);
 }
+const wwfOn = () => REV.prots.has("wwf") && !!(SP && SP.wwf);
+const REV_PROTS = ["wwf", "leaf", "tesco", "ms", "aldi", "fairtrade", "ra", "pan", "eco", "ue"];
+const protName = id => id === "wwf" ? "WWF" : PROT && PROT.protocolos[id] ? PROT.protocolos[id].nombre.replace(/:.*$/, "").replace(/ \(.*\)$/, "") : id;
+const activeProts = () => REV_PROTS.filter(id => REV.prots.has(id) && (id !== "wwf" || wwfOn()) && (id === "wwf" || (PROT && PROT.protocolos[id])));
+// Protocolos elegidos (salvo WWF, que tiene su propia evaluación por plaga): categoría más estricta de las materias activas
+function protNotes(out) {
+  const p = out.p, r = out.r;
+  for (const id of activeProts()) {
+    if (id === "wwf") continue;
+    if (id === "leaf") { if (!String(r.objeto || "").trim()) out.notes.push(["warn", "LEAF: el tratamiento no indica el motivo o la justificación (punto 3.4)."]); continue; }
+    if (!p) continue;
+    const st = protStatus(p, id); if (!st) continue;
+    const subs = st.subs.map(x => x.toLowerCase()).join(", "), cond = [...new Set(st.cond)].join(" ");
+    let sev = st.sev === "ok" ? null : st.sev;
+    if (id === "ue" && st.cat === "no_aprobada") sev = "warn";
+    if (id === "ue" && st.cat !== "no_aprobada" && st.cat !== "cfs") sev = null;
+    if (!sev) continue;
+    out.notes.push([sev, `${protName(id)}: ${st.label.toLowerCase()} (${subs}). ${st.desc}${cond ? " " + cond : ""}`]);
+  }
+}
 function finishWwf(out, codes) {
   const p = out.p;
-  if (REV.mode === "wwf" && WWF && p) {
+  if (wwfOn() && WWF && p) {
     const pls = codes.length ? WWF.plagas.filter(pl => pl.codigos.some(c => codes.some(k => c === k || c.startsWith(k + ".") || k.startsWith(c + ".")))) : [];
     let ev = pls.length ? pls.map(pl => wwfEval(p, pl.id)[0]).filter(Boolean) : wwfEval(p);
     const trampa = /\[RB\]/.test(p.form) && p.funs.has("Insecticida") || /trap|tramp/i.test(p.nombre);
@@ -828,6 +848,7 @@ function finishWwf(out, codes) {
       if (best.pl.id === "alternaria") out.notes.push(["info", "WWF: alternaria solo en Clemenvilla o Nova; en otras variedades, consulta previa."]);
     }
   }
+  protNotes(out);
   if (out.sev !== "bio") out.sev = worst(out.notes);
   return out;
 }
@@ -852,7 +873,7 @@ function contarAplicaciones(res) {
     const g = add("registro", ["R", parcela, anyo, x.p.id].join("¦"), { parcela, anyo, nombre: `${x.p.nombre} (${x.p.reg})` }, x);
     const rm = x.uses.map(u => maxApl(S(u[7]))).filter(v => v != null);
     if (rm.length) { const v = Math.max(...rm); if (g.max == null || v < g.max) { g.max = v; g.maxTxt = [...new Set(x.uses.map(u => S(u[7])).filter(Boolean))].join(" · "); } }
-    if (REV.mode === "wwf" && x.wwf) {
+    if (wwfOn() && x.wwf) {
       for (const s of x.p.sus) {
         const ma = s[0].toUpperCase().replace(/\s*\(.*?\)\s*/g, " ").trim();
         const w = add("wwf", ["W", parcela, anyo, ma].join("¦"), { parcela, anyo, nombre: ma }, x);
@@ -902,7 +923,7 @@ function revisarTexto() {
 }
 function ready(box) {
   if (!USOS) { box.innerHTML = `<p class="empty">Los datos del registro aún se están cargando. Espera unos segundos y vuelve a intentarlo.</p>`; return false; }
-  if (REV.mode === "wwf" && !WWF) { box.innerHTML = `<p class="empty">Los datos del proyecto WWF no están disponibles en esta versión.</p>`; return false; }
+  if (wwfOn() && !WWF) { box.innerHTML = `<p class="empty">Los datos del proyecto WWF no están disponibles en esta versión.</p>`; return false; }
   return true;
 }
 function finRevision(recs, fmt) {
@@ -941,7 +962,7 @@ function renderRevision() {
   };
   box.innerHTML = `
     <div class="rvsum">
-      <div><b>${esc(srcName())}</b>${REV.file ? ` · ${esc(REV.fmt)}` : ""} · ${res.length} producto${res.length === 1 ? "" : "s"}${parcelas.length ? ` en ${parcelas.length} parcela${parcelas.length === 1 ? "" : "s"}` : ""}${fechas.length ? ` · del ${fmtDate(fechas[0])} al ${fmtDate(fechas.at(-1))}` : ""} · ${esc(scopeName())} · revisión ${REV.mode === "wwf" ? "<b>WWF</b> (registro + Proyecto Zitrus)" : "<b>genérica</b> (registro MAPA)"}</div>
+      <div><b>${esc(srcName())}</b>${REV.file ? ` · ${esc(REV.fmt)}` : ""} · ${res.length} producto${res.length === 1 ? "" : "s"}${parcelas.length ? ` en ${parcelas.length} parcela${parcelas.length === 1 ? "" : "s"}` : ""}${fechas.length ? ` · del ${fmtDate(fechas[0])} al ${fmtDate(fechas.at(-1))}` : ""} · ${esc(scopeName())} · revisión: <b>registro MAPA</b>${activeProts().map(id => " + <b>" + esc(protName(id)) + "</b>").join("")}</div>
       <div class="vsum"><span class="pill bad">${c("bad")} incidencias</span><span class="pill warn">${c("warn")} a revisar</span><span class="pill ok">${c("ok") + c("info")} correctos</span><span class="pill ok">${c("bio")} control biológico</span><span class="pill mute">${c("nr")} sin registro fitosanitario</span></div>
     </div>
     <div class="formrow" style="margin:12px 0">
@@ -960,7 +981,7 @@ function renderRevision() {
     <div class="tblwrap"><table class="v rv" style="min-width:${hasF && hasP ? 1180 : 900}px"><thead><tr>${hasF ? "<th>Fecha</th>" : ""}${hasP ? "<th>Parcela</th>" : ""}${hasO ? "<th>Receta · objeto</th>" : ""}<th>Producto anotado</th><th>Dosis</th><th>Plazo seg.</th><th>Resultado</th><th>Observaciones</th></tr></thead>
       <tbody>${vis.map(rowHtml).join("") || `<tr><td colspan="${5 + hasF + hasP + hasO}" class="empty">Nada que mostrar con estos filtros.</td></tr>`}</tbody></table></div>
     ${hasF ? countTable("registro", "Aplicaciones por producto y parcela (límite del registro)", "El registro fija el nº máximo de aplicaciones de cada producto en cada uso. Se cuenta cada receta o tratamiento distinto en el año.") : ""}
-    ${REV.mode === "wwf" && hasF ? countTable("wwf", "Aplicaciones por materia activa y parcela (límite WWF)", "En el proyecto, el límite es de la materia activa, sea cual sea la marca comercial.") : ""}
+    ${wwfOn() && hasF ? countTable("wwf", "Aplicaciones por materia activa y parcela (límite WWF)", "En el proyecto, el límite es de la materia activa, sea cual sea la marca comercial.") : ""}
     </section>`;
 }
 function countTable(tipo, title, note) {
@@ -978,12 +999,17 @@ function exportRevision() {
     declTxt(r), r.src !== "pdf" ? (r.caldo ?? "") : "", r.ps, x.p ? x.p.nombre : "", x.p ? x.p.reg : "", x.p ? susTxt(x.p) : "", x.dosisAut, x.plazoReg,
     SEV[x.sev][0], x.wwf ? WCAT[x.wwf.alt.cat][0] : "", x.notes.map(n => n[1]).join(" | ")]; });
   const cnt = REV.counts.map(g => [g.tipo === "wwf" ? "WWF (materia activa)" : "Registro (producto)", g.parcela, g.anyo, g.nombre, g.n, g.maxTxt || "", g.sev === "bad" ? "Supera el máximo" : g.sev === "lim" ? "Al límite" : "Correcto"]);
-  const title = `Revisión ${REV.mode === "wwf" ? "WWF (registro + Proyecto Zitrus)" : "genérica (registro MAPA)"} de «${srcName()}» · ${scopeName()} · ${stamp()}`;
-  xlsx(`revision_${REV.mode}_${safeName(srcName().replace(/\.[^.]+$/, ""))}.xlsx`, [
+  const title = `Revisión (registro MAPA${activeProts().map(id => " + " + protName(id)).join("")}) de «${srcName()}» · ${scopeName()} · ${stamp()}`;
+  xlsx(`revision_${safeName(srcName().replace(/\.[^.]+$/, ""))}.xlsx`, [
     ["Revisión", title, ["Fecha", "Parcela/sector", "Variedad", "Receta/trat.", "Objeto", "Producto anotado", "Nº reg. anotado", "Materia activa anotada", "Dosis anotada", "Caldo", "Plazo anotado", "Producto en registro", "Nº registro", "Materia activa registro", "Dosis registro", "Plazo registro", "Resultado", "WWF", "Observaciones"], rows,
       [11, 12, 14, 10, 28, 24, 11, 26, 16, 10, 10, 22, 11, 26, 30, 16, 18, 16, 90]],
     ["Nº de aplicaciones", title, ["Límite", "Parcela/sector", "Año", "Producto / materia activa", "Aplicaciones", "Máximo", "Estado"], cnt, [20, 14, 8, 34, 12, 30, 16]]
   ]);
+}
+function renderRvProts() {
+  const box = $("#rvProts"); if (!box) return;
+  const ids = REV_PROTS.filter(id => id === "wwf" ? (SP && SP.wwf && WWF) : PROT && PROT.protocolos[id]);
+  box.innerHTML = `<button class="chip" aria-pressed="true" disabled title="Siempre se revisa contra el Registro del MAPA">Registro MAPA</button>` + ids.map(id => `<button class="chip ${id === "wwf" ? "wwfchip" : ""}" data-rp="${id}" aria-pressed="${REV.prots.has(id)}">${esc(protName(id))}</button>`).join("");
 }
 function limpiarRevision() { REV.file = null; REV.text = ""; REV.recs = []; REV.res = []; REV.counts = []; $("#rvOut").innerHTML = ""; const f = $("#rvFile"); if (f) f.value = ""; toast("Revisión borrada de la pantalla"); }
 
@@ -995,10 +1021,12 @@ function limpiarRevision() { REV.file = null; REV.text = ""; REV.recs = []; REV.
   ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) revisarArchivo(f); });
-  document.querySelectorAll("[data-rmode]").forEach(b => b.addEventListener("click", () => {
-    REV.mode = b.dataset.rmode; document.querySelectorAll("[data-rmode]").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
-    rerunRevision();
-  }));
+  $("#rvProts").addEventListener("click", e => {
+    const b = e.target.closest("[data-rp]"); if (!b) return;
+    const id = b.dataset.rp; if (REV.prots.has(id)) REV.prots.delete(id); else REV.prots.add(id);
+    store.set("fr_rv_prots", [...REV.prots]); renderRvProts(); rerunRevision();
+  });
+  renderRvProts();
   $("#rvScope").addEventListener("change", e => { REV.scope = e.target.value; rerunRevision(); });
   $("#rvRun").addEventListener("click", revisarTexto);
   $("#rvText").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) revisarTexto(); });

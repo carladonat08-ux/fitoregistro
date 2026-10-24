@@ -49,6 +49,12 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pens
 - Sin fechas ni parcelas (una lista simple), la tabla se simplifica.
 - El archivo se procesa en el navegador: no se envía a ningún sitio ni se guarda. Informe descargable en Excel.
 
+**Protocolos**
+- Pestaña con las restricciones de materias activas de clientes, certificaciones y normativa: EDEKA-WWF (solo cítricos), LEAF Marque, GLOBALG.A.P., Tesco, Marks & Spencer, Lidl, ALDI SÜD, Fairtrade, Rainforest Alliance, PAN (plaguicidas altamente peligrosos), agricultura ecológica y Unión Europea (candidatas a sustitución, bajo riesgo, no aprobadas).
+- Para cada uno: qué exige, categorías, materias activas del registro afectadas con sus productos vigentes y enlace al documento original.
+- En la ficha de cada producto, su situación en cada protocolo. En «Por plaga», filtro «Cumplir protocolo» que quita los productos prohibidos para ese cliente. En «Revisar», se pueden marcar varios protocolos a la vez.
+- Listas transcritas de los documentos públicos (octubre de 2026); ver `scripts/protocolos/README.md`. Prevalece la versión que envíe cada cliente o certificadora.
+
 **WWF (Proyecto Zitrus EDEKA-WWF)**
 - Pestaña separada con las tablas del proyecto (pesticidas y control de hierbas, campaña 2025-2026).
 - Por plaga: medidas culturales, control biológico, plantas auxiliares y alternativas químicas (permitida, excepcional o muy excepcional), con máximos de aplicaciones, toxic load y los productos comerciales del registro autorizados para esa plaga en cítricos.

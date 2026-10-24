@@ -243,6 +243,18 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 @media (max-width:560px){.cards{grid-template-columns:minmax(0,1fr)}}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:grid;grid-template-columns:1fr auto;gap:4px 12px;align-items:center;border-left:4px solid var(--leaf)}
 .card.wwfcard{border-left-color:var(--wwf)}
+.prnav{flex-wrap:wrap}
+.prcards .card{grid-template-columns:1fr;align-content:start}
+.prcards .card .btn{justify-self:start;margin-top:6px}
+.prpills{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.prhead h3{margin:0;font-family:var(--f-display);font-size:24px;font-weight:800;font-stretch:85%;text-transform:uppercase}
+.prlegend{display:grid;gap:6px;margin:10px 0}
+.prgrid{display:grid;gap:6px}
+.prrow{display:grid;grid-template-columns:minmax(150px,220px) auto minmax(0,1fr);gap:4px 12px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line)}
+@media (max-width:640px){.prrow{grid-template-columns:auto auto}.prrow .note{grid-column:1/-1}}
+.prname{font-weight:700}
+.pill.prot{text-transform:none;letter-spacing:0;font-weight:600}
+.pill.prot b{font-weight:800}
 .card h3{margin:0;font-family:var(--f-display);font-size:17px;font-weight:700;grid-column:1}
 .card p{margin:0;color:var(--ink-2);font-size:14px;grid-column:1}
 .card .btn{grid-column:2;grid-row:1/3;border-radius:999px;white-space:nowrap}
@@ -403,7 +415,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
       <button role="tab" aria-selected="false" data-view="cuaderno">Cuaderno<span class="count" id="cnt" hidden>0</span></button>
       <button role="tab" aria-selected="false" data-view="revisar">Revisar</button>
-      <button role="tab" aria-selected="false" data-view="wwf" class="wwf" id="tabWwf" hidden>WWF</button>
+      <button role="tab" aria-selected="false" data-view="protocolos">Protocolos</button>
     </nav>
   </div>
   <div class="wrap searchrow" id="searchrow" hidden>
@@ -453,7 +465,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <article class="card"><h3>Por plaga</h3><p>Productos autorizados contra cada plaga, ordenados por plazo.</p><button class="btn" data-go="plaga">Abrir →</button></article>
       <article class="card"><h3>Cuaderno</h3><p>Prepara tu cuaderno de tratamientos y descárgalo en Excel.</p><button class="btn" data-go="cuaderno">Abrir →</button></article>
       <article class="card"><h3>Revisar</h3><p>Pega una lista o sube tu cuaderno en cualquier formato y detecta incidencias.</p><button class="btn" data-go="revisar">Abrir →</button></article>
-      <article class="card wwfcard"><h3>WWF</h3><p>Restricciones del Proyecto Zitrus EDEKA-WWF para cítricos.</p><button class="btn" data-go="wwf">Abrir →</button></article>
+      <article class="card"><h3>Protocolos</h3><p>Qué materias activas limitan Tesco, M&S, Fairtrade, Rainforest, ecológico, WWF…</p><button class="btn" data-go="protocolos">Abrir →</button></article>
     </div>
     <p class="home-note">Datos oficiales del MAPA, actualizados cada semana · Los archivos que revisas no salen de tu dispositivo · Consulta informativa: prevalecen la resolución y la etiqueta autorizada.</p>
   </section>
@@ -481,6 +493,9 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
         <label class="field">Plazo máx. (días)
           <input id="pMax" type="number" min="0" step="1" inputmode="numeric" style="width:110px" placeholder="sin límite">
         </label>
+        <label class="field">Cumplir protocolo
+          <select id="pProt"><option value="">Ninguno</option></select>
+        </label>
       </div>
       <div class="filters">
         <label><input type="checkbox" id="pVig" checked> Solo vigentes</label>
@@ -499,11 +514,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <p class="lead">Pega una lista o sube el archivo tal cual lo tengas: <b>Excel, CSV, PDF, Word, una foto o un escaneo</b>. FitoLupa busca en cada línea el producto (nombre o nº de registro) y, si aparecen, la fecha, la parcela, la variedad, la plaga, la dosis y el plazo. Después lo revisa todo contra el Registro del MAPA en <span class="sp-lower">cítricos</span>.</p>
       <div class="alert info"><b>Tu archivo no sale de este dispositivo.</b> Se lee y se revisa dentro del navegador, sin enviarlo a ningún servidor. Al pulsar «Borrar» o cerrar la pestaña, desaparece. Solo se guarda lo que tú descargues.</div>
       <div class="formrow">
-        <div class="field">Tipo de revisión
-          <div class="chips" role="group" aria-label="Tipo de revisión">
-            <button class="chip" data-rmode="generica" aria-pressed="true">Genérica · registro MAPA</button>
-            <button class="chip wwfchip" data-rmode="wwf" aria-pressed="false" id="rvWwfBtn" hidden>WWF · registro + Proyecto Zitrus</button>
-          </div>
+        <div class="field">Revisar contra (puedes marcar varios)
+          <div class="chips" id="rvProts" role="group" aria-label="Protocolos de la revisión"></div>
         </div>
         <label class="field">Comprobar uso en<select id="rvScope"><option value="campo">cítricos (campo)</option></select></label>
       </div>
@@ -523,9 +535,18 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </div>
   </section>
 
+  <section id="view-protocolos" hidden>
+    <div class="panel">
+      <h2>Protocolos y clientes</h2>
+      <p class="lead">Restricciones de materias activas de clientes, certificaciones y normativa, cruzadas con los productos del registro. Válidas para cualquier cultivo (WWF solo para cítricos). Elige uno para ver qué materias activas limita y cómo.</p>
+      <div class="chips prnav" id="prNav" role="group" aria-label="Protocolos"></div>
+      <div id="prOut" style="margin-top:14px"></div>
+    </div>
+  </section>
+
   <section id="view-wwf" hidden>
     <div class="wwfhead">
-      <div><h2>Proyecto Zitrus EDEKA-WWF</h2><p id="wwfDocs"></p></div>
+      <div><button class="linkbtn" data-go="protocolos" style="font-size:13px">← Protocolos</button><h2>Proyecto Zitrus EDEKA-WWF</h2><p id="wwfDocs"></p></div>
       <div class="chips wwfnav" role="group" aria-label="Secciones WWF">
         <button class="chip" data-w="plaga" aria-pressed="true">Por plaga</button>
         <button class="chip" data-w="ma" aria-pressed="false">Materias activas</button>
@@ -574,7 +595,7 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
 </footer>
 <div class="toast" id="toast" role="status" hidden></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="vendor/xlsx.full.min.js" onerror="var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';document.head.appendChild(s)"></script>
 <script>
 "use strict";
 // ================================================================= Constantes y utilidades
@@ -721,6 +742,7 @@ async function load() {
   // Las tres descargas empiezan a la vez: la tabla WWF (pequeña) aparece enseguida y la ficha se muestra
   // con los datos del producto mientras siguen llegando los usos autorizados (el fichero más grande).
   loadWWF();
+  loadProtocolos();
   const usosP = fetch("data/usos.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); });
   usosP.catch(() => {});
   const r = await fetch("data/indice.json", { cache: "no-cache" });
@@ -1024,6 +1046,7 @@ function renderFicha() {
   </div>
   <div class="f-body">
     ${sc || sp ? `<section class="sec"><h3>Resumen en ${esc(SP.lower)}</h3><div class="sum">${sumCard(sc, "", SP.post ? `${esc(SP.name)} en campo` : esc(SP.name))}${sumCard(sp, "post", `Postcosecha de ${esc(SP.lower)}`)}</div></section>` : ""}
+    ${protFichaHtml(p)}
     <section class="sec"><h3>Materia activa</h3>
       <div class="ma">${p.sus.map(s => `<span>${esc(s[0])}<b>${esc(concTxt(s))}</b></span>`).join("") || "—"}</div>
       ${same.length ? `<div class="same noprint">Misma composición (${same.length} vigente${same.length === 1 ? "" : "s"}): ${same.slice(0, 12).map(o => `<button class="linkbtn" data-open="${o.id}">${esc(o.nombre)}</button>`).join("")}${same.length > 12 ? "…" : ""}</div>` : ""}
@@ -1172,10 +1195,17 @@ function runPlaga() {
     m.get(k).crops.add(r.crop); m.get(k).ags.add(r.agName);
   }
   PL.rows = [...m.values()];
+  // Protocolo elegido: fuera los productos con alguna materia activa prohibida; el resto lleva su categoría
+  const prot = $("#pProt") ? $("#pProt").value : "";
+  let fuera = 0;
+  if (prot && PROT) {
+    PL.rows.forEach(r => r.prot = protStatus(r.p, prot));
+    const n0 = PL.rows.length; PL.rows = PL.rows.filter(r => !(r.prot && r.prot.sev === "bad")); fuera = n0 - PL.rows.length;
+  } else PL.rows.forEach(r => r.prot = null);
   sortPlaga();
   const prods = new Set(PL.rows.map(r => r.p.id)), mas = new Set(PL.rows.map(r => r.p.sn));
   sel.innerHTML = `<span>${esc(a ? a[1] : PL.agent)}</span><span class="pill mute">${esc($("#pCrop").selectedOptions[0].textContent.replace(/^·\s*/, ""))}</span><button class="btn small" id="pReset">Cambiar plaga</button>`;
-  sum.innerHTML = PL.rows.length ? `<span class="pill ok">${prods.size} productos</span><span class="pill mute">${mas.size} composiciones distintas</span>${PL.rows.some(r => r.generic) ? '<span class="pill warn">incluye usos genéricos</span>' : ""}` : `<span class="pill bad">No hay productos autorizados con estos filtros</span>`;
+  sum.innerHTML = PL.rows.length ? `<span class="pill ok">${prods.size} productos</span><span class="pill mute">${mas.size} composiciones distintas</span>${PL.rows.some(r => r.generic) ? '<span class="pill warn">incluye usos genéricos</span>' : ""}${prot && PROT && fuera ? `<span class="pill mute">${fuera} usos excluidos por ${esc(PROT.protocolos[prot].nombre.replace(/:.*$/, ""))}</span>` : ""}` : `<span class="pill bad">No hay productos autorizados con estos filtros</span>${prot && fuera ? `<span class="pill mute">${fuera} usos excluidos por ${esc(PROT.protocolos[prot].nombre.replace(/:.*$/, ""))}</span>` : ""}`;
   renderPlagaTable();
 }
 function sortPlaga() {
@@ -1189,7 +1219,7 @@ function renderPlagaTable() {
   const th = (k, t) => `<th><button data-sort="${k}">${t}</button></th>`;
   out.innerHTML = `<table class="v"><thead><tr>${th("nombre", "Producto")}${th("ma", "Materia activa")}<th>Para</th><th>Dosis</th>${th("plazo", "Plazo seg.")}<th>Nº aplic.</th><th>Caldo</th>${th("cad", "Caducidad")}</tr></thead><tbody>${PL.rows.map(r => {
     const conv = convText(r.p, r.u);
-    return `<tr><td><button class="linkbtn" data-open="${r.p.id}">${esc(r.p.nombre)}</button><div class="mono" style="font-size:12px">${esc(r.p.reg)}</div>${estadoPill(r.p)}</td>
+    return `<tr><td><button class="linkbtn" data-open="${r.p.id}">${esc(r.p.nombre)}</button><div class="mono" style="font-size:12px">${esc(r.p.reg)}</div>${estadoPill(r.p)}${r.prot ? `<div style="margin-top:4px"><span class="pill ${sevPill(r.prot.sev)}" title="${esc(r.prot.desc + " " + r.prot.cond.join(" "))}">${esc(r.prot.label)}</span></div>` : ""}</td>
     <td>${esc(susTxt(r.p))}</td>
     <td>${r.generic ? `<span class="gen">Uso genérico</span>` : ""}${esc([...r.ags].join(", "))}<div class="note">${esc([...r.crops].join(", "))}</div>${scopePills(r.u) ? `<div class="vtags">${scopePills(r.u)}</div>` : ""}</td>
     <td><span class="dose">${esc(doseText(r.u))}</span>${conv ? `<span class="conv">${esc(conv)}</span>` : ""}</td>
@@ -1297,6 +1327,98 @@ function matchLine(line) {
   const p = byCode || byName;
   if (p && !note) { const hit = [name, paren && norm(paren)].find(q => q && p.an.includes(q)); if (hit) note = `«${p.alias[p.an.indexOf(hit)]}» es otra denominación comercial de ${p.nombre} (${p.reg}).`; }
   return { raw, p, note, info: !!(p && note && p.an.length && !/no coincide|no figura|puede ser/.test(note)) };
+}
+
+// ================================================================= Protocolos (clientes, certificaciones y normativa)
+// data/protocolos.json: para cada materia activa del registro, su categoría en cada protocolo
+// (Tesco, M&S, Fairtrade, Rainforest Alliance, PAN, ALDI, ecológico, UE). WWF tiene su propia tabla por plaga.
+let PROT = null;
+const PR = { sel: "todos", q: "" };
+const SEVRANK = { ok: 0, info: 1, warn: 2, bad: 3 };
+async function loadProtocolos() {
+  try { const r = await fetch("data/protocolos.json", { cache: "no-cache" }); if (!r.ok) return; PROT = await r.json(); } catch { return; }
+  if (!$("#view-protocolos").hidden) renderProtocolos();
+  if (current) renderFicha();
+  if (typeof renderRvProts === "function") renderRvProts();
+  initPlagaProt();
+}
+const protList = () => PROT ? PROT.orden.filter(id => id !== "wwf" || (SP && SP.wwf && WWF)) : [];
+const protCat = (pid, cat) => (PROT && PROT.protocolos[pid].cats[cat]) || [cat, "mute", ""];
+// Situación de un producto en un protocolo: la categoría más estricta de sus materias activas
+function protStatus(p, pid) {
+  if (!PROT || !p || pid === "wwf") return null;
+  const pr = PROT.protocolos[pid]; if (!pr || pr.sin_lista) return null;
+  let best = null;
+  for (const s of p.sus) {
+    const cat = (PROT.sus[s[0]] || {})[pid]; if (!cat) continue;
+    const c = pr.cats[cat] || [cat, "mute", ""], r = SEVRANK[c[1]] ?? 0;
+    const cond = PROT.cond[pid + "|" + s[0]] || "";
+    if (!best || r > best.rank) best = { cat, label: c[0], sev: c[1], desc: c[2], rank: r, subs: [s[0]], cond: cond ? [cond] : [] };
+    else if (r === best.rank && best.cat === cat) { best.subs.push(s[0]); if (cond) best.cond.push(cond); }
+  }
+  if (pid === "eco" && best && p.sus.some(s => !(PROT.sus[s[0]] || {}).eco)) best = null;   // materia sin clasificar: no afirmar nada
+  return best;
+}
+const sevPill = sev => ({ bad: "bad", warn: "warn", info: "mute", ok: "ok" }[sev] || "mute");
+function protPillsHtml(p, opts = {}) {
+  if (!PROT) return "";
+  const items = protList().filter(id => !PROT.protocolos[id].sin_lista && id !== "wwf").map(id => ({ id, st: protStatus(p, id) })).filter(x => x.st && (!opts.onlyIssues || x.st.rank >= 2));
+  if (!items.length) return "";
+  return items.map(({ id, st }) => `<span class="pill prot ${sevPill(st.sev)}" title="${esc(PROT.protocolos[id].nombre)}: ${esc(st.label)} (${esc(st.subs.map(s => s.toLowerCase()).join(", "))}). ${esc(st.desc)} ${esc([...new Set(st.cond)].join(" "))}"><b>${esc(PROT.protocolos[id].nombre.replace(/:.*$/, ""))}</b> ${esc(st.label)}</span>`).join("");
+}
+function protFichaHtml(p) {
+  if (!PROT) return "";
+  const rows = protList().filter(id => id !== "wwf" && !PROT.protocolos[id].sin_lista).map(id => ({ id, st: protStatus(p, id) }));
+  const listed = rows.filter(r => r.st);
+  if (!listed.length) return `<section class="sec"><h3>Protocolos y clientes</h3><p class="note">Sus materias activas no aparecen en las listas de Tesco, M&S, Fairtrade, Rainforest Alliance, PAN ni ALDI. <button class="linkbtn" data-go="protocolos">Ver protocolos</button></p></section>`;
+  return `<section class="sec"><h3>Protocolos y clientes</h3>
+    <div class="prgrid">${listed.map(({ id, st }) => `<div class="prrow"><span class="prname">${esc(PROT.protocolos[id].nombre)}</span><span class="pill ${sevPill(st.sev)}">${esc(st.label)}</span><span class="note">${esc(st.desc)}${st.cond.length ? " " + esc([...new Set(st.cond)].join(" ")) : ""}${p.sus.length > 1 ? ` (${esc(st.subs.map(s => s.toLowerCase()).join(", "))})` : ""}</span></div>`).join("")}</div>
+    <p class="note">Sin mención: ${esc(rows.filter(r => !r.st).map(r => PROT.protocolos[r.id].nombre.replace(/:.*$/, "")).join(", ") || "—")}. Listas transcritas de los documentos públicos; prevalece la versión vigente de cada cliente o certificadora. <button class="linkbtn" data-go="protocolos">Ver protocolos</button></p></section>`;
+}
+function renderProtocolos() {
+  const box = $("#prOut"), nav = $("#prNav");
+  if (!PROT) { box.innerHTML = `<div class="loading" style="padding:20px"><span class="spin"></span>Cargando protocolos…</div>`; return; }
+  const ids = protList();
+  if (PR.sel !== "todos" && !ids.includes(PR.sel)) PR.sel = "todos";
+  nav.innerHTML = `<button class="chip" data-pr="todos" aria-pressed="${PR.sel === "todos"}">Todos</button>` + ids.map(id => `<button class="chip ${id === "wwf" ? "wwfchip" : ""}" data-pr="${id}" aria-pressed="${PR.sel === id}">${esc(PROT.protocolos[id].nombre.replace(/:.*$/, "").replace(/ \(.*\)$/, ""))}</button>`).join("");
+  if (PR.sel === "todos") {
+    box.innerHTML = `<div class="cards prcards">${ids.map(id => {
+      const pr = PROT.protocolos[id], n = pr.n_registro || {};
+      const pills = Object.entries(pr.cats).filter(([c]) => n[c]).map(([c, v]) => `<span class="pill ${sevPill(v[1])}">${n[c]} ${esc(v[0].toLowerCase())}</span>`).join("");
+      return `<article class="card ${id === "wwf" ? "wwfcard" : ""}"><h3>${esc(pr.nombre)}</h3><p><span class="note">${esc(pr.tipo)}</span><br>${esc(pr.resumen.length > 170 ? pr.resumen.slice(0, 170).replace(/\s\S*$/, "") + "…" : pr.resumen)}</p><div class="prpills">${pr.sin_lista ? '<span class="pill mute">Sin lista de materias activas</span>' : id === "wwf" ? '<span class="pill mute">Tabla por plaga</span>' : pills}</div><button class="btn" data-pr="${id}">Ver →</button></article>`;
+    }).join("")}</div>
+    <p class="note" style="margin-top:14px">Cifras: materias activas del registro español que aparecen en cada lista. Las listas se han transcrito de los documentos públicos indicados en cada protocolo (consulta: ${fmtDate(PROT.fecha)}); prevalece siempre la versión vigente que os envíe cada cliente o certificadora.</p>`;
+    return;
+  }
+  if (PR.sel === "wwf") { setView("wwf"); return; }
+  const pr = PROT.protocolos[PR.sel];
+  const head = `<div class="prhead"><div><h3>${esc(pr.nombre)}</h3><p class="note">${esc(pr.tipo)} · ${esc(pr.version)}${pr.fuente ? ` · <a href="${esc(pr.fuente)}" target="_blank" rel="noopener">documento original</a>` : ""}</p></div></div><p class="lead">${esc(pr.resumen)}</p>`;
+  if (pr.sin_lista) {
+    const como = { leaf: "En «Revisar», con LEAF marcado, se avisa de los tratamientos sin motivo o justificación, además de las comprobaciones del registro (producto autorizado, dosis, plazo de seguridad).",
+      globalgap: "En «Revisar», las comprobaciones del registro cubren lo principal: producto registrado para el cultivo, dosis, plazo de seguridad y vigencia. El LMR del país de destino no se comprueba.",
+      lidl: "Estos límites se aplican a los análisis de residuos, no al cuaderno de tratamientos: FitoLupa no los comprueba." }[PR.sel] || "";
+    box.innerHTML = head + `<div class="alert info">${esc(como)}</div>`;
+    return;
+  }
+  const rows = Object.entries(PROT.sus).filter(([, m]) => m[PR.sel]).map(([s, m]) => {
+    const c = pr.cats[m[PR.sel]] || [m[PR.sel], "mute", ""];
+    const prods = P.filter(p => p.estado === "Vigente" && p.sus.some(x => x[0] === s));
+    return { s, cat: m[PR.sel], c, prods, cond: PROT.cond[PR.sel + "|" + s] || "" };
+  }).filter(r => r.prods.length && (!PR.q || norm(r.s + " " + r.prods.map(p => p.nombre).join(" ")).includes(norm(PR.q))));
+  const order = Object.keys(pr.cats);
+  rows.sort((a, b) => order.indexOf(a.cat) - order.indexOf(b.cat) || a.s.localeCompare(b.s, "es"));
+  box.innerHTML = head + `<div class="prlegend">${order.map(k => `<div><span class="pill ${sevPill(pr.cats[k][1])}">${esc(pr.cats[k][0])}</span> <span class="note">${esc(pr.cats[k][2])}</span></div>`).join("")}</div>
+    <div class="formrow" style="margin:12px 0"><label class="field">Buscar<input type="search" id="prQ" value="${esc(PR.q)}" placeholder="materia activa o producto"></label><span class="note">${rows.length} materias activas del registro con productos vigentes</span></div>
+    <div class="tblwrap"><table class="v" style="min-width:720px"><thead><tr><th>Materia activa</th><th>Categoría</th><th>Productos vigentes</th><th>Condiciones</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td><b>${esc(r.s)}</b></td><td><span class="pill ${sevPill(r.c[1])}">${esc(r.c[0])}</span></td><td style="font-size:13px">${r.prods.slice(0, 6).map(p => `<button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button>`).join(", ")}${r.prods.length > 6 ? ` <span class="note">y ${r.prods.length - 6} más</span>` : ""}</td><td class="note">${esc(r.cond)}</td></tr>`).join("") || `<tr><td colspan="4" class="empty">Nada que mostrar.</td></tr>`}</tbody></table></div>
+    <p class="note">Solo se muestran las materias activas que tienen productos vigentes en el registro español. Para la lista completa, consulta el documento original.</p>`;
+}
+// Por plaga: filtrar por protocolo
+function initPlagaProt() {
+  const s = $("#pProt"); if (!s || !PROT) return;
+  const cur = s.value;
+  s.innerHTML = `<option value="">Ninguno</option>` + protList().filter(id => id !== "wwf" && !PROT.protocolos[id].sin_lista).map(id => `<option value="${id}">${esc(PROT.protocolos[id].nombre.replace(/:.*$/, ""))}</option>`).join("");
+  s.value = cur;
 }
 
 // ================================================================= Proyecto Zitrus EDEKA-WWF
@@ -1473,15 +1595,17 @@ $("#wvxlsx").addEventListener("click", () => { if (!W.rows.length) runWwfVerify(
   xlsx(`verificacion_WWF_${new Date().toISOString().slice(0, 10)}.xlsx`, [["WWF", `Verificación Proyecto Zitrus EDEKA-WWF (campaña ${WWF.campana}) · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado WWF", "Plagas en la tabla del proyecto", "Máx. aplicaciones", "Toxic load", "Observaciones"], W.rows, [24, 22, 12, 22, 60, 36, 12, 40]]]); });
 
 // ================================================================= Vistas y eventos
-const VIEWS = ["inicio", "buscar", "plaga", "cuaderno", "revisar", "wwf"];
+const VIEWS = ["inicio", "buscar", "plaga", "cuaderno", "revisar", "protocolos", "wwf"];
 function setView(v) {
   if (v === "verificar") v = "revisar";      // la antigua pestaña «Verificar» está ahora dentro de «Revisar»
-  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
+  if (v === "wwf" && !(SP && SP.wwf)) v = "protocolos";
+  document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === (v === "wwf" ? "protocolos" : v))));
   VIEWS.forEach(x => $("#view-" + x).hidden = x !== v);
   $("#searchrow").hidden = v !== "buscar";
   if (v === "cuaderno") renderCuaderno();
   if (v === "plaga") setTimeout(() => $("#pQ").focus(), 50);
   if (v === "wwf") renderWwf();
+  if (v === "protocolos") { if (PR.sel === "wwf") PR.sel = "todos"; renderProtocolos(); }
   if (v === "inicio" && location.hash) try { history.replaceState(null, "", location.pathname + location.search); } catch {}
   store.set("fr_view", v);
 }
@@ -1502,8 +1626,7 @@ function applySpeciesLabels() {
   document.querySelectorAll(".legend-post").forEach(e => e.hidden = !SP.post);
   // Proyecto Zitrus EDEKA-WWF: solo para cítricos
   const showW = !!(WWF && SP.wwf);
-  $("#tabWwf").hidden = !showW;
-  const rb = $("#rvWwfBtn"); if (rb) rb.hidden = !showW;
+  if (typeof renderRvProts === "function") renderRvProts();
   document.querySelectorAll(".wwfcard,.wwf-only").forEach(e => e.hidden = !showW);
   renderSpeciesPicker();
 }
@@ -1576,8 +1699,10 @@ function setSpecies(code) {
   runSearch();
   if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; ui.cropSel = ""; ui.calc.gi = null; renderFicha(); }
   if (typeof limpiarRevision === "function" && REV.res.length) { REV.file = null; REV.res = []; REV.counts = []; $("#rvOut").innerHTML = ""; }
-  if (!$("#view-wwf").hidden && !SP.wwf) setView("inicio");
-  if (!SP.wwf && typeof REV !== "undefined" && REV.mode === "wwf") { REV.mode = "generica"; document.querySelectorAll("[data-rmode]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.rmode === "generica"))); }
+  if (!$("#view-wwf").hidden && !SP.wwf) setView("protocolos");
+  if (!$("#view-protocolos").hidden) renderProtocolos();
+  initPlagaProt();
+  if (typeof renderRvProts === "function") renderRvProts();
   renderHomeStats();
   toast(`${spLook(SP.name).em} Cultivo seleccionado: ${SP.name}`);
 }
@@ -1593,9 +1718,15 @@ function renderHomeStats() {
 document.addEventListener("click", e => { if (!e.target.closest(".spwrap")) closePop(); });
 function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
 $("#homeForm").addEventListener("submit", e => { e.preventDefault(); homeSearch($("#hq").value.trim()); });
-$("#view-inicio").addEventListener("click", e => {
-  const go = e.target.closest("[data-go]"); if (go) { setView(go.dataset.go); window.scrollTo({ top: 0, behavior: "smooth" }); }
+document.addEventListener("click", e => {
+  const go = e.target.closest("[data-go]"); if (go) { if (go.dataset.go === "protocolos") PR.sel = "todos"; setView(go.dataset.go); window.scrollTo({ top: 0, behavior: "smooth" }); }
 });
+$("#view-protocolos").addEventListener("click", e => {
+  const b = e.target.closest("[data-pr]"); if (b) { PR.sel = b.dataset.pr; PR.q = ""; renderProtocolos(); return; }
+  const o = e.target.closest("[data-open]"); if (o) openFromAnywhere(Number(o.dataset.open));
+});
+$("#view-protocolos").addEventListener("input", e => { if (e.target.id === "prQ") { clearTimeout(PR.t); PR.t = setTimeout(() => { PR.q = e.target.value; renderProtocolos(); const q = $("#prQ"); q.focus(); q.setSelectionRange(q.value.length, q.value.length); }, 250); } });
+$("#pProt").addEventListener("change", runPlaga);
 document.querySelector(".brand").addEventListener("click", () => { setView("inicio"); window.scrollTo({ top: 0, behavior: "smooth" }); });
 function openFromAnywhere(id) { setView("buscar"); openProduct(id); window.scrollTo({ top: 0, behavior: "smooth" }); }
 document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if (b) setView(b.dataset.view); });
