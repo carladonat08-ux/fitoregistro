@@ -18,13 +18,9 @@ jobs:
         run: |
           mkdir -p fuentes && cd fuentes
           get() { curl -sSL --retry 3 --max-time 120 -A "Mozilla/5.0 (FitoLupa)" -o "$1" "$2" && echo "OK $1 $(stat -c%s "$1")" || echo "FALLO $1"; }
-          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
-          curl -sSL --retry 3 -A "$UA" -H "Accept: application/pdf,*/*" -H "Accept-Language: en-GB,en" -e "https://www.tescoplc.com/" -o tesco.pdf "https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"; head -c 200 tesco.pdf > _tesco_head.txt
-          get eu_as_v3.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active-substances?format=json&api-version=v3.0"
-          get boe_organic_2021_1165.pdf "https://boe.gob.es/doue/2021/253/L00013-00048.pdf"
-          get certisys_organic.pdf "https://www.certisys.eu/wp-content/uploads/2022/04/Nouvelle-Reglementation-EU-2022-Listes-des-substances-autorisees_CERTISYS.pdf"
-          get caermurcia_2021_1165_M2.pdf "https://caermurcia.com/wp-content/uploads/2024/01/21-Reglamento-ejecucion-2021_1165_M2.pdf"
-          get boe_doue_2025_973.pdf "https://boe.es/doue/2025/973/L00001-00024.pdf"
+          get tesco_wb.pdf "https://web.archive.org/web/2026id_/https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"
+          get tesco_wb2.pdf "https://web.archive.org/web/2025id_/https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"
+          python3 ../scripts/ue_sustancias.py ue_sustancias.json || echo "UE falló" > ue_fallo.txt
           ls -la
       - name: Extraer texto y subir a la rama temporal
         run: |
