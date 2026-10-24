@@ -260,6 +260,17 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .card .btn{grid-column:2;grid-row:1/3;border-radius:999px;white-space:nowrap}
 .home-note{margin:0;font-size:12.5px;color:var(--ink-3);max-width:110ch}
 /* Selector de cultivo (Inicio y cabecera) */
+.combo{position:relative;min-width:0}
+.combo-native{position:absolute!important;opacity:0;pointer-events:none;width:1px!important;height:1px!important;overflow:hidden}
+.combo-btn{display:flex;align-items:center;gap:8px;width:100%;min-width:200px;border:1.5px solid var(--line-strong);border-radius:8px;background:var(--bg);color:var(--ink);padding:9px 12px;font:inherit;font-size:15px;cursor:pointer;text-align:left}
+.combo-btn span{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.combo-btn svg{width:12px;height:12px;flex:none;color:var(--ink-3)}
+.combo-btn:hover,.combo-btn[aria-expanded="true"]{border-color:var(--head)}
+.combo-pop{position:absolute;z-index:40;top:calc(100% + 6px);left:0;width:max(100%,min(360px,calc(100vw - 32px)));background:var(--surface);border:1px solid var(--line-strong);border-radius:14px;padding:10px;box-shadow:0 18px 40px -16px rgb(0 0 0 / .45);display:grid;gap:8px}
+.combo-pop input{width:100%;border:1.5px solid var(--line-strong);border-radius:10px;padding:9px 12px;background:var(--bg);font-size:15px}
+.combo-pop input:focus{border-color:var(--head);outline:none}
+.combo-pop .croplist{margin:0;box-shadow:none;border:0;padding:0;max-height:min(340px,50vh)}
+@media (max-width:700px){.combo{width:100%}.combo-btn{min-width:0}.combo-pop{width:100%}}
 .cropfind{position:relative}
 .cropfind input{width:100%;border:1.5px solid var(--line-strong);border-radius:12px;padding:10px 12px 10px 38px;background:var(--surface);font-size:15px}
 .cropfind input:focus{border-color:var(--head);outline:none;box-shadow:0 0 0 3px rgb(0 0 0 / .08)}
@@ -275,13 +286,20 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .sppop{position:absolute;z-index:30;top:calc(100% + 8px);left:0;width:min(380px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line-strong);border-radius:16px;padding:12px;box-shadow:0 18px 40px -16px rgb(0 0 0 / .45);display:grid;gap:8px}
 .sppop .croplist{margin:0;box-shadow:none;border:0;padding:0;max-height:min(360px,55vh)}
 .spwrap{position:relative}
-.spbadge{display:inline-flex;align-items:center;gap:7px;border:1px solid rgb(246 239 224 / .25);background:rgb(246 239 224 / .08);color:var(--head-ink);border-radius:999px;padding:5px 12px 5px 13px;cursor:pointer;font-size:13px}
-.spbadge span{color:var(--head-mute);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-.spbadge b{font-weight:700;color:var(--head-accent)}
-.spbadge i{font-style:normal;font-size:17px;line-height:1}
-.spbadge svg{width:12px;height:12px}
+.spbadge{display:inline-flex;align-items:center;gap:10px;border:1.5px solid rgb(246 239 224 / .35);background:rgb(246 239 224 / .1);color:var(--head-ink);border-radius:999px;padding:9px 20px 9px 16px;cursor:pointer;font-size:15px;box-shadow:0 4px 14px -8px rgb(0 0 0 / .5)}
+.spbadge span{color:var(--head-mute);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.spbadge b{font-weight:800;color:var(--head-accent);font-size:19px}
+.spbadge i{font-style:normal;font-size:26px;line-height:1}
+.spbadge svg{width:14px;height:14px}
+.top .wrap>.spwrap{flex:1 1 auto;display:flex;justify-content:center}
+.top .wrap>.spwrap>.sppop{left:50%;transform:translateX(-50%)}
+.top .wrap>.spwrap~.tabs{margin-left:0}
 .spbadge:hover{background:rgb(246 239 224 / .16)}
-@media (max-width:700px){.brand~.spwrap,header .spwrap{order:3}.hero-pick{order:0}}
+@media (max-width:700px){.brand~.spwrap,header .spwrap{order:3;width:100%}.hero-pick{order:0}.spbadge{width:100%;justify-content:center}}
+.croplist.checks label{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14.5px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--ink)}
+.croplist.checks label:hover{background:var(--sunk)}
+.croplist.checks input{width:18px;height:18px;accent-color:var(--head)}
+.croplist.checks small{margin-left:auto;color:var(--ink-3);font-size:11.5px;font-weight:400}
 .hero-pick .sppop{width:min(420px,calc(100vw - 32px))}
 .brand{cursor:pointer}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 22px;display:grid;gap:14px;min-width:0}
@@ -514,15 +532,24 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <p class="lead">Pega una lista o sube el archivo tal cual lo tengas: <b>Excel, CSV, PDF, Word, una foto o un escaneo</b>. FitoLupa busca en cada línea el producto (nombre o nº de registro) y, si aparecen, la fecha, la parcela, la variedad, la plaga, la dosis y el plazo. Después lo revisa todo contra el Registro del MAPA en <span class="sp-lower">cítricos</span>.</p>
       <div class="alert info"><b>Tu archivo no sale de este dispositivo.</b> Se lee y se revisa dentro del navegador, sin enviarlo a ningún servidor. Al pulsar «Borrar» o cerrar la pestaña, desaparece. Solo se guarda lo que tú descargues.</div>
       <div class="formrow">
-        <div class="field">Revisar contra (puedes marcar varios)
-          <div class="chips" id="rvProts" role="group" aria-label="Protocolos de la revisión"></div>
+        <div class="field">Revisar contra
+          <div class="chips" role="radiogroup" aria-label="Revisar contra">
+            <button class="chip" data-rbase="mapa" role="radio" aria-pressed="true" aria-checked="true">Registro MAPA</button>
+            <button class="chip" data-rbase="prot" role="radio" aria-pressed="false" aria-checked="false">Protocolos</button>
+          </div>
+        </div>
+        <div class="field" id="rvProtField" hidden>Protocolos (además del registro MAPA)
+          <div class="combo" id="rvProtBox">
+            <button type="button" class="combo-btn" id="rvProtBtn" aria-haspopup="true" aria-expanded="false"><span>Elige protocolos…</span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="combo-pop" id="rvProtPop" hidden><ul class="croplist checks" id="rvProts"></ul></div>
+          </div>
         </div>
         <label class="field">Comprobar uso en<select id="rvScope"><option value="campo">cítricos (campo)</option></select></label>
       </div>
       <div class="rvin">
         <div class="rvpaste">
           <label for="rvText" class="rvlab">Pegar lista o texto</label>
-          <textarea id="rvText" spellcheck="false" placeholder="Un producto por línea: nombre o nº de registro, y si quieres fecha, dosis, plaga…"></textarea>
+          <textarea id="rvText" spellcheck="false" placeholder="Pega aquí tu lista, un producto por línea. Por ejemplo:&#10;24526&#10;CORNALINA 0,25 g/l pulgón&#10;03/07/2026 Navelina LAINCOIL 1,5 % cotonet"></textarea>
           <div class="f-actions"><button class="btn primary" id="rvRun">Revisar lista</button><button class="btn" id="rvClear">Borrar</button></div>
         </div>
         <label class="drop" id="rvDrop" for="rvFile">
@@ -847,17 +874,7 @@ function runSearch() {
     </button></li>`;
   let html = "";
   const narrow = window.matchMedia("(max-width:900px)").matches;
-  if (!q && narrow) {
-    const rec = store.get("fr_recent", []).map(id => byId.get(id)).filter(p => p && pass(p)).slice(0, 5);
-    $("#rcount").textContent = rec.length ? "Consultados recientemente" : "Escribe para buscar";
-    $("#rhint").textContent = `${total.toLocaleString("es-ES")} productos`;
-    $("#rlist").innerHTML = rec.map(item).join("") || `<li class="empty" style="padding:14px">Escribe un nº de registro, un nombre o una materia activa.</li>`;
-    return;
-  }
-  if (!q) {
-    const rec = store.get("fr_recent", []).map(id => byId.get(id)).filter(p => p && pass(p)).slice(0, 6);
-    if (rec.length) html += `<li class="sub">Consultados recientemente</li>` + rec.map(item).join("") + `<li class="sub">Todos</li>`;
-  }
+  void narrow;
   html += res.map(([, p]) => item(p)).join("");
   $("#rlist").innerHTML = res.length ? html : `<li class="empty">Sin coincidencias. Prueba con el nº de registro o parte del nombre.<br><br>Si el nombre es una «otra denominación» comercial, búscalo por su nº de registro.</li>`;
 }
@@ -1082,6 +1099,7 @@ function renderFicha() {
       <p class="note">Clasificación, frases de peligro, mitigación de riesgos, plazo de reentrada y envases: consulta la ficha oficial o la etiqueta.</p>
     </section>
   </div>`;
+  comboSelect($("#cropSel"));
 }
 function useRow(p, g, gi) {
   const u = g.u, cond = Tx(u[11]);
@@ -1142,8 +1160,11 @@ function initPlaga() {
   const top = `<option value="campo">${esc(SP.name)}${SP.post ? " en campo" : ""} (incluye variedades y grupos)</option>${SP.post ? `<option value="post">Postcosecha de ${esc(SP.lower)}</option>` : ""}`;
   const citricos = IDX.c.filter(c => (c[0].startsWith(SP.field) || (SP.post && c[0].startsWith(SP.post))) && c[0] !== SP.code && crops.has(c[1])).map(c => `<option value="c:${esc(c[1])}">· ${esc(c[1])}</option>`).join("");
   const others = [...crops.keys()].filter(n => !IDX.c.some(c => c[1] === n && (c[0].startsWith(SP.field) || (SP.post && c[0].startsWith(SP.post))))).sort((a, b) => a.localeCompare(b, "es")).map(n => `<option value="c:${esc(n)}">${esc(n)}</option>`).join("");
-  $("#pCrop").innerHTML = `<optgroup label="${esc(SP.name)}">${top}${citricos}</optgroup><optgroup label="Otros cultivos">${others}</optgroup>`;
+  void citricos; void others;
+  const todos = [...crops.keys()].sort((a, b) => a.localeCompare(b, "es")).map(n => `<option value="c:${esc(n)}">${esc(n)}</option>`).join("");
+  $("#pCrop").innerHTML = top + todos;
   PL.crop = "campo";
+  comboSelect($("#pCrop"));
 }
 function cropTest(sel) {
   if (sel === "campo") return c => isCampo(c[0]);
@@ -1294,14 +1315,6 @@ function exportFicha(p) {
 }
 
 // ================================================================= Verificador
-const EJEMPLO = `24526
-ES-01312
-CORNALINA
-LAINCOIL
-FLASH UM
-DECCOZIL-50
-UREA CRISTALINA
-SULFATO DE ZINC`;
 function matchLine(line) {
   const raw = line.trim(); if (!raw) return null;
   const codes = raw.match(/\bES[\s\-]?\d{3,6}\b|\b\d{4,6}\b/gi) || [];
@@ -1329,6 +1342,57 @@ function matchLine(line) {
   return { raw, p, note, info: !!(p && note && p.an.length && !/no coincide|no figura|puede ser/.test(note)) };
 }
 
+// ================================================================= Desplegables con buscador
+// Sustituye visualmente un <select> por un botón que abre la lista completa (orden alfabético) con un
+// cuadro para filtrar mientras se escribe. El <select> sigue existiendo (oculto) y recibe el valor y el
+// evento «change», así que el resto del código no cambia.
+function comboSelect(sel) {
+  if (!sel) return;
+  let w = sel.closest(".combo");
+  if (!w) {
+    w = document.createElement("div"); w.className = "combo";
+    sel.parentNode.insertBefore(w, sel); w.appendChild(sel);
+    sel.classList.add("combo-native"); sel.tabIndex = -1; sel.setAttribute("aria-hidden", "true");
+    w.insertAdjacentHTML("beforeend", `<button type="button" class="combo-btn" aria-haspopup="listbox" aria-expanded="false"><span></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="combo-pop" hidden><input type="search" autocomplete="off" placeholder="Escribe para filtrar…" aria-label="Filtrar"><ul class="croplist" role="listbox"></ul></div>`);
+    const btn = w.querySelector(".combo-btn"), pop = w.querySelector(".combo-pop"), inp = pop.querySelector("input"), list = pop.querySelector("ul");
+    const draw = () => {
+      const qn = norm(inp.value);
+      const opts = [...sel.options].filter(o => !o.disabled);
+      const hit = o => !qn || norm(o.textContent).startsWith(qn) || norm(o.textContent).split(/[\s,(·]+/).some(w => w.startsWith(qn));
+      const shown = opts.filter(hit);
+      list.innerHTML = shown.map(o => `<li><button type="button" role="option" data-v="${esc(o.value)}" aria-current="${o.value === sel.value}"><span>${esc(o.textContent.replace(/^·\s*/, ""))}</span></button></li>`).join("") || `<li class="note" style="padding:10px">Nada empieza por «${esc(inp.value)}».</li>`;
+    };
+    const close = () => { pop.hidden = true; btn.setAttribute("aria-expanded", "false"); inp.value = ""; };
+    w._close = close;
+    btn.addEventListener("click", e => {
+      e.stopPropagation();
+      const open = pop.hidden; closePop();
+      if (open) { pop.hidden = false; btn.setAttribute("aria-expanded", "true"); draw(); inp.focus(); const cur = list.querySelector('[aria-current="true"]'); if (cur) cur.scrollIntoView({ block: "nearest" }); }
+    });
+    inp.addEventListener("input", draw);
+    inp.addEventListener("keydown", e => {
+      const bs = [...list.querySelectorAll("button")];
+      if (e.key === "Escape") { close(); btn.focus(); return; }
+      if (!bs.length) return;
+      let i = bs.findIndex(b => b.classList.contains("on"));
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); bs.forEach(b => b.classList.remove("on")); i = e.key === "ArrowDown" ? Math.min(bs.length - 1, i + 1) : Math.max(0, i - 1); bs[i].classList.add("on"); bs[i].scrollIntoView({ block: "nearest" }); }
+      if (e.key === "Enter") { e.preventDefault(); (bs[i] || bs[0]).click(); }
+    });
+    list.addEventListener("click", e => {
+      const b = e.target.closest("[data-v]"); if (!b) return;
+      close(); btn.focus();
+      if (sel.value !== b.dataset.v) { sel.value = b.dataset.v; sel.dispatchEvent(new Event("change", { bubbles: true })); }
+      label();
+    });
+    pop.addEventListener("click", e => e.stopPropagation());
+    sel.addEventListener("change", () => label());
+    new MutationObserver(() => label()).observe(sel, { childList: true, subtree: true });
+  }
+  const label = () => { const o = sel.selectedOptions[0]; w.querySelector(".combo-btn span").textContent = o ? o.textContent.replace(/^·\s*/, "") : ""; };
+  w._label = label; label();
+}
+document.addEventListener("click", e => { if (!e.target.closest(".combo")) document.querySelectorAll(".combo").forEach(c => c._close && c._close()); });
 // ================================================================= Protocolos (clientes, certificaciones y normativa)
 // data/protocolos.json: para cada materia activa del registro, su categoría en cada protocolo
 // (Tesco, M&S, Fairtrade, Rainforest Alliance, PAN, ALDI, ecológico, UE). WWF tiene su propia tabla por plaga.
@@ -1650,21 +1714,22 @@ function speciesList() {
 // Lista de cultivos cuyo nombre empieza por lo escrito
 function cropListHtml(q) {
   const qn = norm(q);
-  if (!qn) {
-    return `<li class="lt">Cultivos frecuentes</li>` + SP_FEATURED.map(([c, n]) => `<li><button type="button" data-spc="${c}" aria-current="${SP && SP.code === c}"><i>${spLook(n).em}</i><span>${esc(n)}</span></button></li>`).join("");
-  }
+  const all = speciesList();
+  if (!all.length) return `<li class="note" style="padding:10px">Cargando cultivos…</li>`;
+  // Todos los cultivos en orden alfabético; al escribir, solo los que empiezan por lo escrito
   const seen = new Set();
-  const hits = speciesList().filter(c => c.n.startsWith(qn) && !seen.has(c.code + c.name) && seen.add(c.code + c.name));
-  const feat = new Set(SP_FEATURED.map(x => x[0]));
-  hits.sort((x, y) => (feat.has(y.code) ? 1 : 0) - (feat.has(x.code) ? 1 : 0) || x.name.localeCompare(y.name, "es"));
+  const hits = all.filter(c => (!qn || c.n.startsWith(qn)) && !seen.has(c.code + c.name) && seen.add(c.code + c.name));
+  hits.sort((x, y) => x.name.localeCompare(y.name, "es"));
   if (!hits.length) return `<li class="note" style="padding:10px">Ningún cultivo del registro empieza por «${esc(q)}».</li>`;
-  return `<li class="lt">${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span><mark>${esc(c.name.slice(0, q.length))}</mark>${esc(c.name.slice(q.length))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
+  const k = qn ? q.length : 0;
+  return `<li class="lt">${qn ? `${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»` : `${hits.length} cultivos · escribe para filtrar`}</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span>${k ? `<mark>${esc(c.name.slice(0, k))}</mark>` : ""}${esc(c.name.slice(k))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
 }
 function openCropFind(box) {
   const list = box.querySelector(".croplist"), inp = box.querySelector("input");
   list.innerHTML = cropListHtml(inp.value.trim()); list.hidden = false;
 }
-function closePop() {
+function closePop(keepCombos) {
+  if (!keepCombos) document.querySelectorAll(".combo").forEach(c => c._close && c._close());
   document.querySelectorAll(".spwrap .sppop").forEach(p => { p.hidden = true; p.querySelector("input").value = ""; });
   document.querySelectorAll(".cropbtn").forEach(b => b.setAttribute("aria-expanded", "false"));
 }

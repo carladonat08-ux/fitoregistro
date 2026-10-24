@@ -8,7 +8,7 @@
 // Usa funciones y datos del script principal (P, byId, USOS, IDX, WWF, norm, regKey…).
 // =====================================================================================
 
-const REV = { file: null, text: "", prots: new Set(store.get("fr_rv_prots", [])), scope: "campo", recs: [], res: [], counts: [], filter: "todo", parcela: "", q: "" };
+const REV = { file: null, text: "", base: store.get("fr_rv_base", "mapa"), prots: new Set(store.get("fr_rv_prots", [])), scope: "campo", recs: [], res: [], counts: [], filter: "todo", parcela: "", q: "" };
 
 // ------------------------------------------------------------------ utilidades
 const isoFromDMY = s => { const m = /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(s || ""); return m ? `${m[3]}-${m[2].padStart(2, "0")}-${m[1].padStart(2, "0")}` : null; };
@@ -806,10 +806,10 @@ function revisar(r) {
   }
   return finishWwf(out, codes);
 }
-const wwfOn = () => REV.prots.has("wwf") && !!(SP && SP.wwf);
+const wwfOn = () => REV.base === "prot" && REV.prots.has("wwf") && !!(SP && SP.wwf);
 const REV_PROTS = ["wwf", "leaf", "tesco", "ms", "aldi", "fairtrade", "ra", "pan", "eco", "ue"];
 const protName = id => id === "wwf" ? "WWF" : PROT && PROT.protocolos[id] ? PROT.protocolos[id].nombre.replace(/:.*$/, "").replace(/ \(.*\)$/, "") : id;
-const activeProts = () => REV_PROTS.filter(id => REV.prots.has(id) && (id !== "wwf" || wwfOn()) && (id === "wwf" || (PROT && PROT.protocolos[id])));
+const activeProts = () => REV.base !== "prot" ? [] : REV_PROTS.filter(id => REV.prots.has(id) && (id !== "wwf" || wwfOn()) && (id === "wwf" || (PROT && PROT.protocolos[id])));
 // Protocolos elegidos (salvo WWF, que tiene su propia evaluación por plaga): categoría más estricta de las materias activas
 function protNotes(out) {
   const p = out.p, r = out.r;
@@ -913,7 +913,6 @@ async function revisarArchivo(file) {
 }
 function revisarTexto() {
   const t = $("#rvText").value;
-  store.set("fr_vlist", t);
   const box = $("#rvOut");
   if (!t.trim()) { box.innerHTML = `<p class="empty">Pega una lista de productos o el texto del cuaderno.</p>`; return; }
   if (!ready(box)) return;
@@ -1006,10 +1005,16 @@ function exportRevision() {
     ["Nº de aplicaciones", title, ["Límite", "Parcela/sector", "Año", "Producto / materia activa", "Aplicaciones", "Máximo", "Estado"], cnt, [20, 14, 8, 34, 12, 30, 16]]
   ]);
 }
+const PROT_TIPO = { wwf: "solo cítricos", leaf: "certificación", tesco: "cliente", ms: "cliente", aldi: "cliente", fairtrade: "certificación", ra: "certificación", pan: "lista de referencia", eco: "normativa", ue: "normativa" };
 function renderRvProts() {
   const box = $("#rvProts"); if (!box) return;
+  document.querySelectorAll("[data-rbase]").forEach(b => { const on = b.dataset.rbase === REV.base; b.setAttribute("aria-pressed", String(on)); b.setAttribute("aria-checked", String(on)); });
+  $("#rvProtField").hidden = REV.base !== "prot";
   const ids = REV_PROTS.filter(id => id === "wwf" ? (SP && SP.wwf && WWF) : PROT && PROT.protocolos[id]);
-  box.innerHTML = `<button class="chip" aria-pressed="true" disabled title="Siempre se revisa contra el Registro del MAPA">Registro MAPA</button>` + ids.map(id => `<button class="chip ${id === "wwf" ? "wwfchip" : ""}" data-rp="${id}" aria-pressed="${REV.prots.has(id)}">${esc(protName(id))}</button>`).join("");
+  ids.sort((a, b) => protName(a).localeCompare(protName(b), "es"));
+  box.innerHTML = ids.map(id => `<li><label><input type="checkbox" data-rp="${id}" ${REV.prots.has(id) ? "checked" : ""}><span>${esc(protName(id))}</span><small>${esc(PROT_TIPO[id] || "")}</small></label></li>`).join("") || `<li class="note" style="padding:10px">Cargando protocolos…</li>`;
+  const sel = activeProts();
+  $("#rvProtBtn span").textContent = sel.length ? sel.map(protName).join(", ") : "Elige protocolos…";
 }
 function limpiarRevision() { REV.file = null; REV.text = ""; REV.recs = []; REV.res = []; REV.counts = []; $("#rvOut").innerHTML = ""; const f = $("#rvFile"); if (f) f.value = ""; toast("Revisión borrada de la pantalla"); }
 
@@ -1021,16 +1026,24 @@ function limpiarRevision() { REV.file = null; REV.text = ""; REV.recs = []; REV.
   ["dragenter", "dragover"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.add("over"); }));
   ["dragleave", "drop"].forEach(ev => drop.addEventListener(ev, e => { e.preventDefault(); drop.classList.remove("over"); }));
   drop.addEventListener("drop", e => { const f = e.dataTransfer.files[0]; if (f) revisarArchivo(f); });
-  $("#rvProts").addEventListener("click", e => {
-    const b = e.target.closest("[data-rp]"); if (!b) return;
-    const id = b.dataset.rp; if (REV.prots.has(id)) REV.prots.delete(id); else REV.prots.add(id);
+  document.querySelectorAll("[data-rbase]").forEach(b => b.addEventListener("click", e => {
+    e.stopPropagation();
+    REV.base = b.dataset.rbase; store.set("fr_rv_base", REV.base); renderRvProts(); rerunRevision();
+    if (REV.base === "prot" && !activeProts().length) { $("#rvProtPop").hidden = false; $("#rvProtBtn").setAttribute("aria-expanded", "true"); }
+  }));
+  $("#rvProtBtn").addEventListener("click", e => { e.stopPropagation(); const pop = $("#rvProtPop"); pop.hidden = !pop.hidden; $("#rvProtBtn").setAttribute("aria-expanded", String(!pop.hidden)); });
+  $("#rvProtPop").addEventListener("click", e => e.stopPropagation());
+  $("#rvProtBox")._close = () => { $("#rvProtPop").hidden = true; $("#rvProtBtn").setAttribute("aria-expanded", "false"); };
+  $("#rvProts").addEventListener("change", e => {
+    const id = e.target.dataset.rp; if (!id) return;
+    if (e.target.checked) REV.prots.add(id); else REV.prots.delete(id);
     store.set("fr_rv_prots", [...REV.prots]); renderRvProts(); rerunRevision();
   });
   renderRvProts();
   $("#rvScope").addEventListener("change", e => { REV.scope = e.target.value; rerunRevision(); });
   $("#rvRun").addEventListener("click", revisarTexto);
   $("#rvText").addEventListener("keydown", e => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) revisarTexto(); });
-  $("#rvText").value = store.get("fr_vlist", "") || EJEMPLO;
+  $("#rvText").value = "";
   document.addEventListener("paste", e => {      // pegar una imagen (captura) directamente
     if ($("#view-revisar").hidden) return;
     const f = [...(e.clipboardData?.files || [])].find(x => /^image\//.test(x.type)); if (f) { e.preventDefault(); revisarArchivo(new File([f], "captura.png", { type: f.type })); }
