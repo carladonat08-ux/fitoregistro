@@ -1,0 +1,37 @@
+name: Descargar fuentes de protocolos
+
+# Descarga los documentos públicos de los protocolos (listas de fitosanitarios) para
+# revisarlos y transcribirlos. No publica nada: deja los archivos como artefacto de la ejecución.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fuentes:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar
+        run: |
+          mkdir -p fuentes && cd fuentes
+          get() { curl -sSL --retry 3 --max-time 120 -A "Mozilla/5.0 (FitoLupa)" -o "$1" "$2" && echo "OK $1 $(stat -c%s "$1")" || echo "FALLO $1"; }
+          get tesco.pdf "https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"
+          get ms_2023.pdf "https://corporate.marksandspencer.com/sites/marksandspencer/files/Sustainability/Animal%20welfare%20reporting/Pesticides%20Policy%20July%2023V2.pdf"
+          get fairtrade_hml.pdf "https://fairtrade.net/content/dam/fairtrade/fairtrade-international/hazardous-materials-list/Hazardous_Materials_List_EN.pdf"
+          get ra_farming_annex_v14.html "https://knowledge.rainforest-alliance.org/docs/farming-annex-v14"
+          get ra_farming_annex.html "https://knowledge.rainforest-alliance.org/docs/farming-annex"
+          get pan_hhp_2024.pdf "https://www.pan-uk.org/site/wp-content/uploads/PAN_HHP_List_2024.pdf"
+          get eu_cfs_2015_408.html "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32015R0408"
+          get eu_organic_2021_1165_es.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:02021R1165-20250701"
+          get eu_organic_2021_1165_es_b.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:02021R1165-20240101"
+          get eu_organic_2021_1165_es_orig.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:32021R1165"
+          get hse_cfs.html "https://www.hse.gov.uk/pesticides/active-substances/substitution.htm"
+          get eu_as.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v2.0"
+          get eu_as_v1.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v1.0"
+          ls -la
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fuentes
+          path: fuentes/
+          retention-days: 7
