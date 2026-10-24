@@ -443,7 +443,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </div>
     <div class="filters">
       <label><input type="checkbox" id="fVig" checked> Solo vigentes</label>
-      <label><input type="checkbox" id="fCit" checked> Solo con uso en <span class="sp-lower">cítricos</span></label>
+      <label><input type="checkbox" id="fCad"> Caducados</label>
+      <label><input type="checkbox" id="fProx"> Caducan en 1 mes</label>
       <select id="fFun" aria-label="Función"><option value="">Todas las funciones</option></select>
     </div>
   </div>
@@ -686,6 +687,7 @@ const cropCode = u => IDX.c[u[0]][0];
 const cropAnc = code => { const out = []; for (let i = 2; i < 16; i += 2) { const a = code.slice(0, i).padEnd(16, "0"); if (a !== code) out.push(a); } return out; };
 const prefOf = code => code.replace(/(00)+$/, "");
 function makeSpecies(code) {
+  if (code === "ALL") return { code: "ALL", all: true, name: "Todos los cultivos", lower: "todos los cultivos", field: "01", post: "02", postAnc: new Set(), anc: new Set(), wwf: false };
   const row = IDX && IDX.c.find(c => c[0] === code);
   if (!row) return null;
   const feat = SP_FEATURED.find(x => x[0] === code);
@@ -851,8 +853,12 @@ function score(p, q, qn, qk, qd) {
 function runSearch() {
   if (!IDX) return;
   const q = $("#q").value.trim(), qn = norm(q), qk = regKey(q), qd = /^\s*(es)?[\s\-]*\d+\s*$/i.test(q) ? regDigits(q) : "";
-  const vig = $("#fVig").checked, cit = $("#fCit").checked, fun = $("#fFun").value;
-  const pass = p => !(vig && p.estado !== "Vigente") && !(cit && USOS && !p.campo && !p.post) && !(fun && USOS && !p.funs.has(fun));
+  const vig = $("#fVig").checked, cad = $("#fCad").checked, prox = $("#fProx").checked, fun = $("#fFun").value;
+  // Caducado: cancelado o con la autorización vencida. Caducan en 1 mes: vigentes que vencen en los próximos 30 días.
+  const isCad = p => p.estado !== "Vigente" || (p.cad && daysTo(p.cad) < 0);
+  const isProx = p => !isCad(p) && p.cad && daysTo(p.cad) <= 30;
+  const enCultivo = p => !USOS || !SP || SP.all || p.campo || p.post;      // el cultivo elegido ya filtra
+  const pass = p => enCultivo(p) && !(vig && p.estado !== "Vigente") && !(cad && !isCad(p)) && !(prox && !isProx(p)) && !(fun && USOS && !p.funs.has(fun));
   let res = [];
   for (const p of P) { if (!pass(p)) continue; const s = score(p, q, qn, qk, qd); if (s > 0) res.push([s, p]); }
   let fuzzy = false;
@@ -870,7 +876,7 @@ function runSearch() {
   const item = p => `<li><button data-id="${p.id}" ${current && current.id === p.id ? 'aria-current="true"' : ""}>
       <span class="r-name">${hl(p.nombre)}</span><span class="r-reg">${esc(p.reg)}</span>
       <span class="r-ma">${p.sus.map(s => hl(s[0]) + (s[1] ? " " + esc(concTxt(s)) : "")).join(" + ") || esc(p.form)}${aliasHit(p, qn)}</span>
-      <span class="r-tags">${estadoPill(p)}${USOS && p.campo ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post ? '<span class="pill post">Postcosecha</span>' : ""}</span>
+      <span class="r-tags">${estadoPill(p)}${USOS && p.campo && !SP.all ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post && !SP.all ? '<span class="pill post">Postcosecha</span>' : ""}</span>
     </button></li>`;
   let html = "";
   const narrow = window.matchMedia("(max-width:900px)").matches;
@@ -1050,7 +1056,7 @@ function renderFicha() {
   <div class="f-head">
     <div class="printonly">FitoLupa · Consulta del ${today()} · Registro de Productos Fitosanitarios del MAPA, datos a ${fmtDate(IDX.fecha)}</div>
     <div class="f-title"><h2>${esc(p.nombre)}</h2><span class="regbox" title="Nº de registro">${esc(p.reg)}</span>${estadoPill(p)}</div>
-    <div class="f-tags">${USOS && p.campo ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post ? `<span class="pill post">Postcosecha ${esc(SP.lower)}</span>` : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
+    <div class="f-tags">${USOS && p.campo && !SP.all ? `<span class="pill cit">${esc(SP.name)}</span>` : ""}${USOS && p.post && !SP.all ? `<span class="pill post">Postcosecha ${esc(SP.lower)}</span>` : ""}${[...p.funs].map(f => `<span class="pill fun">${esc(f)}</span>`).join("")}</div>
     <div class="f-form">${esc(p.form)}</div>
     ${alerts.length ? `<div class="alerts">${alerts.join("")}</div>` : ""}
     <div class="f-actions">
@@ -1083,7 +1089,7 @@ function renderFicha() {
     <section class="sec"><h3>Usos autorizados y dosis</h3>
       <div class="usebar">
         <div class="chips" role="group" aria-label="Cultivo">
-          ${p.campo ? `<button class="chip" data-crop="cit" aria-pressed="${ui.crop === "cit"}">${esc(SP.name)}${SP.post ? " campo" : ""}</button>` : ""}
+          ${p.campo ? `<button class="chip" data-crop="cit" aria-pressed="${ui.crop === "cit"}">${SP.all ? "Campo" : esc(SP.name) + (SP.post ? " campo" : "")}</button>` : ""}
           ${p.post ? `<button class="chip" data-crop="post" aria-pressed="${ui.crop === "post"}">Postcosecha</button>` : ""}
           <button class="chip" data-crop="all" aria-pressed="${ui.crop === "all"}">Todos (${crops.length} cultivos)</button>
         </div>
@@ -1696,7 +1702,7 @@ function applySpeciesLabels() {
 }
 function renderSpeciesPicker() {
   if (!SP) return;
-  document.querySelectorAll(".sp-emoji").forEach(e => e.textContent = spLook(SP.name).em);
+  document.querySelectorAll(".sp-emoji").forEach(e => e.textContent = SP.all ? "🌍" : spLook(SP.name).em);
 }
 let SP_LIST = null;
 function speciesList() {
@@ -1720,9 +1726,10 @@ function cropListHtml(q) {
   const seen = new Set();
   const hits = all.filter(c => (!qn || c.n.startsWith(qn)) && !seen.has(c.code + c.name) && seen.add(c.code + c.name));
   hits.sort((x, y) => x.name.localeCompare(y.name, "es"));
-  if (!hits.length) return `<li class="note" style="padding:10px">Ningún cultivo del registro empieza por «${esc(q)}».</li>`;
+  if (!hits.length) return norm("todos los cultivos").startsWith(qn) ? `<li><button type="button" data-spc="ALL" aria-current="${!!(SP && SP.all)}"><i>🌍</i><span><b>Todos los cultivos</b></span><small>sin filtrar por cultivo</small></button></li>` : `<li class="note" style="padding:10px">Ningún cultivo del registro empieza por «${esc(q)}».</li>`;
   const k = qn ? q.length : 0;
-  return `<li class="lt">${qn ? `${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»` : `${hits.length} cultivos · escribe para filtrar`}</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span>${k ? `<mark>${esc(c.name.slice(0, k))}</mark>` : ""}${esc(c.name.slice(k))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
+  const todos = !qn || norm("todos los cultivos").startsWith(qn) ? `<li><button type="button" data-spc="ALL" aria-current="${!!(SP && SP.all)}"><i>🌍</i><span><b>Todos los cultivos</b></span><small>sin filtrar por cultivo</small></button></li>` : "";
+  return todos + `<li class="lt">${qn ? `${hits.length} cultivo${hits.length === 1 ? "" : "s"} con «${esc(q)}»` : `${hits.length} cultivos · escribe para filtrar`}</li>` + hits.map(c => `<li><button type="button" data-spc="${c.code}" aria-current="${SP && SP.code === c.code}"><i>${spLook(c.name).em}</i><span>${k ? `<mark>${esc(c.name.slice(0, k))}</mark>` : ""}${esc(c.name.slice(k))}</span><small>${esc(c.alias || c.parent)}</small></button></li>`).join("");
 }
 function openCropFind(box) {
   const list = box.querySelector(".croplist"), inp = box.querySelector("input");
@@ -1769,7 +1776,7 @@ function setSpecies(code) {
   initPlagaProt();
   if (typeof renderRvProts === "function") renderRvProts();
   renderHomeStats();
-  toast(`${spLook(SP.name).em} Cultivo seleccionado: ${SP.name}`);
+  toast(SP.all ? "🌍 Sin filtrar por cultivo: todos los cultivos" : `${spLook(SP.name).em} Cultivo seleccionado: ${SP.name}`);
 }
 function renderHomeStats() {
   if (!IDX) return;
@@ -1778,7 +1785,7 @@ function renderHomeStats() {
   const cit = USOS && SP ? vig.filter(p => p.campo || p.post).length : null;
   let usos = null;
   if (USOS && SP) { usos = 0; for (const [pid, arr] of Object.entries(USOS.u)) { const p = byId.get(Number(pid)); if (!p || p.estado !== "Vigente") continue; for (const u of arr) { const c = cropCode(u); if (isCampo(c) || isPost(c)) usos++; } } }
-  $("#homeStats").innerHTML = `Datos del MAPA a <b>${fmtDate(IDX.fecha)}</b> · <b>${n(vig.length)}</b> productos vigentes` + (cit == null ? "" : ` · <b>${n(cit)}</b> con uso en ${esc(SP.lower)} · <b>${n(usos)}</b> usos autorizados`);
+  $("#homeStats").innerHTML = `Datos del MAPA a <b>${fmtDate(IDX.fecha)}</b> · <b>${n(vig.length)}</b> productos vigentes` + (cit == null ? "" : ` · <b>${n(cit)}</b> ${SP.all ? "con algún uso autorizado" : "con uso en " + esc(SP.lower)} · <b>${n(usos)}</b> usos autorizados`);
 }
 document.addEventListener("click", e => { if (!e.target.closest(".spwrap")) closePop(); });
 function homeSearch(q) { setView("buscar"); const i = $("#q"); i.value = q; runSearch(); i.focus(); }
@@ -1806,7 +1813,12 @@ $("#rlist").addEventListener("keydown", e => {
   if (e.key === "ArrowDown" && i < bs.length - 1) { e.preventDefault(); bs[i + 1].focus(); }
   if (e.key === "ArrowUp") { e.preventDefault(); (i > 0 ? bs[i - 1] : $("#q")).focus(); }
 });
-["#fVig", "#fCit", "#fFun"].forEach(s => $(s).addEventListener("change", runSearch));
+["#fVig", "#fCad", "#fProx", "#fFun"].forEach(s => $(s).addEventListener("change", e => {
+  // «Solo vigentes» y «Caducados» se excluyen; «Caducan en 1 mes» va con vigentes
+  if (e.target.id === "fCad" && e.target.checked) { $("#fVig").checked = false; $("#fProx").checked = false; }
+  if ((e.target.id === "fVig" || e.target.id === "fProx") && e.target.checked) $("#fCad").checked = false;
+  runSearch();
+}));
 $("#rlist").addEventListener("click", e => { const b = e.target.closest("button[data-id]"); if (b) openProduct(Number(b.dataset.id)); });
 window.addEventListener("hashchange", () => { const p = productFromHash(); if (p && (!current || p.id !== current.id)) openFromAnywhere(p.id); });
 
