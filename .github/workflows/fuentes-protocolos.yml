@@ -1,17 +1,19 @@
 name: Descargar fuentes de protocolos
 
 # Descarga los documentos públicos de los protocolos (listas de fitosanitarios) para
-# revisarlos y transcribirlos. No publica nada: deja los archivos como artefacto de la ejecución.
+# revisarlos y transcribirlos. Deja el texto extraído en la rama temporal «fuentes-tmp»
+# (no se publica en la web); se borra después de usarla.
 on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   fuentes:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Descargar
         run: |
           mkdir -p fuentes && cd fuentes
@@ -30,8 +32,15 @@ jobs:
           get eu_as.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v2.0"
           get eu_as_v1.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v1.0"
           ls -la
-      - uses: actions/upload-artifact@v4
-        with:
-          name: fuentes
-          path: fuentes/
-          retention-days: 7
+      - name: Extraer texto y subir a la rama temporal
+        run: |
+          sudo apt-get install -y poppler-utils >/dev/null
+          cd fuentes
+          for f in *.pdf; do pdftotext -layout "$f" "${f%.pdf}.txt" || true; rm -f "$f"; done
+          cd ..
+          git config user.name "FitoLupa bot"; git config user.email "actions@users.noreply.github.com"
+          git checkout --orphan fuentes-tmp
+          git rm -rq --cached . >/dev/null
+          git add fuentes
+          git commit -qm "Fuentes de protocolos (temporal)"
+          git push -f origin fuentes-tmp
