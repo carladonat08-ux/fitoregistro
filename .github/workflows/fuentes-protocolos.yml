@@ -34,13 +34,14 @@ jobs:
           ls -la
       - name: Extraer texto y subir a la rama temporal
         run: |
-          sudo apt-get install -y poppler-utils >/dev/null
+          which pdftotext || (sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils)
           cd fuentes
-          for f in *.pdf; do pdftotext -layout "$f" "${f%.pdf}.txt" || true; rm -f "$f"; done
+          ls -la > _listado.txt
+          for f in *.pdf; do pdftotext -layout "$f" "${f%.pdf}.txt" || echo "pdftotext falló $f" >> _listado.txt; rm -f "$f"; done
           cd ..
           git config user.name "FitoLupa bot"; git config user.email "actions@users.noreply.github.com"
           git checkout --orphan fuentes-tmp
-          git rm -rq --cached . >/dev/null
-          git add fuentes
+          git rm -rq --cached . || true
+          git add -f fuentes
           git commit -qm "Fuentes de protocolos (temporal)"
           git push -f origin fuentes-tmp
