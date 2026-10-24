@@ -5,12 +5,24 @@ name: Descargar fuentes de protocolos
 # (no se publica en la web); se borra después de usarla.
 on:
   workflow_dispatch:
+    inputs:
+      borrar:
+        description: "Solo borrar la rama temporal fuentes-tmp"
+        type: boolean
+        default: false
 
 permissions:
   contents: write
 
 jobs:
+  borrar:
+    if: ${{ inputs.borrar }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: git push origin --delete fuentes-tmp || true
   fuentes:
+    if: ${{ !inputs.borrar }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
