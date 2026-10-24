@@ -284,7 +284,12 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .ac li button:hover,.ac li button:focus-visible{background:var(--sunk)}
 .ac li small{color:var(--ink-3);font-family:var(--f-mono);white-space:nowrap}
 .selplaga{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-weight:600}
-textarea#vlist{width:100%;min-height:170px;border:1.5px solid var(--line-strong);border-radius:6px;padding:10px 12px;background:var(--bg);font-family:var(--f-mono);font-size:13px;resize:vertical}
+.rvin{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:16px;margin:14px 0 6px;align-items:stretch}
+@media (max-width:760px){.rvin{grid-template-columns:minmax(0,1fr)}}
+.rvlab{display:block;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px}
+.rvin .drop{display:flex;flex-direction:column;justify-content:center;margin:0;min-height:170px}
+.rvin .f-actions{margin-top:8px}
+textarea#rvText,textarea#vlist{width:100%;min-height:170px;border:1.5px solid var(--line-strong);border-radius:6px;padding:10px 12px;background:var(--bg);font-family:var(--f-mono);font-size:13px;resize:vertical}
 .vsum{display:flex;flex-wrap:wrap;gap:8px}
 .linkbtn{border:0;background:none;color:var(--leaf);font-weight:700;cursor:pointer;padding:0;text-align:left;text-decoration:underline;text-underline-offset:2px}
 .foot{font-size:12px;color:var(--ink-3);padding-block:0 30px;display:grid;gap:4px}
@@ -396,9 +401,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
       <button role="tab" aria-selected="true" data-view="inicio">Inicio</button>
       <button role="tab" aria-selected="false" data-view="buscar">Producto</button>
       <button role="tab" aria-selected="false" data-view="plaga">Por plaga</button>
-      <button role="tab" aria-selected="false" data-view="verificar">Verificar</button>
       <button role="tab" aria-selected="false" data-view="cuaderno">Cuaderno<span class="count" id="cnt" hidden>0</span></button>
-      <button role="tab" aria-selected="false" data-view="revisar">Revisar cuaderno</button>
+      <button role="tab" aria-selected="false" data-view="revisar">Revisar</button>
       <button role="tab" aria-selected="false" data-view="wwf" class="wwf" id="tabWwf" hidden>WWF</button>
     </nav>
   </div>
@@ -447,9 +451,8 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     <div class="cards">
       <article class="card"><h3>Producto</h3><p>Ficha completa: dosis, plazos, usos y condicionamientos.</p><button class="btn" data-go="buscar">Abrir →</button></article>
       <article class="card"><h3>Por plaga</h3><p>Productos autorizados contra cada plaga, ordenados por plazo.</p><button class="btn" data-go="plaga">Abrir →</button></article>
-      <article class="card"><h3>Verificar</h3><p>Comprueba los productos de una receta de un vistazo.</p><button class="btn" data-go="verificar">Abrir →</button></article>
       <article class="card"><h3>Cuaderno</h3><p>Prepara tu cuaderno de tratamientos y descárgalo en Excel.</p><button class="btn" data-go="cuaderno">Abrir →</button></article>
-      <article class="card"><h3>Revisar cuaderno</h3><p>Sube tu cuaderno en Excel o PDF y detecta incidencias.</p><button class="btn" data-go="revisar">Abrir →</button></article>
+      <article class="card"><h3>Revisar</h3><p>Pega una lista o sube tu cuaderno en cualquier formato y detecta incidencias.</p><button class="btn" data-go="revisar">Abrir →</button></article>
       <article class="card wwfcard"><h3>WWF</h3><p>Restricciones del Proyecto Zitrus EDEKA-WWF para cítricos.</p><button class="btn" data-go="wwf">Abrir →</button></article>
     </div>
     <p class="home-note">Datos oficiales del MAPA, actualizados cada semana · Los archivos que revisas no salen de tu dispositivo · Consulta informativa: prevalecen la resolución y la etiqueta autorizada.</p>
@@ -490,26 +493,10 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
     </div>
   </section>
 
-  <section id="view-verificar" hidden>
-    <div class="panel">
-      <h2>Verificar una lista de productos</h2>
-      <p class="lead">Pega los productos de una receta, un cuaderno de campo o un parte de tratamientos, uno por línea. Se reconoce el nº de registro (ES-00657, ES00657, 24526) o el nombre comercial. Las líneas sin registro fitosanitario (abonos, correctores, bioestimulantes) quedan separadas. La lista de ejemplo se puede sustituir.</p>
-      <textarea id="vlist" spellcheck="false" aria-label="Lista de productos"></textarea>
-      <div class="f-actions">
-        <button class="btn primary" id="vrun">Verificar</button>
-        <button class="btn" id="vclear">Vaciar</button>
-        <button class="btn" id="vxlsx">Descargar Excel</button>
-        <label class="filters"><select id="vscope" aria-label="Comprobar autorización en"><option value="campo">Comprobar uso en cítricos (campo)</option><option value="post">Comprobar uso en postcosecha de cítricos</option><option value="cualquiera">Cítricos, campo o postcosecha</option><option value="">No comprobar cultivo</option></select></label>
-      </div>
-      <div class="vsum" id="vsum"></div>
-      <div class="tblwrap" id="vout" hidden></div>
-    </div>
-  </section>
-
   <section id="view-revisar" hidden>
     <div class="panel">
-      <h2>Revisar un cuaderno de tratamientos</h2>
-      <p class="lead">Sube tu cuaderno en <b>Excel</b> (formato tipo Atalaya: una fila por aplicación) o el <b>PDF «Resumen recetas foliares»</b>. Cada aplicación se revisa contra el Registro del MAPA: nº de registro y nombre, materia activa, vigencia en la fecha, uso autorizado contra la plaga en <span class="sp-lower">cítricos</span>, dosis, caldo, plazo de seguridad y nº de aplicaciones por materia activa.</p>
+      <h2>Revisar productos o un cuaderno</h2>
+      <p class="lead">Pega una lista o sube el archivo tal cual lo tengas: <b>Excel, CSV, PDF, Word, una foto o un escaneo</b>. FitoLupa busca en cada línea el producto (nombre o nº de registro) y, si aparecen, la fecha, la parcela, la variedad, la plaga, la dosis y el plazo. Después lo revisa todo contra el Registro del MAPA en <span class="sp-lower">cítricos</span>.</p>
       <div class="alert info"><b>Tu archivo no sale de este dispositivo.</b> Se lee y se revisa dentro del navegador, sin enviarlo a ningún servidor. Al pulsar «Borrar» o cerrar la pestaña, desaparece. Solo se guarda lo que tú descargues.</div>
       <div class="formrow">
         <div class="field">Tipo de revisión
@@ -518,13 +505,20 @@ mark{background:var(--accent-soft);color:inherit;padding:0 1px;border-radius:2px
             <button class="chip wwfchip" data-rmode="wwf" aria-pressed="false" id="rvWwfBtn" hidden>WWF · registro + Proyecto Zitrus</button>
           </div>
         </div>
+        <label class="field">Comprobar uso en<select id="rvScope"><option value="campo">cítricos (campo)</option></select></label>
       </div>
-      <label class="drop" id="rvDrop" for="rvFile">
-        <input type="file" id="rvFile" accept=".xlsx,.xls,.xlsm,.ods,.csv,.pdf,application/pdf" class="sr">
-        <b>Arrastra aquí el archivo o pulsa para elegirlo</b>
-        <span>Excel (.xlsx, .xls) o PDF de recetas</span>
-      </label>
-      <div class="f-actions"><button class="btn" id="rvClear">Borrar revisión</button></div>
+      <div class="rvin">
+        <div class="rvpaste">
+          <label for="rvText" class="rvlab">Pegar lista o texto</label>
+          <textarea id="rvText" spellcheck="false" placeholder="Un producto por línea: nombre o nº de registro, y si quieres fecha, dosis, plaga…"></textarea>
+          <div class="f-actions"><button class="btn primary" id="rvRun">Revisar lista</button><button class="btn" id="rvClear">Borrar</button></div>
+        </div>
+        <label class="drop" id="rvDrop" for="rvFile">
+          <input type="file" id="rvFile" class="sr">
+          <b>Subir archivo</b>
+          <span>Arrastra aquí o pulsa para elegir.<br>Excel, CSV, PDF, Word, foto o escaneo.<br>También puedes pegar una captura (Ctrl+V).</span>
+        </label>
+      </div>
       <div id="rvOut"></div>
     </div>
   </section>
@@ -772,7 +766,6 @@ async function load() {
   runSearch();
   if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; renderFicha(); }
   if (!$("#view-wwf").hidden) renderWwf();
-  if (!$("#view-verificar").hidden && !$("#vout").innerHTML) runVerify();
   renderHomeStats();
 }
 function productFromHash() {
@@ -1279,7 +1272,6 @@ FLASH UM
 DECCOZIL-50
 UREA CRISTALINA
 SULFATO DE ZINC`;
-let VROWS = [];
 function matchLine(line) {
   const raw = line.trim(); if (!raw) return null;
   const codes = raw.match(/\bES[\s\-]?\d{3,6}\b|\b\d{4,6}\b/gi) || [];
@@ -1305,34 +1297,6 @@ function matchLine(line) {
   const p = byCode || byName;
   if (p && !note) { const hit = [name, paren && norm(paren)].find(q => q && p.an.includes(q)); if (hit) note = `«${p.alias[p.an.indexOf(hit)]}» es otra denominación comercial de ${p.nombre} (${p.reg}).`; }
   return { raw, p, note, info: !!(p && note && p.an.length && !/no coincide|no figura|puede ser/.test(note)) };
-}
-function runVerify() {
-  if (!USOS) return;
-  const lines = $("#vlist").value.split(/\n/).map(matchLine).filter(Boolean);
-  const scope = $("#vscope").value;
-  const test = scope === "campo" ? isCampo : scope === "post" ? isPost : scope === "cualquiera" ? (c => isCampo(c) || isPost(c)) : null;
-  const scopeName = scope === "campo" ? SP.lower + (SP.post ? " (campo)" : "") : scope === "post" ? "postcosecha de " + SP.lower : SP.lower;
-  let ok = 0, warn = 0, nr = 0; VROWS = [];
-  const rows = lines.map(r => {
-    if (!r.p) { nr++; VROWS.push([r.raw, "", "", "Sin registro fitosanitario", r.note || "Fertilizante, corrector, bioestimulante o nombre no encontrado", "", "", "", "", ""]); return `<tr class="nr"><td>${esc(r.raw)}</td><td colspan="6"><span class="pill mute">Sin registro fitosanitario</span> ${esc(r.note || "Fertilizante, corrector, bioestimulante o nombre no encontrado. No necesita nº de registro fitosanitario.")}</td></tr>`; }
-    const p = r.p, s = test ? summaryFor(p, test) : summaryFor(p, () => true);
-    let st, stTxt, extra = r.note;
-    const dd = daysTo(p.cad);
-    if (p.estado !== "Vigente") { st = '<span class="pill bad">Cancelado</span>'; stTxt = "Cancelado"; warn++; }
-    else if (dd != null && dd < 0) { st = '<span class="pill bad">Caducado</span>'; stTxt = "Caducado"; warn++; }
-    else if (test && !s) { st = `<span class="pill bad">No autorizado en ${scopeName}</span>`; stTxt = "No autorizado en " + scopeName; warn++; }
-    else if ((r.note && !r.info) || p.limV || (dd != null && dd < CAD_AVISO)) {
-      st = '<span class="pill warn">Revisar</span>'; stTxt = "Revisar"; warn++;
-      if (p.limV) extra = (extra ? extra + " " : "") + `Fecha límite de venta ${fmtDate(p.limV)}.`;
-      else if (dd != null && dd < CAD_AVISO) extra = (extra ? extra + " " : "") + `Caduca el ${fmtDate(p.cad)} (en ${dd} días).`;
-    } else { st = '<span class="pill ok">Correcto</span>'; stTxt = "Correcto"; ok++; }
-    VROWS.push([r.raw, p.nombre, p.reg, stTxt, [extra, s && s.tags.length ? "Ojo: " + s.tags.join(", ") : ""].filter(Boolean).join(" "), susTxt(p), [...p.funs].join(", "), s ? s.doses.join(" | ") : "", s ? s.plazo : "", fmtDate(p.cad)]);
-    return `<tr><td>${esc(r.raw)}</td><td><button class="linkbtn" data-open="${p.id}">${esc(p.nombre)}</button><div class="mono" style="font-size:12px">${esc(p.reg)}</div></td><td>${st}${extra ? `<div style="font-size:12px;margin-top:4px">${esc(extra)}</div>` : ""}${s && s.tags.length ? `<div class="vtags" style="margin-top:4px">${s.tags.map(t => `<span class="pill vtag" title="Algún uso limita especies o variedades: revisa la ficha">⚠ ${esc(t)}</span>`).join("")}</div>` : ""}</td><td>${esc(susTxt(p))}</td><td class="mono" style="font-size:12px">${s ? esc(listShort(s.doses, 3)) : "—"}</td><td class="mono">${s ? esc(s.plazo) : "—"}</td><td class="mono">${fmtDate(p.cad)}</td></tr>`;
-  });
-  $("#vsum").innerHTML = lines.length ? `<span class="pill ok">${ok} correctos</span><span class="pill warn">${warn} a revisar</span><span class="pill mute">${nr} sin registro fitosanitario</span>` : "";
-  const out = $("#vout"); out.hidden = !lines.length;
-  out.innerHTML = `<table class="v"><thead><tr><th>Entrada</th><th>Producto en registro</th><th>Resultado</th><th>Materia activa</th><th>Dosis${test ? " en " + scopeName : ""}</th><th>Plazo seg.</th><th>Caducidad</th></tr></thead><tbody>${rows.join("")}</tbody></table>`;
-  store.set("fr_vlist", $("#vlist").value);
 }
 
 // ================================================================= Proyecto Zitrus EDEKA-WWF
@@ -1509,13 +1473,13 @@ $("#wvxlsx").addEventListener("click", () => { if (!W.rows.length) runWwfVerify(
   xlsx(`verificacion_WWF_${new Date().toISOString().slice(0, 10)}.xlsx`, [["WWF", `Verificación Proyecto Zitrus EDEKA-WWF (campaña ${WWF.campana}) · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado WWF", "Plagas en la tabla del proyecto", "Máx. aplicaciones", "Toxic load", "Observaciones"], W.rows, [24, 22, 12, 22, 60, 36, 12, 40]]]); });
 
 // ================================================================= Vistas y eventos
-const VIEWS = ["inicio", "buscar", "plaga", "verificar", "cuaderno", "revisar", "wwf"];
+const VIEWS = ["inicio", "buscar", "plaga", "cuaderno", "revisar", "wwf"];
 function setView(v) {
+  if (v === "verificar") v = "revisar";      // la antigua pestaña «Verificar» está ahora dentro de «Revisar»
   document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === v)));
   VIEWS.forEach(x => $("#view-" + x).hidden = x !== v);
   $("#searchrow").hidden = v !== "buscar";
   if (v === "cuaderno") renderCuaderno();
-  if (v === "verificar" && USOS && !$("#vout").innerHTML) runVerify();
   if (v === "plaga") setTimeout(() => $("#pQ").focus(), 50);
   if (v === "wwf") renderWwf();
   if (v === "inicio" && location.hash) try { history.replaceState(null, "", location.pathname + location.search); } catch {}
@@ -1533,7 +1497,8 @@ function applySpeciesLabels() {
   if (!SP) return;
   document.querySelectorAll(".sp-name").forEach(e => e.textContent = SP.name);
   document.querySelectorAll(".sp-lower").forEach(e => e.textContent = SP.lower);
-  $("#vscope").innerHTML = `<option value="campo">Comprobar uso en ${esc(SP.lower)}${SP.post ? " (campo)" : ""}</option>${SP.post ? `<option value="post">Comprobar uso en postcosecha de ${esc(SP.lower)}</option><option value="cualquiera">${esc(SP.name)}, campo o postcosecha</option>` : ""}<option value="">No comprobar cultivo</option>`;
+  $("#rvScope").innerHTML = `<option value="campo">${esc(SP.lower)}${SP.post ? " (campo)" : ""}</option>${SP.post ? `<option value="post">postcosecha de ${esc(SP.lower)}</option><option value="ambos">${esc(SP.lower)}, campo o postcosecha</option>` : ""}`;
+  if (typeof REV !== "undefined") { if (!SP.post) REV.scope = "campo"; $("#rvScope").value = REV.scope; }
   document.querySelectorAll(".legend-post").forEach(e => e.hidden = !SP.post);
   // Proyecto Zitrus EDEKA-WWF: solo para cítricos
   const showW = !!(WWF && SP.wwf);
@@ -1610,7 +1575,6 @@ function setSpecies(code) {
   if (USOS) { initPlaga(); PL.agent = null; AG_INDEX = null; runPlaga(); }
   runSearch();
   if (current) { ui.crop = current.campo ? "cit" : current.post ? "post" : "all"; ui.cropSel = ""; ui.calc.gi = null; renderFicha(); }
-  $("#vout").innerHTML = ""; $("#vout").hidden = true; $("#vsum").innerHTML = "";
   if (typeof limpiarRevision === "function" && REV.res.length) { REV.file = null; REV.res = []; REV.counts = []; $("#rvOut").innerHTML = ""; }
   if (!$("#view-wwf").hidden && !SP.wwf) setView("inicio");
   if (!SP.wwf && typeof REV !== "undefined" && REV.mode === "wwf") { REV.mode = "generica"; document.querySelectorAll("[data-rmode]").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.rmode === "generica"))); }
@@ -1709,13 +1673,6 @@ $("#pXlsx").addEventListener("click", () => {
     PL.rows.map(r => [r.p.nombre, r.p.reg, r.p.estado, susTxt(r.p), [...r.ags].join(", "), r.generic ? "Sí" : "", [...r.crops].join(", "), doseText(r.u), convText(r.p, r.u).replace(/^= /, ""), S(r.u[5]) || "", S(r.u[7]) || "", S(r.u[8]) || "", S(r.u[9]) || "", fmtDate(r.p.cad), Tx(r.u[11]) || ""]),
     [22, 12, 10, 30, 30, 8, 24, 16, 14, 12, 10, 10, 22, 11, 80]]]);
 });
-// Verificador
-$("#vrun").addEventListener("click", runVerify);
-$("#vclear").addEventListener("click", () => { $("#vlist").value = ""; $("#vout").innerHTML = ""; $("#vout").hidden = true; $("#vsum").innerHTML = ""; store.set("fr_vlist", ""); $("#vlist").focus(); });
-$("#vscope").addEventListener("change", runVerify);
-$("#vout").addEventListener("click", e => { const b = e.target.closest("[data-open]"); if (b) openFromAnywhere(Number(b.dataset.open)); });
-$("#vxlsx").addEventListener("click", () => { if (!VROWS.length) runVerify(); if (!VROWS.length) return toast("La lista está vacía");
-  xlsx(`verificacion_${new Date().toISOString().slice(0, 10)}.xlsx`, [["Verificación", `Verificación de productos · ${stamp()}`, ["Entrada", "Producto en registro", "Nº registro", "Resultado", "Observaciones", "Materia activa", "Función", "Dosis", "Plazo seguridad", "Caducidad"], VROWS, [26, 22, 12, 22, 50, 30, 16, 34, 18, 11]]]); });
 // Cuaderno
 $("#cout").addEventListener("click", e => { const b = e.target.closest("[data-del]"); if (b) { CQ.splice(+b.dataset.del, 1); store.set("fr_cuaderno", CQ); renderCuaderno(); } });
 $("#cclear").addEventListener("click", () => { if (CQ.length) $("#cconfirm").hidden = false; });
@@ -1730,7 +1687,6 @@ async function copyText(txt, okMsg) {
 }
 
 // Arranque
-$("#vlist").value = store.get("fr_vlist", "") || EJEMPLO;
 renderCuaderno();
 load().catch(err => { if (current) return; $("#ficha").innerHTML = `<p class="empty">No se pudieron cargar los datos del registro (${esc(err.message)}). Comprueba la conexión y recarga la página.</p>`; $("#rcount").textContent = "Sin datos"; });
 if (!IN_CLAUDE && "serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js").catch(() => {});

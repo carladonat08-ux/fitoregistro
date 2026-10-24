@@ -10,8 +10,8 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pens
 
 **Especie y variedad dentro del cultivo**
 - El registro autoriza por cultivo, no por variedad, pero algunos condicionamientos limitan la especie («Excepto limonero», «Uso en naranjo y mandarino») o nombran variedades («Exclusivamente clementino», «No aplicar en peral variedad Conference»).
-- Esos usos llevan una etiqueta ⚠ (Excepto…, Solo…, Solo clementinas, Variedad) en la ficha, «Por plaga» y «Verificar», y la frase se resalta en el condicionamiento.
-- En «Revisar cuaderno» se lee la variedad (columna variedad del PDF o parcela/sector del Excel: Navelina, Clemenules, Nadorcott, Verna…) y se avisa si el uso no la cubre. Los plazos y dosis se comparan solo con los usos que sí aplican a esa especie.
+- Esos usos llevan una etiqueta ⚠ (Excepto…, Solo…, Solo clementinas, Variedad) en la ficha y en «Por plaga», y la frase se resalta en el condicionamiento.
+- En «Revisar» se lee la variedad (columna o línea de variedad, o la parcela: Navelina, Clemenules, Nadorcott, Verna…) y se avisa si el uso no la cubre. Los plazos y dosis se comparan solo con los usos que sí aplican a esa especie.
 
 **Inicio**
 - Página corta: elegir cultivo, buscar producto, cifras del registro en una línea y acceso a cada herramienta.
@@ -35,19 +35,18 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pens
 - Lista todos los productos autorizados con dosis, plazo y aplicaciones. Se puede ordenar, filtrar por plazo máximo y descargar en Excel.
 - Incluye los usos registrados para el grupo superior (por ejemplo, «Ácaros» para el ácaro rojo), marcados como uso genérico.
 
-**Verificar lista**
-- Pega una receta o un parte de tratamientos.
-- Separa los fitosanitarios de los abonos y bioestimulantes y comprueba vigencia, nº de registro, otras denominaciones, autorización en cítricos (campo o postcosecha), plazo y caducidad.
-- Descarga el resultado en Excel.
-
 **Cuaderno**
 - Añade usos desde las fichas con las columnas del cuaderno de tratamientos y descárgalos en Excel.
 - Se guarda solo en el navegador de cada persona.
 
-**Revisar cuaderno**
-- Sube el cuaderno en Excel (tipo Atalaya, una fila por aplicación) o el PDF «Resumen recetas foliares».
-- Elige revisión **genérica** (registro MAPA) o **WWF** (registro + Proyecto Zitrus).
-- Revisa cada aplicación: nº de registro y nombre (incluidas otras denominaciones), materia activa y concentración, vigencia en la fecha, uso autorizado contra la plaga en cítricos, dosis, caldo, plazo de seguridad (incluida la fecha de cumplimiento) y nº de aplicaciones (por producto según el registro; por materia activa según WWF).
+**Revisar** (antes «Verificar» y «Revisar cuaderno»)
+- Pega una lista (o filas copiadas de Excel) o sube el archivo en cualquier formato: Excel (.xlsx, .xls, .ods), CSV, PDF con texto, PDF escaneado, Word (.docx, .doc, .odt), texto o foto. También se puede pegar una captura con Ctrl+V.
+- Lector universal: si hay cabecera («Producto», «Nº registro», «Dosis», «Fecha», «Parcela»…) usa sus columnas, aunque se llamen distinto; si no, busca en cada línea los productos del registro, el nº ES-…, la fecha, la dosis (cc/l, g/l, %, cc/hl, l/ha, kg/1.000 l…), la plaga y el plazo. Líneas como «Parcela: 12» o «Variedad: Navelina» se aplican a las siguientes. En PDF reconstruye las tablas aunque las celdas ocupen varias líneas.
+- Formatos conocidos (Excel tipo Atalaya y PDF «Resumen recetas foliares») se leen con su lector específico.
+- Fotos y PDF escaneados: el texto se reconoce en el propio navegador (Tesseract, se descarga la primera vez). Corrige confusiones típicas (l/1, O/0) y tolera nombres mal escritos.
+- Elige revisión **genérica** (registro MAPA) o **WWF** (registro + Proyecto Zitrus) y si se comprueba el uso en campo, postcosecha o ambos.
+- Revisa cada línea: nº de registro y nombre (incluidas otras denominaciones), materia activa y concentración, vigencia (en la fecha de aplicación o, si no hay fecha, hoy), uso autorizado contra la plaga, especie y variedad, dosis, caldo, plazo de seguridad y nº de aplicaciones (por producto según el registro; por materia activa según WWF).
+- Sin fechas ni parcelas (una lista simple), la tabla se simplifica.
 - El archivo se procesa en el navegador: no se envía a ningún sitio ni se guarda. Informe descargable en Excel.
 
 **WWF (Proyecto Zitrus EDEKA-WWF)**
