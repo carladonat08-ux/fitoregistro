@@ -18,19 +18,13 @@ jobs:
         run: |
           mkdir -p fuentes && cd fuentes
           get() { curl -sSL --retry 3 --max-time 120 -A "Mozilla/5.0 (FitoLupa)" -o "$1" "$2" && echo "OK $1 $(stat -c%s "$1")" || echo "FALLO $1"; }
-          get tesco.pdf "https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"
-          get ms_2023.pdf "https://corporate.marksandspencer.com/sites/marksandspencer/files/Sustainability/Animal%20welfare%20reporting/Pesticides%20Policy%20July%2023V2.pdf"
-          get fairtrade_hml.pdf "https://fairtrade.net/content/dam/fairtrade/fairtrade-international/hazardous-materials-list/Hazardous_Materials_List_EN.pdf"
-          get ra_farming_annex_v14.html "https://knowledge.rainforest-alliance.org/docs/farming-annex-v14"
-          get ra_farming_annex.html "https://knowledge.rainforest-alliance.org/docs/farming-annex"
-          get pan_hhp_2024.pdf "https://www.pan-uk.org/site/wp-content/uploads/PAN_HHP_List_2024.pdf"
-          get eu_cfs_2015_408.html "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX:32015R0408"
-          get eu_organic_2021_1165_es.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:02021R1165-20250701"
-          get eu_organic_2021_1165_es_b.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:02021R1165-20240101"
-          get eu_organic_2021_1165_es_orig.html "https://eur-lex.europa.eu/legal-content/ES/TXT/HTML/?uri=CELEX:32021R1165"
-          get hse_cfs.html "https://www.hse.gov.uk/pesticides/active-substances/substitution.htm"
-          get eu_as.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v2.0"
-          get eu_as_v1.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active_substances?format=json&language=EN&api-version=v1.0"
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+          curl -sSL --retry 3 -A "$UA" -H "Accept: application/pdf,*/*" -H "Accept-Language: en-GB,en" -e "https://www.tescoplc.com/" -o tesco.pdf "https://www.tescoplc.com/media/759510/tesco-highly-hazardous-pesticide-list.pdf"; head -c 200 tesco.pdf > _tesco_head.txt
+          get eu_as_v3.json "https://api.datalake.sante.service.ec.europa.eu/sante/pesticides/active-substances?format=json&api-version=v3.0"
+          get boe_organic_2021_1165.pdf "https://boe.gob.es/doue/2021/253/L00013-00048.pdf"
+          get certisys_organic.pdf "https://www.certisys.eu/wp-content/uploads/2022/04/Nouvelle-Reglementation-EU-2022-Listes-des-substances-autorisees_CERTISYS.pdf"
+          get caermurcia_2021_1165_M2.pdf "https://caermurcia.com/wp-content/uploads/2024/01/21-Reglamento-ejecucion-2021_1165_M2.pdf"
+          get boe_doue_2025_973.pdf "https://boe.es/doue/2025/973/L00001-00024.pdf"
           ls -la
       - name: Extraer texto y subir a la rama temporal
         run: |
