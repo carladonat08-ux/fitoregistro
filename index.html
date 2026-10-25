@@ -7,21 +7,21 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
 <meta name="robots" content="index, follow">
-<link rel="canonical" href="https://carladonat08-ux.github.io/fitoregistro/">
+<link rel="canonical" href="https://fitolupa.tech/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="es_ES">
 <meta property="og:site_name" content="FitoLupa">
 <meta property="og:title" content="FitoLupa · Buscador de productos fitosanitarios por cultivo">
 <meta property="og:description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
-<meta property="og:url" content="https://carladonat08-ux.github.io/fitoregistro/">
-<meta property="og:image" content="https://carladonat08-ux.github.io/fitoregistro/icons/og.png">
+<meta property="og:url" content="https://fitolupa.tech/">
+<meta property="og:image" content="https://fitolupa.tech/icons/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="FitoLupa · Buscador de productos fitosanitarios por cultivo">
 <meta name="twitter:description" content="Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.">
-<meta name="twitter:image" content="https://carladonat08-ux.github.io/fitoregistro/icons/og.png">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "FitoLupa", "url": "https://carladonat08-ux.github.io/fitoregistro/", "description": "Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.", "inLanguage": "es", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Web", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "keywords": "productos fitosanitarios, registro fitosanitario MAPA, plazo de seguridad, dosis, cítricos, aguacate, vid, cuaderno de campo"}</script>
+<meta name="twitter:image" content="https://fitolupa.tech/icons/og.png">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "FitoLupa", "url": "https://fitolupa.tech/", "description": "Busca productos fitosanitarios autorizados en España por cultivo: usos, dosis en cc/L y g/L, plazos de seguridad y condicionamientos del Registro oficial del MAPA, actualizado cada semana.", "inLanguage": "es", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Web", "isAccessibleForFree": true, "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "keywords": "productos fitosanitarios, registro fitosanitario MAPA, plazo de seguridad, dosis, cítricos, aguacate, vid, cuaderno de campo"}</script>
 <meta name="theme-color" content="#1d4a30">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
@@ -211,6 +211,14 @@ details.cd summary{cursor:pointer;color:var(--leaf);font-weight:600;font-size:12
 .calc .out b{display:block;font-family:var(--f-mono);font-size:20px;color:var(--ink)}
 .calc .out span{font-size:12px;color:var(--ink-3)}
 .calc .which{font-size:13px;color:var(--ink-2)}
+.calc .dosesel{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.calc .inl{display:flex;flex-direction:row;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:13px}
+.calc .inl input{width:100px}
+.calc .cubas{font-size:14px;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.calc .cubas ul{margin:4px 0 0;padding-left:18px}
+.calc .cubas b{font-family:var(--f-mono)}
+.calc #cCopy{justify-self:start}
+.alert.ok{background:var(--ok-soft);border-left-color:var(--ok)}
 
 /* Paneles */
 /* Inicio */
@@ -666,7 +674,7 @@ let SP = null;
 const IN_CLAUDE = !!window.claude;
 const CAD_AVISO = 60;      // días: a partir de aquí se avisa de caducidad próxima   // dentro del visor de Claude no hay impresión ni service worker
 let IDX = null, USOS = null, P = [], byId = new Map(), current = null;
-const ui = { crop: "cit", cropSel: "", plaga: "", calc: { ha: 1, caldo: 2000, gi: null } };
+const ui = { crop: "cit", cropSel: "", plaga: "", calc: Object.assign({ ha: 1, caldo: 2000, cuba: 2000, dose: "max", custom: 0 }, (() => { try { return JSON.parse(localStorage.getItem("fr_calc")) || {}; } catch { return {}; } })(), { gi: null }) };
 const $ = s => document.querySelector(s);
 const norm = s => (s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
 const regKey = s => (s || "").toUpperCase().replace(/[\s\-_.]/g, "");
@@ -1126,35 +1134,85 @@ function useRow(p, g, gi) {
 }
 
 // ================================================================= Calculadora
+// Cantidad de producto en la unidad más cómoda: cc/g por debajo de 1 L/kg, L/kg por encima
+function qty(v, liquid) {
+  if (v == null || !isFinite(v)) return "—";
+  const small = liquid ? "cc" : "g", big = liquid ? "L" : "kg";
+  return Math.abs(v) < 1000 ? `${fmtNum(+v.toFixed(v < 10 ? 2 : 0))} ${small}` : `${fmtNum(+(v / 1000).toFixed(3))} ${big}`;
+}
+// Máximo de producto por hectárea que fija el condicionamiento («máximo 1,5 l/ha», «sin sobrepasar 2 kg/ha»), en cc o g
+function maxPorHa(cond) {
+  const m = (cond || "").match(/(?:m[áa]x(?:ima|imo)?\.?|sin sobrepasar|no superar|hasta un m[áa]ximo de)[^.\n]{0,40}?(\d+(?:[.,]\d+)?)\s*(l|kg|g|ml|cc)\s*(?:de producto|p\.?\s?f\.?)?\s*\/\s*ha/i);
+  if (!m) return null;
+  const v = parseFloat(m[1].replace(",", ".")), u = m[2].toLowerCase();
+  const after = cond.slice(m.index + m[0].length, m.index + m[0].length + 25);
+  const anual = /^\s*(\/\s*a[ñn]o|y a[ñn]o|al a[ñn]o|por a[ñn]o|por campa[ñn]a|y campa[ñn]a)/i.test(after) || /campa[ñn]a|al a[ñn]o|por a[ñn]o/i.test(m[0]);
+  return { v: /^(l|kg)$/.test(u) ? v * 1000 : v, txt: `${m[1]} ${m[2]}/ha${anual ? " al año" : ""}`, anual };
+}
 function calcHtml(p) {
   const gi = ui.calc.gi, g = gi != null ? GROUPS[gi] : null;
-  const head = g ? `<div class="which">Uso seleccionado: <b>${esc(g.crop)}</b> · ${esc(g.plagas.slice(0, 2).join(", "))}${g.plagas.length > 2 ? "…" : ""} · ${esc(doseText(g.u))}</div>` : `<div class="which">Pulsa <b>Calcular</b> en un uso para saber cuánto producto necesitas.</div>`;
-  let out = "";
-  if (g) {
-    const c = convPair(p, g.u);
-    const ha = ui.calc.ha, caldo = ui.calc.caldo;
-    if (c && ha > 0 && caldo > 0) {
-      const big = p.liquid ? "L" : "kg";
-      const tot = v => c.per === "L" ? v * caldo * ha / 1000 : v * ha / 1000;
-      const conc = v => c.per === "L" ? v : v / caldo;
-      const r = (x, y) => (x = +x.toFixed(3), y = +y.toFixed(3), x === y ? fmtNum(x) : `${fmtNum(x)}–${fmtNum(y)}`);
-      out = `<div class="out">
-        <div><b>${r(tot(c.min), tot(c.max))} ${big}</b><span>producto para ${fmtNum(ha)} ha</span></div>
-        <div><b>${fmtNum(caldo * ha)} L</b><span>caldo total</span></div>
-        <div><b>${r(conc(c.min), conc(c.max))} ${p.liquid ? "cc/L" : "g/L"}</b><span>concentración en cuba</span></div>
-        <div><b>${r(conc(c.min), conc(c.max))} ${big}</b><span>por cuba de 1.000 L</span></div>
-      </div>`;
-      const cal = parseCaldo(S(g.u[9]));
-      if (cal && (caldo < cal.min || caldo > cal.max)) out += `<div class="alert warn">El caldo de ${fmtNum(caldo)} L/ha está fuera del rango autorizado (${fmtNum(cal.min)}–${fmtNum(cal.max)} L/ha).</div>`;
-      const cond = Tx(g.u[11]) || "";
-      const mx = cond.match(/(?:m[áa]x(?:imo)?|sin sobrepasar|no superar)[^.\n]{0,40}?(\d+(?:[.,]\d+)?)\s*(l|kg|g|ml|cc)\s*(?:de producto)?\s*\/\s*ha/i);
-      if (mx) out += `<div class="alert info">El condicionamiento fija un máximo de <b>${esc(mx[1])} ${esc(mx[2])}/ha</b>: compruébalo con el resultado.</div>`;
-    } else if (!c) out = `<div class="alert info">La unidad «${esc(S(g.u[4]) || "sin dato")}» no se convierte automáticamente. Revisa el condicionamiento del uso.</div>`;
-  }
-  return `<div class="calc">${head}<div class="row">
-    <label>Superficie (ha)<input id="cHa" type="number" min="0" step="0.01" inputmode="decimal" value="${ui.calc.ha}"></label>
-    <label>Caldo (L/ha)<input id="cCaldo" type="number" min="0" step="50" inputmode="decimal" value="${ui.calc.caldo}"></label>
-  </div>${out}</div>`;
+  if (!g) return `<div class="calc"><div class="which">Pulsa <b>Calcular</b> en un uso de la tabla para saber cuánto producto necesitas, por hectárea y por cuba.</div></div>`;
+  const c = convPair(p, g.u);
+  const pl = [...new Set(g.plagas)];
+  const head = `<div class="which">Uso seleccionado: <b>${esc(g.crop)}</b> · ${esc(pl.slice(0, 2).join(", "))}${pl.length > 2 ? "…" : ""} · dosis del registro <b>${esc(doseText(g.u))}</b>${c && c.per === "L" ? ` (${esc(convText(p, g.u).slice(2))})` : ""}</div>`;
+  if (!c) return `<div class="calc">${head}<div class="alert info">La unidad «${esc(S(g.u[4]) || "sin dato")}» no se puede calcular automáticamente (ver la nota o el condicionamiento del uso).</div></div>`;
+  const L = p.liquid, uConc = c.u === "cc/ha" || c.u === "cc/L" ? "cc/L" : "g/L", uHa = L ? "L/ha" : "kg/ha";
+  const { ha, caldo, cuba } = ui.calc;
+  // Dosis elegida (en la unidad del registro convertida: cc/L o g/L si va por litro de caldo; cc/ha o g/ha si va por hectárea)
+  const fixed = c.min === c.max || !(c.min > 0);
+  let mode = ui.calc.dose; if (fixed && mode !== "otra") mode = "max";
+  const d = mode === "min" ? c.min : mode === "otra" && ui.calc.custom > 0 ? (c.per === "L" ? ui.calc.custom : ui.calc.custom * 1000) : c.max;
+  const doseBtns = `<div class="dosesel" role="group" aria-label="Dosis">
+      ${fixed ? `<button type="button" class="chip" data-dose="max" aria-pressed="${mode !== "otra"}">${fmtNum(c.per === "L" ? c.max : c.max / 1000)} ${c.per === "L" ? uConc : uHa}</button>`
+        : `<button type="button" class="chip" data-dose="min" aria-pressed="${mode === "min"}">Mínima ${fmtNum(c.per === "L" ? c.min : c.min / 1000)} ${c.per === "L" ? uConc : uHa}</button><button type="button" class="chip" data-dose="max" aria-pressed="${mode === "max"}">Máxima ${fmtNum(c.per === "L" ? c.max : c.max / 1000)} ${c.per === "L" ? uConc : uHa}</button>`}
+      <button type="button" class="chip" data-dose="otra" aria-pressed="${mode === "otra"}">Otra</button>
+      ${mode === "otra" ? `<label class="inl"><input id="cDose" type="number" min="0" step="0.01" inputmode="decimal" value="${ui.calc.custom || ""}" placeholder="${fmtNum(c.per === "L" ? c.max : c.max / 1000)}"> ${c.per === "L" ? uConc : uHa}</label>` : ""}
+    </div>`;
+  const inputs = `<div class="row">
+    <label>Superficie (ha)<input id="cHa" type="number" min="0" step="0.01" inputmode="decimal" value="${ha}"></label>
+    <label>Caldo (L/ha)<input id="cCaldo" type="number" min="0" step="50" inputmode="decimal" value="${caldo}"></label>
+    <label>Cuba (L)<input id="cCuba" type="number" min="0" step="100" inputmode="decimal" value="${cuba}"></label>
+  </div>`;
+  let out = "", alerts = "";
+  if (ha > 0 && caldo > 0) {
+    const porHa = c.per === "L" ? d * caldo : d;            // cc o g por hectárea
+    const conc = c.per === "L" ? d : d / caldo;              // cc/L o g/L de caldo
+    const total = porHa * ha, caldoTot = caldo * ha;
+    let cubas = "";
+    if (cuba > 0) {
+      const llenas = Math.floor(caldoTot / cuba + 1e-9), resto = +(caldoTot - llenas * cuba).toFixed(1);
+      const n = llenas + (resto > 0.5 ? 1 : 0);
+      cubas = `<div class="cubas"><b>${n} cuba${n === 1 ? "" : "s"}</b> para ${fmtNum(+caldoTot.toFixed(1))} L de caldo:
+        <ul>${llenas ? `<li>${llenas} llena${llenas === 1 ? "" : "s"} de ${fmtNum(cuba)} L → <b>${qty(conc * cuba, L)}</b> de producto en cada una</li>` : ""}
+        ${resto > 0.5 ? `<li>${llenas ? "1 más" : "1"} de ${fmtNum(resto)} L → <b>${qty(conc * resto, L)}</b> de producto</li>` : ""}</ul></div>`;
+    }
+    out = `<div class="out">
+      <div><b>${qty(total, L)}</b><span>producto para ${fmtNum(ha)} ha</span></div>
+      <div><b>${fmtNum(+(porHa / 1000).toFixed(3))} ${uHa}</b><span>producto por hectárea</span></div>
+      <div><b>${fmtNum(+conc.toFixed(4))} ${uConc}</b><span>concentración · ${qty(conc * 1000, L)} por 1.000 L</span></div>
+      <div><b>${fmtNum(+caldoTot.toFixed(1))} L</b><span>caldo total</span></div>
+    </div>${cubas}`;
+    // Avisos
+    if (mode === "otra" && ui.calc.custom > 0) {
+      if (d > c.max * 1.0001) alerts += `<div class="alert bad">La dosis elegida supera la máxima autorizada (${esc(doseText(g.u))}).</div>`;
+      else if (d < c.min * 0.9999) alerts += `<div class="alert info">La dosis elegida está por debajo de la mínima autorizada (${esc(doseText(g.u))}).</div>`;
+    }
+    const cal = parseCaldo(S(g.u[9]));
+    if (cal && (caldo < cal.min || caldo > cal.max)) alerts += `<div class="alert warn">El caldo de ${fmtNum(caldo)} L/ha está fuera del rango autorizado (${fmtNum(cal.min)}–${fmtNum(cal.max)} L/ha).</div>`;
+    const mx = maxPorHa(Tx(g.u[11]));
+    if (mx && mx.anual) alerts += `<div class="alert info">El condicionamiento fija un máximo de <b>${esc(mx.txt)}</b>: suma todas las aplicaciones del año (${fmtNum(+(porHa / 1000).toFixed(3))} ${uHa} en esta).</div>`;
+    else if (mx) alerts += porHa > mx.v * 1.0001
+      ? `<div class="alert bad">Con este caldo salen <b>${fmtNum(+(porHa / 1000).toFixed(3))} ${uHa}</b> de producto, más del máximo que fija el condicionamiento (<b>${esc(mx.txt)}</b>). Baja la dosis o el caldo.</div>`
+      : `<div class="alert ok">Dentro del máximo del condicionamiento (${esc(mx.txt)}).</div>`;
+    if (c.per === "ha" && !cal) alerts += `<div class="alert info">La dosis va por hectárea: la cantidad de producto no depende del caldo; el caldo solo cambia la concentración.</div>`;
+  } else out = `<p class="note">Indica la superficie y el caldo.</p>`;
+  const copy = ha > 0 && caldo > 0 ? `<button type="button" class="btn small" id="cCopy">Copiar resultado</button>` : "";
+  return `<div class="calc">${head}${doseBtns}${inputs}${out}${alerts}${copy}</div>`;
+}
+function calcText(p) {
+  const box = $("#calcBox"); if (!box) return "";
+  const t = [...box.querySelectorAll(".which, .out > div, .cubas, .alert")].map(e => e.innerText.replace(/\s+/g, " ").trim());
+  return `${p.nombre} (${p.reg})\n` + t.join("\n");
 }
 
 // ================================================================= Búsqueda por plaga
@@ -1828,8 +1886,11 @@ $("#ficha").addEventListener("click", e => {
   const op = e.target.closest("[data-open]"); if (op) { openProduct(Number(op.dataset.open)); return; }
   const add = e.target.closest("[data-add]");
   if (add) { const g = GROUPS[+add.dataset.add]; CQ.push(cuadernoRow(current, g)); store.set("fr_cuaderno", CQ); renderCuaderno(); toast(`Añadido al cuaderno: ${current.nombre} · ${g.crop}`); return; }
+  const dz = e.target.closest("[data-dose]");
+  if (dz) { ui.calc.dose = dz.dataset.dose; $("#calcBox").innerHTML = calcHtml(current); if (ui.calc.dose === "otra") $("#cDose").focus(); return; }
+  if (e.target.id === "cCopy") { copyText(calcText(current), "Resultado copiado"); return; }
   const calc = e.target.closest("[data-calc]");
-  if (calc) { ui.calc.gi = +calc.dataset.calc; const cal = parseCaldo(S(GROUPS[ui.calc.gi].u[9])); if (cal) ui.calc.caldo = cal.max; $("#calcBox").innerHTML = calcHtml(current); $("#calcBox").scrollIntoView({ behavior: "smooth", block: "nearest" }); return; }
+  if (calc) { ui.calc.gi = +calc.dataset.calc; ui.calc.dose = "max"; ui.calc.custom = 0; const cal = parseCaldo(S(GROUPS[ui.calc.gi].u[9])); if (cal) ui.calc.caldo = cal.max; $("#calcBox").innerHTML = calcHtml(current); $("#calcBox").scrollIntoView({ behavior: "smooth", block: "nearest" }); return; }
   const act = e.target.closest("[data-act]"); if (!act) return;
   const p = current;
   if (act.dataset.act === "xlsx") exportFicha(p);
@@ -1848,10 +1909,12 @@ $("#ficha").addEventListener("change", e => {
 });
 $("#ficha").addEventListener("input", e => {
   if (e.target.id === "plagaF") { clearTimeout(st); st = setTimeout(() => { ui.plaga = e.target.value; ui.calc.gi = null; renderFicha(); const f = $("#plagaF"); f.focus(); f.setSelectionRange(f.value.length, f.value.length); }, 250); }
-  if (e.target.id === "cHa" || e.target.id === "cCaldo") {
-    ui.calc.ha = parseFloat($("#cHa").value) || 0; ui.calc.caldo = parseFloat($("#cCaldo").value) || 0;
-    const id = e.target.id;
-    $("#calcBox").innerHTML = calcHtml(current); const el = $("#" + id); el.focus();
+  if (["cHa", "cCaldo", "cCuba", "cDose"].includes(e.target.id)) {
+    const num = id => { const el = $("#" + id); return el ? parseFloat(String(el.value).replace(",", ".")) || 0 : 0; };
+    ui.calc.ha = num("cHa"); ui.calc.caldo = num("cCaldo"); ui.calc.cuba = num("cCuba"); if ($("#cDose")) ui.calc.custom = num("cDose");
+    store.set("fr_calc", { ha: ui.calc.ha, caldo: ui.calc.caldo, cuba: ui.calc.cuba });
+    const id = e.target.id, pos = e.target.selectionStart;
+    clearTimeout(ui.calc.t); ui.calc.t = setTimeout(() => { $("#calcBox").innerHTML = calcHtml(current); const el = $("#" + id); if (el) { el.focus(); try { el.setSelectionRange(pos, pos); } catch {} } }, 250);
   }
 });
 // Por plaga

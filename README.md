@@ -1,5 +1,7 @@
 # FitoLupa
 
+Web: **https://fitolupa.tech**
+
 Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pensado para el trabajo diario de calidad: consultar fichas sin tener que leerlas una a una en la web del Ministerio.
 
 ## Qué hace
@@ -27,7 +29,7 @@ Buscador del **Registro de Productos Fitosanitarios del MAPA** por cultivo, pens
   - todos los usos autorizados: dosis del registro y **convertida a cc/L o g/L**, caldo, plazo, aplicaciones, intervalo, estado fenológico, usuario, método y condicionamiento específico;
   - condiciones generales de uso;
   - avisos de cancelación, caducidad en menos de 60 días y fecha límite de venta.
-- **Calculadora**: producto total, caldo y concentración por superficie. Avisa si el caldo está fuera del rango autorizado o si el condicionamiento fija un máximo por hectárea.
+- **Calculadora** (botón «Calcular» en cada uso): eliges dosis mínima, máxima u otra; superficie, caldo y capacidad de la cuba. Da el producto total, por hectárea, la concentración, el caldo total y cuántas cubas salen con el producto de cada una (llenas y la última). Avisa si la dosis supera la autorizada, si el caldo está fuera del rango del registro y si se pasa del máximo por hectárea que fija el condicionamiento (o recuerda el máximo anual). Los datos de superficie, caldo y cuba se recuerdan.
 - Exportar la ficha a **Excel**, **imprimir o guardar en PDF** (con fecha de consulta y fecha de los datos) y copiar un enlace directo a la ficha.
 
 **Por plaga**
